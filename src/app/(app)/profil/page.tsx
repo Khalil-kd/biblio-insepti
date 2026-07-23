@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireSession } from "@/lib/require-session";
 import { getUserPreferences, listActiveSessions } from "@/lib/user-preferences";
 import { PreferencesForm } from "@/components/PreferencesForm";
@@ -69,4 +70,3 @@ export default async function ProfilePage() {
     </div>
   );
 }
-import Link from "next/link";

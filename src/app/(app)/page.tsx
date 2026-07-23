@@ -4,15 +4,24 @@ import { listApplicationsWithCounts, listPrompts } from "@/lib/prompts";
 import { AppCard } from "@/components/AppCard";
 import { PromptCardView } from "@/components/PromptCardView";
 import { SearchPalette } from "@/components/SearchPalette";
+import { importPromptsFromSeed } from "@/lib/import-prompts";
 
 export const metadata = { title: "Accueil — Bibliothèque de prompts INSEPTI" };
 
 export default async function HomePage() {
   const session = await requireSession();
-  const [apps, recentPrompts] = await Promise.all([
+  let [apps, recentPrompts] = await Promise.all([
     listApplicationsWithCounts(),
     listPrompts({ userId: session.userId, sort: "recent" }),
   ]);
+
+  if (session.role === "admin" && recentPrompts.length === 0) {
+    await importPromptsFromSeed(session.userId);
+    [apps, recentPrompts] = await Promise.all([
+      listApplicationsWithCounts(),
+      listPrompts({ userId: session.userId, sort: "recent" }),
+    ]);
+  }
 
   const firstName = session.displayName.split(" ")[0];
 

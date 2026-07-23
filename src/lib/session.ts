@@ -2,6 +2,7 @@ import "server-only";
 import { cookies, headers } from "next/headers";
 import { and, eq, isNull, gt } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb } from "./db";
 import { auditLog, sessions, users } from "@db/schema";
 import { sessionDurationMs, computeRenewal } from "./session-policy";
@@ -90,12 +91,12 @@ export interface CurrentSession {
 
 async function getSitesSession(): Promise<CurrentSession | null> {
   const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email")?.trim().toLowerCase();
-  if (!email) return null;
+  const sourceEmail = requestHeaders.get("oai-authenticated-user-email")?.trim().toLowerCase();
+  if (!sourceEmail) return null;
 
   const encodedName = requestHeaders.get("oai-authenticated-user-full-name");
   const nameEncoding = requestHeaders.get("oai-authenticated-user-full-name-encoding");
-  let displayName = email.split("@")[0] ?? email;
+  let displayName = sourceEmail.split("@")[0] ?? sourceEmail;
   if (encodedName && nameEncoding === "percent-encoded-utf-8") {
     try {
       displayName = decodeURIComponent(encodedName);
@@ -105,22 +106,32 @@ async function getSitesSession(): Promise<CurrentSession | null> {
   }
 
   const pairwiseId = requestHeaders.get("oai-authenticated-user-pairwise-id");
+  const entraSubject = `sites:${pairwiseId ?? sourceEmail}`;
+  const { env } = await getCloudflareContext({ async: true });
+  const isConfiguredOwner =
+    Boolean(env.SITES_OWNER_EMAIL) && sourceEmail === env.SITES_OWNER_EMAIL?.trim().toLowerCase();
+  const email = isConfiguredOwner ? env.APP_ADMIN_EMAIL?.trim().toLowerCase() || sourceEmail : sourceEmail;
+  if (isConfiguredOwner && env.APP_ADMIN_NAME?.trim()) displayName = env.APP_ADMIN_NAME.trim();
+  const requestedRole = isConfiguredOwner ? ("admin" as const) : ("member" as const);
+
   const db = await getDb();
-  const existing = await db.select().from(users).where(eq(users.email, email)).limit(1);
-  let user = existing[0];
+  const existingBySubject = await db.select().from(users).where(eq(users.entraSubject, entraSubject)).limit(1);
+  const existingByEmail = existingBySubject[0]
+    ? []
+    : await db.select().from(users).where(eq(users.email, email)).limit(1);
+  let user = existingBySubject[0] ?? existingByEmail[0];
 
   if (!user) {
-    const role = "member" as const;
     const now = new Date();
     const userId = nanoid();
     const inserted = await db
       .insert(users)
       .values({
         id: userId,
-        entraSubject: `sites:${pairwiseId ?? email}`,
+        entraSubject,
         email,
         displayName,
-        role,
+        role: requestedRole,
         status: "active",
         createdAt: now,
         updatedAt: now,
@@ -129,8 +140,11 @@ async function getSitesSession(): Promise<CurrentSession | null> {
       .onConflictDoNothing()
       .returning({ id: users.id });
 
-    const resolved = await db.select().from(users).where(eq(users.email, email)).limit(1);
-    user = resolved[0];
+    const resolvedBySubject = await db.select().from(users).where(eq(users.entraSubject, entraSubject)).limit(1);
+    const resolvedByEmail = resolvedBySubject[0]
+      ? []
+      : await db.select().from(users).where(eq(users.email, email)).limit(1);
+    user = resolvedBySubject[0] ?? resolvedByEmail[0];
     if (!user) return null;
 
     if (inserted.length > 0) {
@@ -146,7 +160,12 @@ async function getSitesSession(): Promise<CurrentSession | null> {
     }
   } else {
     if (user.status === "disabled") return null;
-    await db.update(users).set({ displayName, lastLoginAt: new Date() }).where(eq(users.id, user.id));
+    const role = isConfiguredOwner ? ("admin" as const) : user.role;
+    await db
+      .update(users)
+      .set({ entraSubject, email, displayName, role, lastLoginAt: new Date(), updatedAt: new Date() })
+      .where(eq(users.id, user.id));
+    user = { ...user, entraSubject, email, displayName, role };
   }
 
   return {

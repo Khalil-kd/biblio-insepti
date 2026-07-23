@@ -2,7 +2,11 @@
 // CloudflareEnv attendu par @opennextjs/cloudflare. Regénérer via `npm run cf:types` après
 // toute modification de wrangler.toml.
 declare global {
-  interface CloudflareEnv extends Env {}
+  interface CloudflareEnv extends Env {
+    SITES_OWNER_EMAIL?: string;
+    APP_ADMIN_EMAIL?: string;
+    APP_ADMIN_NAME?: string;
+  }
 }
 
 export {};
