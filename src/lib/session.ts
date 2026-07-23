@@ -1,9 +1,9 @@
 import "server-only";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { and, eq, isNull, gt } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { getDb } from "./db";
-import { sessions, users } from "@db/schema";
+import { auditLog, sessions, users } from "@db/schema";
 import { sessionDurationMs, computeRenewal } from "./session-policy";
 
 // Comportement de session défini par la passation section 3 "Option Rester connecté".
@@ -88,12 +88,86 @@ export interface CurrentSession {
   rememberMe: boolean;
 }
 
+async function getSitesSession(): Promise<CurrentSession | null> {
+  const requestHeaders = await headers();
+  const email = requestHeaders.get("oai-authenticated-user-email")?.trim().toLowerCase();
+  if (!email) return null;
+
+  const encodedName = requestHeaders.get("oai-authenticated-user-full-name");
+  const nameEncoding = requestHeaders.get("oai-authenticated-user-full-name-encoding");
+  let displayName = email.split("@")[0] ?? email;
+  if (encodedName && nameEncoding === "percent-encoded-utf-8") {
+    try {
+      displayName = decodeURIComponent(encodedName);
+    } catch {
+      // L'e-mail reste le repli sûr si le nom transmis est mal encodé.
+    }
+  }
+
+  const pairwiseId = requestHeaders.get("oai-authenticated-user-pairwise-id");
+  const db = await getDb();
+  const existing = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  let user = existing[0];
+
+  if (!user) {
+    const role = "member" as const;
+    const now = new Date();
+    const userId = nanoid();
+    await db.insert(users).values({
+      id: userId,
+      entraSubject: `sites:${pairwiseId ?? email}`,
+      email,
+      displayName,
+      role,
+      status: "active",
+      createdAt: now,
+      updatedAt: now,
+      lastLoginAt: now,
+    });
+    await db.insert(auditLog).values({
+      id: nanoid(),
+      actorUserId: userId,
+      action: "user.created.sites",
+      targetType: "user",
+      targetId: userId,
+      summary: `Premier accès privé Sites de ${email}`,
+      createdAt: now,
+    });
+    user = {
+      id: userId,
+      entraSubject: `sites:${pairwiseId ?? email}`,
+      email,
+      displayName,
+      avatarUrl: null,
+      role,
+      status: "active",
+      createdAt: now,
+      updatedAt: now,
+      lastLoginAt: now,
+    };
+  } else {
+    if (user.status === "disabled") return null;
+    await db.update(users).set({ displayName, lastLoginAt: new Date() }).where(eq(users.id, user.id));
+  }
+
+  return {
+    sessionId: `sites:${user.id}`,
+    userId: user.id,
+    email: user.email,
+    displayName: user.displayName,
+    role: user.role,
+    status: user.status,
+    rememberMe: true,
+  };
+}
+
 // Lit la session depuis le cookie, vérifie l'expiration/révocation côté serveur, et applique
 // un renouvellement glissant raisonnable (jamais une session infinie).
 export async function getCurrentSession(): Promise<CurrentSession | null> {
+  const sitesSession = await getSitesSession();
   const store = await cookies();
   const token = store.get(SESSION_COOKIE_NAME)?.value;
-  if (!token) return null;
+  if (!token) return sitesSession;
 
   const tokenHash = await hashToken(token);
   const db = await getDb();
@@ -118,7 +192,7 @@ export async function getCurrentSession(): Promise<CurrentSession | null> {
     .limit(1);
 
   const row = rows[0];
-  if (!row) return null;
+  if (!row) return sitesSession;
   if (row.status === "disabled") return null;
 
   const renewal = computeRenewal({
