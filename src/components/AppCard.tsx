@@ -8,7 +8,8 @@ export function AppCard({ slug, name, count }: { slug: string; name: string; cou
   return (
     <Link
       href={`/app/${slug}`}
-      className="focus-ring surface group flex min-h-32 flex-col items-start justify-between rounded-xl2 p-4 text-left transition-all duration-250 hover:-translate-y-1 hover:shadow-soft"
+      prefetch={false}
+      className="focus-ring surface group relative flex min-h-32 cursor-pointer flex-col items-start justify-between rounded-xl2 p-4 text-left transition-all duration-250 hover:-translate-y-1 hover:border-insepti-green hover:shadow-soft"
     >
       {app ? (
         <Image src={app.iconPath} alt="" width={48} height={48} className="h-11 w-11 object-contain" aria-hidden="true" />

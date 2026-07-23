@@ -2,6 +2,7 @@ import "server-only";
 import { cookies, headers } from "next/headers";
 import { and, eq, isNull, gt } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { cache } from "react";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb } from "./db";
 import { auditLog, sessions, users } from "@db/schema";
@@ -181,7 +182,7 @@ async function getSitesSession(): Promise<CurrentSession | null> {
 
 // Lit la session depuis le cookie, vérifie l'expiration/révocation côté serveur, et applique
 // un renouvellement glissant raisonnable (jamais une session infinie).
-export async function getCurrentSession(): Promise<CurrentSession | null> {
+async function getCurrentSessionUncached(): Promise<CurrentSession | null> {
   const sitesSession = await getSitesSession();
   const store = await cookies();
   const token = store.get(SESSION_COOKIE_NAME)?.value;
@@ -239,6 +240,9 @@ export async function getCurrentSession(): Promise<CurrentSession | null> {
     rememberMe: row.rememberMe,
   };
 }
+
+// Déduplique les lectures d'identité et de session entre layout et page pendant un même rendu RSC.
+export const getCurrentSession = cache(getCurrentSessionUncached);
 
 export async function revokeSession(sessionId: string) {
   const db = await getDb();

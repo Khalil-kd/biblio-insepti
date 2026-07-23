@@ -15,7 +15,7 @@ export default async function LoginPage() {
       <section
         className="relative hidden overflow-hidden bg-white p-12 lg:flex lg:items-center lg:justify-center"
         style={{
-          backgroundImage: "url('/brand/insepti-flow-light.png')",
+          backgroundImage: "url('/brand/insepti-arrows-light.png')",
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
@@ -27,6 +27,7 @@ export default async function LoginPage() {
             width={760}
             height={170}
             priority
+            unoptimized
             className="h-auto w-full drop-shadow-[0_18px_35px_rgba(39,50,56,0.10)]"
           />
           <div className="mt-14 grid grid-cols-3 gap-3" aria-hidden="true">

@@ -13,6 +13,7 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
       <div className="flex items-start justify-between gap-2">
         <Link
           href={`/app/${prompt.applicationSlug}`}
+          prefetch={false}
           aria-label={`Voir les prompts ${prompt.applicationName}`}
           className={`focus-ring inline-flex items-center gap-2 rounded-lg pr-2 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-75 ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}
         >
@@ -30,7 +31,7 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
         </Link>
         <FavoriteButton promptId={prompt.id} initialFavorite={prompt.isFavorite} />
       </div>
-      <Link href={`/prompt/${prompt.slug}`} className="focus-ring flex flex-1 flex-col gap-1.5">
+      <Link href={`/prompt/${prompt.slug}`} prefetch={false} className="focus-ring flex flex-1 flex-col gap-1.5">
         <h3 className="text-base font-semibold leading-snug">{prompt.title}</h3>
         <p className="line-clamp-3 text-sm" style={{ color: "var(--fg-muted)" }}>
           {prompt.description}

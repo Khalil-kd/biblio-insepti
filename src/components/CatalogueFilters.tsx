@@ -1,7 +1,9 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { PromptCardView } from "./PromptCardView";
+import { normalizeSearchText } from "@/lib/search";
+import type { PromptCard, SortOption } from "@/lib/prompts";
 
 interface AppOption {
   slug: string;
@@ -29,17 +31,17 @@ function FilterDropdown({
   const selected = options.find((option) => option.value === value) ?? options[0];
 
   useEffect(() => {
-    function closeOnOutsideClick(event: MouseEvent) {
+    function close(event: MouseEvent) {
       if (!containerRef.current?.contains(event.target as Node)) setOpen(false);
     }
-    function closeOnEscape(event: KeyboardEvent) {
+    function escape(event: KeyboardEvent) {
       if (event.key === "Escape") setOpen(false);
     }
-    document.addEventListener("mousedown", closeOnOutsideClick);
-    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", escape);
     return () => {
-      document.removeEventListener("mousedown", closeOnOutsideClick);
-      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", escape);
     };
   }, []);
 
@@ -51,7 +53,7 @@ function FilterDropdown({
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
-        className={`focus-ring surface flex w-full items-center justify-between gap-4 px-4 py-2.5 text-left text-sm font-medium ${
+        className={`focus-ring surface flex w-full items-center justify-between gap-4 px-4 py-3 text-left text-sm font-medium ${
           open ? "rounded-t-xl border-insepti-green" : "rounded-xl"
         }`}
       >
@@ -68,12 +70,7 @@ function FilterDropdown({
         </svg>
       </button>
       {open && (
-        <div
-          role="listbox"
-          aria-label={label}
-          className="surface card-shadow absolute left-0 right-0 z-30 overflow-hidden rounded-b-xl border-t-0 p-1"
-          style={{ borderColor: "var(--border)" }}
-        >
+        <div role="listbox" aria-label={label} className="surface card-shadow absolute left-0 right-0 z-30 overflow-hidden rounded-b-xl border-t-0 p-1">
           {options.map((option) => {
             const isSelected = option.value === value;
             return (
@@ -102,55 +99,93 @@ function FilterDropdown({
   );
 }
 
-export function CatalogueFilters({ apps }: { apps: AppOption[] }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get("q") ?? "");
-  const [, startTransition] = useTransition();
+export function CatalogueExplorer({
+  apps,
+  prompts,
+  initialQuery = "",
+  initialApplication = "",
+  initialSort = "pertinence",
+}: {
+  apps: AppOption[];
+  prompts: PromptCard[];
+  initialQuery?: string;
+  initialApplication?: string;
+  initialSort?: SortOption;
+}) {
+  const [query, setQuery] = useState(initialQuery);
+  const [application, setApplication] = useState(initialApplication);
+  const [sort, setSort] = useState<SortOption>(initialSort);
 
-  function updateParam(name: string, value: string | null) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set(name, value);
-    else params.delete(name);
-    startTransition(() => {
-      router.push(`/catalogue?${params.toString()}`);
-    });
-  }
-
-  function onSubmitSearch(e: React.FormEvent) {
-    e.preventDefault();
-    updateParam("q", query || null);
-  }
+  const filteredPrompts = useMemo(() => {
+    const terms = normalizeSearchText(query).split(" ").filter(Boolean);
+    return prompts
+      .filter((prompt) => !application || prompt.applicationSlug === application)
+      .filter((prompt) => terms.every((term) => prompt.searchText.includes(term)))
+      .sort((left, right) => {
+        if (sort === "alphabetique") return left.title.localeCompare(right.title, "fr");
+        if (sort === "recent") return new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime();
+        return 0;
+      });
+  }, [application, prompts, query, sort]);
 
   return (
-    <form onSubmit={onSubmitSearch} className="mb-6 flex flex-wrap items-center gap-3">
-      <input
-        type="search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Rechercher…"
-        aria-label="Rechercher dans le catalogue"
-        className="focus-ring surface min-w-[220px] flex-1 rounded-lg px-4 py-2.5 text-sm"
-      />
-      <FilterDropdown
-        label="Filtrer par application"
-        value={searchParams.get("application") ?? ""}
-        onChange={(value) => updateParam("application", value || null)}
-        options={[
-          { value: "", label: "Toutes les applications" },
-          ...apps.map((app) => ({ value: app.slug, label: app.name })),
-        ]}
-      />
-      <FilterDropdown
-        label="Trier les prompts"
-        value={searchParams.get("tri") ?? "pertinence"}
-        onChange={(value) => updateParam("tri", value)}
-        options={[
-          { value: "pertinence", label: "Pertinence" },
-          { value: "alphabetique", label: "Alphabétique" },
-          { value: "recent", label: "Plus récent" },
-        ]}
-      />
-    </form>
+    <>
+      <form onSubmit={(event) => event.preventDefault()} className="mb-4 flex flex-wrap items-stretch gap-3">
+        <div className="surface flex min-w-[280px] flex-1 overflow-hidden rounded-xl">
+          <span className="flex items-center pl-4 text-insepti-green" aria-hidden="true">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="m16 16 4 4" strokeLinecap="round" />
+            </svg>
+          </span>
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Titre, contenu, mot-clé ou application…"
+            aria-label="Rechercher dans le catalogue"
+            className="focus-ring min-w-0 flex-1 bg-transparent px-3 py-3 text-sm outline-none"
+          />
+          <button type="submit" className="focus-ring m-1 rounded-lg bg-insepti-green-deep px-5 text-sm font-semibold text-white hover:bg-insepti-green">
+            Rechercher
+          </button>
+        </div>
+        <FilterDropdown
+          label="Filtrer par application"
+          value={application}
+          onChange={setApplication}
+          options={[
+            { value: "", label: "Toutes les applications" },
+            ...apps.map((app) => ({ value: app.slug, label: app.name })),
+          ]}
+        />
+        <FilterDropdown
+          label="Trier les prompts"
+          value={sort}
+          onChange={(value) => setSort(value as SortOption)}
+          options={[
+            { value: "pertinence", label: "Pertinence" },
+            { value: "alphabetique", label: "Alphabétique" },
+            { value: "recent", label: "Plus récent" },
+          ]}
+        />
+      </form>
+
+      <p className="mb-5 text-sm" aria-live="polite" style={{ color: "var(--fg-muted)" }}>
+        {filteredPrompts.length} prompt{filteredPrompts.length > 1 ? "s" : ""}
+      </p>
+
+      {filteredPrompts.length === 0 ? (
+        <p className="py-12 text-center" style={{ color: "var(--fg-muted)" }}>
+          Aucun prompt ne correspond à ces critères. Essayez un autre mot.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredPrompts.map((prompt) => (
+            <PromptCardView key={prompt.id} prompt={prompt} />
+          ))}
+        </div>
+      )}
+    </>
   );
 }

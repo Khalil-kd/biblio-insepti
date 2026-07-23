@@ -6,13 +6,10 @@ import { showToast } from "@/lib/toast-client";
 
 export function PreferencesForm({
   initialTheme,
-  initialTrackHistory,
 }: {
   initialTheme: "light" | "dark" | "system";
-  initialTrackHistory: boolean;
 }) {
-  const [theme, setTheme] = useState(initialTheme);
-  const [trackHistory, setTrackHistory] = useState(initialTrackHistory);
+  const [theme, setTheme] = useState<"light" | "dark">(initialTheme === "light" ? "light" : "dark");
   const [saving, setSaving] = useState(false);
 
   async function save() {
@@ -23,17 +20,12 @@ export function PreferencesForm({
         withCsrfHeaders({
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ theme, trackHistory }),
+          body: JSON.stringify({ theme, trackHistory: false }),
         }),
       );
       if (!res.ok) throw new Error();
-      if (theme === "system") {
-        delete document.documentElement.dataset.theme;
-        document.documentElement.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);
-      } else {
-        document.documentElement.dataset.theme = theme;
-        document.documentElement.classList.toggle("dark", theme === "dark");
-      }
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.classList.toggle("dark", theme === "dark");
       showToast({ message: "Préférences enregistrées", tone: "success" });
     } catch {
       showToast({ message: "Échec de l'enregistrement des préférences", tone: "error" });
@@ -47,7 +39,7 @@ export function PreferencesForm({
       <div>
         <span className="mb-2 block text-sm font-medium">Thème</span>
         <div className="flex gap-2">
-          {(["system", "light", "dark"] as const).map((t) => (
+          {(["dark", "light"] as const).map((t) => (
             <button
               key={t}
               type="button"
@@ -58,16 +50,11 @@ export function PreferencesForm({
               }`}
               style={{ borderColor: "var(--border)" }}
             >
-              {t === "system" ? "Système" : t === "light" ? "Clair" : "Sombre"}
+              {t === "light" ? "Clair" : "Sombre"}
             </button>
           ))}
         </div>
       </div>
-
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={trackHistory} onChange={(e) => setTrackHistory(e.target.checked)} />
-        Conserver mon historique récent de consultation
-      </label>
 
       <button
         type="button"

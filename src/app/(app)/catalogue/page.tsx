@@ -1,7 +1,6 @@
 import { requireSession } from "@/lib/require-session";
 import { listPrompts, listApplicationsWithCounts, type SortOption } from "@/lib/prompts";
-import { CatalogueFilters } from "@/components/CatalogueFilters";
-import { PromptCardView } from "@/components/PromptCardView";
+import { CatalogueExplorer } from "@/components/CatalogueFilters";
 
 export const metadata = { title: "Catalogue — Bibliothèque de prompts INSEPTI" };
 
@@ -22,28 +21,23 @@ export default async function CataloguePage({
     listApplicationsWithCounts(),
     listPrompts({
       userId: session.userId,
-      query: params.q,
-      applicationSlug: params.application,
-      sort: (params.tri as SortOption) ?? "pertinence",
+      sort: "recent",
     }),
   ]);
+  const initialSort: SortOption = ["pertinence", "alphabetique", "recent"].includes(params.tri ?? "")
+    ? (params.tri as SortOption)
+    : "pertinence";
 
   return (
     <div>
       <h1 className="mb-6 text-2xl font-semibold tracking-tight">Catalogue</h1>
-      <CatalogueFilters apps={apps.map((a) => ({ slug: a.slug, name: a.name }))} />
-
-      {prompts.length === 0 ? (
-        <p className="py-12 text-center" style={{ color: "var(--fg-muted)" }}>
-          Aucun prompt ne correspond à ces critères. Essayez d&apos;élargir votre recherche.
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {prompts.map((p) => (
-            <PromptCardView key={p.id} prompt={p} />
-          ))}
-        </div>
-      )}
+      <CatalogueExplorer
+        apps={apps.map((app) => ({ slug: app.slug, name: app.name }))}
+        prompts={prompts}
+        initialQuery={params.q}
+        initialApplication={params.application}
+        initialSort={initialSort}
+      />
     </div>
   );
 }

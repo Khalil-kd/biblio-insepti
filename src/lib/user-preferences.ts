@@ -1,13 +1,16 @@
 import "server-only";
 import { eq } from "drizzle-orm";
+import { cache } from "react";
 import { getDb } from "./db";
 import { userPreferences, sessions } from "@db/schema";
 
-export async function getUserPreferences(userId: string) {
+async function getUserPreferencesUncached(userId: string) {
   const db = await getDb();
   const rows = await db.select().from(userPreferences).where(eq(userPreferences.userId, userId)).limit(1);
   return rows[0] ?? { userId, theme: "system" as const, trackHistory: false };
 }
+
+export const getUserPreferences = cache(getUserPreferencesUncached);
 
 export async function upsertUserPreferences(userId: string, input: { theme: "light" | "dark" | "system"; trackHistory: boolean }) {
   const db = await getDb();

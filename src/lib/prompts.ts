@@ -13,6 +13,7 @@ export interface PromptCard {
   applicationName: string;
   applicationColor: string;
   isFavorite: boolean;
+  searchText: string;
   updatedAt: Date;
 }
 
@@ -60,6 +61,7 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
       applicationSlug: applications.slug,
       applicationName: applications.name,
       applicationColor: applications.color,
+      searchText: prompts.searchText,
       isFavorite: opts.userId
         ? sql<number>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${opts.userId})`
         : sql<number>`0`,
@@ -92,6 +94,7 @@ export async function getPromptBySlug(slug: string, userId: string | null): Prom
       applicationSlug: applications.slug,
       applicationName: applications.name,
       applicationColor: applications.color,
+      searchText: prompts.searchText,
       isFavorite: userId
         ? sql<number>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${userId})`
         : sql<number>`0`,
@@ -123,6 +126,7 @@ export async function getPromptBySlug(slug: string, userId: string | null): Prom
     applicationName: row.applicationName,
     applicationColor: row.applicationColor,
     isFavorite: Boolean(row.isFavorite),
+    searchText: row.searchText,
   };
 }
 
@@ -134,10 +138,15 @@ export async function listApplicationsWithCounts() {
       name: applications.name,
       color: applications.color,
       sortOrder: applications.sortOrder,
-      count: sql<number>`(select count(*) from ${prompts} where ${prompts.applicationId} = ${applications.id} and ${prompts.status} = 'published')`,
+      count: sql<number>`count(${prompts.id})`,
     })
     .from(applications)
+    .leftJoin(
+      prompts,
+      and(eq(prompts.applicationId, applications.id), eq(prompts.status, "published")),
+    )
     .where(eq(applications.isActive, true))
+    .groupBy(applications.id, applications.slug, applications.name, applications.color, applications.sortOrder)
     .orderBy(asc(applications.sortOrder));
   return rows;
 }

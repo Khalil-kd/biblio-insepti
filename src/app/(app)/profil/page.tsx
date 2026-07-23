@@ -1,31 +1,27 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/require-session";
-import { getUserPreferences, listActiveSessions } from "@/lib/user-preferences";
+import { getUserPreferences } from "@/lib/user-preferences";
 import { PreferencesForm } from "@/components/PreferencesForm";
-import { SessionsList } from "@/components/SessionsList";
 import { LogoutButton } from "@/components/LogoutButton";
 
 export const metadata = { title: "Profil — Bibliothèque de prompts INSEPTI" };
 
 export default async function ProfilePage() {
   const session = await requireSession();
-  const [prefs, activeSessions] = await Promise.all([
-    getUserPreferences(session.userId),
-    listActiveSessions(session.userId),
-  ]);
+  const prefs = await getUserPreferences(session.userId);
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-8">
-      <div className="rounded-[2rem] bg-insepti-graphite p-7 text-white sm:p-9">
-        <p className="text-xs font-bold uppercase tracking-[0.14em] text-insepti-green-light">Mon espace</p>
+    <div className="flex w-full flex-col gap-8">
+      <div className="brand-trajectory rounded-[2rem] p-7 sm:p-9">
+        <p className="hero-kicker text-xs font-bold uppercase tracking-[0.14em]">Mon espace</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">Profil et réglages</h1>
-        <p className="mt-1 text-white/65">
+        <p className="hero-muted mt-1">
           {session.displayName} · {session.email} · {session.role === "admin" ? "Administrateur" : "Membre"}
         </p>
       </div>
 
       {session.role === "admin" && (
-        <section>
+        <section className="px-7 sm:px-9">
           <p className="brand-kicker">Réservé aux administrateurs</p>
           <Link href="/admin" className="focus-ring surface mt-3 flex items-center justify-between rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:shadow-soft">
             <span>
@@ -39,26 +35,12 @@ export default async function ProfilePage() {
         </section>
       )}
 
-      <section>
+      <section className="px-7 sm:px-9">
         <h2 className="mb-3 text-lg font-semibold">Préférences</h2>
-        <PreferencesForm initialTheme={prefs.theme} initialTrackHistory={prefs.trackHistory} />
+        <PreferencesForm initialTheme={prefs.theme} />
       </section>
 
-      <section>
-        <h2 className="mb-3 text-lg font-semibold">Sessions actives</h2>
-        <SessionsList
-          sessions={activeSessions.map((s) => ({
-            id: s.id,
-            createdAt: s.createdAt.toISOString(),
-            lastSeenAt: s.lastSeenAt.toISOString(),
-            rememberMe: s.rememberMe,
-            userAgent: s.userAgent,
-            isCurrent: s.id === session.sessionId,
-          }))}
-        />
-      </section>
-
-      <section>
+      <section className="px-7 sm:px-9">
         <LogoutButton />
       </section>
     </div>

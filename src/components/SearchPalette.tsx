@@ -1,154 +1,100 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { APPLICATIONS } from "@/lib/applications-data";
+import { normalizeSearchText } from "@/lib/search";
 
-interface SearchResult {
+export interface SearchablePrompt {
   slug: string;
   title: string;
   description: string;
   applicationName: string;
   applicationSlug: string;
+  searchText: string;
 }
 
-export function SearchPalette() {
-  const [open, setOpen] = useState(false);
+export function SearchPalette({ prompts }: { prompts: SearchablePrompt[] }) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [focused, setFocused] = useState(false);
   const router = useRouter();
+  const normalizedQuery = normalizeSearchText(query);
 
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setOpen((v) => !v);
-      }
-      if (e.key === "Escape") {
-        setOpen(false);
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  const results = useMemo(() => {
+    const terms = normalizedQuery.split(" ").filter(Boolean);
+    if (terms.length === 0) return [];
+    return prompts.filter((prompt) => terms.every((term) => prompt.searchText.includes(term))).slice(0, 8);
+  }, [normalizedQuery, prompts]);
 
-  useEffect(() => {
-    if (open) {
-      setTimeout(() => inputRef.current?.focus(), 20);
-    } else {
-      setQuery("");
-      setResults([]);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal });
-        if (!res.ok) return;
-        const data = (await res.json()) as { results: SearchResult[] };
-        setResults(data.results);
-        setActiveIndex(0);
-      } catch {
-        // requête annulée ou erreur réseau silencieuse dans la palette
-      }
-    }, 200);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [query, open]);
-
-  function go(slug: string) {
-    setOpen(false);
-    router.push(`/prompt/${slug}`);
-  }
-
-  function onKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIndex((i) => Math.min(i + 1, results.length - 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter" && results[activeIndex]) {
-      go(results[activeIndex].slug);
-    }
+  function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!normalizedQuery) return;
+    router.push(`/catalogue?q=${encodeURIComponent(query.trim())}`);
   }
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="focus-ring surface flex w-full max-w-md items-center gap-2 rounded-lg px-4 py-2.5 text-left text-sm"
-        style={{ color: "var(--fg-muted)" }}
-        aria-haspopup="dialog"
+    <div className="relative w-full">
+      <form
+        onSubmit={submit}
+        className="surface flex w-full items-stretch overflow-hidden rounded-2xl shadow-[0_18px_45px_rgba(39,50,56,0.14)]"
       >
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          className="h-5 w-5 shrink-0 text-insepti-green"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
+        <span className="flex items-center pl-5 text-insepti-green" aria-hidden="true">
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <circle cx="11" cy="11" r="6.5" />
+            <path d="m16 16 4 4" strokeLinecap="round" />
+          </svg>
+        </span>
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => window.setTimeout(() => setFocused(false), 150)}
+          placeholder="Titre, mot-clé, contenu ou application…"
+          aria-label="Rechercher un prompt"
+          className="focus-ring min-w-0 flex-1 bg-transparent px-4 py-4 text-base outline-none sm:py-5"
+        />
+        <button
+          type="submit"
+          className="focus-ring m-1.5 rounded-xl bg-insepti-green-deep px-5 text-sm font-semibold text-white transition hover:bg-insepti-green sm:px-7"
         >
-          <circle cx="11" cy="11" r="6.5" />
-          <path d="m16 16 4 4" strokeLinecap="round" />
-        </svg>
-        <span className="flex-1">Rechercher un prompt…</span>
-      </button>
+          Rechercher
+        </button>
+      </form>
 
-      {open && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Recherche de prompts"
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 pt-24"
-          onClick={() => setOpen(false)}
-        >
-          <div
-            className="surface w-full max-w-xl rounded-xl2 p-2 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={onKeyDown}
-              placeholder="Titre, description, application, variable…"
-              aria-label="Rechercher un prompt"
-              className="focus-ring w-full rounded-lg bg-transparent px-3 py-3 text-base outline-none"
-            />
-            <div className="max-h-96 overflow-y-auto">
-              {results.length === 0 && query && (
-                <p className="px-3 py-4 text-sm" style={{ color: "var(--fg-muted)" }}>
-                  Aucun prompt ne correspond à « {query} ».
-                </p>
-              )}
-              {results.map((r, i) => (
+      {focused && normalizedQuery && (
+        <div className="surface card-shadow absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 overflow-hidden rounded-2xl p-2">
+          {results.length === 0 ? (
+            <p className="px-4 py-5 text-sm" style={{ color: "var(--fg-muted)" }}>
+              Aucun prompt ne correspond à « {query} ».
+            </p>
+          ) : (
+            results.map((result) => {
+              const application = APPLICATIONS.find((item) => item.slug === result.applicationSlug);
+              return (
                 <button
-                  key={r.slug}
+                  key={result.slug}
                   type="button"
-                  onClick={() => go(r.slug)}
-                  className={`focus-ring flex w-full flex-col items-start gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors duration-150 ${
-                    i === activeIndex ? "bg-black/5 dark:bg-white/10" : ""
-                  }`}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => router.push(`/prompt/${result.slug}`)}
+                  className="focus-ring flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-black/5 dark:hover:bg-white/10"
                 >
-                  <span className="text-sm font-medium">{r.title}</span>
-                  <span className="text-xs" style={{ color: "var(--fg-muted)" }}>
-                    {r.applicationName} · {r.description}
+                  {application && (
+                    <Image src={application.iconPath} alt="" width={28} height={28} className="h-7 w-7 object-contain" aria-hidden="true" />
+                  )}
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-semibold">{result.title}</span>
+                    <span className="block truncate text-xs" style={{ color: "var(--fg-muted)" }}>
+                      {result.applicationName} · {result.description}
+                    </span>
                   </span>
                 </button>
-              ))}
-            </div>
-          </div>
+              );
+            })
+          )}
         </div>
       )}
-    </>
+    </div>
   );
 }
