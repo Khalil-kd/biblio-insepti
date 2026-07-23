@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.open-next/
+.wrangler/
+tsconfig.tsbuildinfo
+.env
+.env.local
+.env.notion.local
+*.local
+dist/
+.turbo/
+.vercel/
+.DS_Store
+data/notion-raw.json

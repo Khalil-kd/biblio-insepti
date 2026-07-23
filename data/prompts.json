@@ -1,0 +1,952 @@
+[
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8112-8917-d1bc4ad227f9",
+    "slug": "faq-de-projet",
+    "title": "FAQ de projet",
+    "application_slug": "sharepoint",
+    "description": "Génère une FAQ à partir de [FICHIERS/PAGES].",
+    "body": "Génère une FAQ à partir de [FICHIERS/PAGES].\nCouvre périmètre, rôles, processus, calendrier, outils, décisions et contacts.\nChaque réponse doit être courte et reliée à sa source. Signale les réponses susceptibles d’être obsolètes.",
+    "variables": [
+      "FICHIERS/PAGES"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8116-a428-e18695ee7fad",
+    "slug": "executer-une-tache-avec-controle",
+    "title": "Exécuter une tâche avec contrôle",
+    "application_slug": "planner",
+    "description": "Exécute la tâche [TÂCHE] en utilisant [SOURCES].",
+    "body": "Exécute la tâche [TÂCHE] en utilisant [SOURCES].\nAvant de commencer, reformule le résultat attendu, les contraintes et les critères de qualité.\nSi une information essentielle manque, pose les questions nécessaires.\nLivre un brouillon pour revue et ne marque pas la tâche comme terminée.",
+    "variables": [
+      "TÂCHE",
+      "SOURCES"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8127-a3ef-c97081091f79",
+    "slug": "resumer-un-dossier",
+    "title": "Résumer un dossier",
+    "application_slug": "onedrive",
+    "description": "Résume les fichiers sélectionnés pour une personne qui rejoint la mission.",
+    "body": "Résume les fichiers sélectionnés pour une personne qui rejoint la mission.\nPrésente contexte, objectifs, acteurs, décisions, livrables, état actuel, risques et prochaines étapes.\nIndique les fichiers à lire en priorité et pourquoi.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8128-b319-d8a8fe8ea710",
+    "slug": "analyse-des-reponses",
+    "title": "Analyse des réponses",
+    "application_slug": "forms",
+    "description": "Analyse les réponses de cette enquête.",
+    "body": "Analyse les réponses de cette enquête.\nPrésente taux de réponse, distributions, segments, thèmes des verbatims, signaux faibles et limites.\nDistingue résultats descriptifs et interprétations. Propose les analyses complémentaires utiles dans Excel.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8144-b49d-d000b9295cf1",
+    "slug": "prioriser-mes-taches",
+    "title": "Prioriser mes tâches",
+    "application_slug": "planner",
+    "description": "Montre mes tâches dues cette semaine.",
+    "body": "Montre mes tâches dues cette semaine.\nPriorise-les selon impact client, urgence, dépendances et effort estimé.\nExplique le classement et propose un ordre d’exécution réaliste.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8146-adc0-c70d1631a757",
+    "slug": "agent-de-connaissances",
+    "title": "Agent de connaissances",
+    "application_slug": "sharepoint",
+    "description": "Configure cet agent pour répondre aux questions sur [PÉRIMÈTRE].",
+    "body": "Configure cet agent pour répondre aux questions sur [PÉRIMÈTRE].\nIl doit utiliser uniquement [SITES/DOSSIERS/FICHIERS], citer ses sources, indiquer quand il ne sait pas et ne jamais extrapoler une politique.\nTon professionnel, réponses courtes, avec lien vers le document de référence.",
+    "variables": [
+      "PÉRIMÈTRE",
+      "SITES/DOSSIERS/FICHIERS"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-816a-bb83-f0771bf79997",
+    "slug": "revue-de-questionnaire",
+    "title": "Revue de questionnaire",
+    "application_slug": "forms",
+    "description": "Audite ce questionnaire.",
+    "body": "Audite ce questionnaire.\nDétecte biais, ambiguïtés, questions doubles, chevauchements, ordre influençant les réponses et options incomplètes.\nPropose les corrections et explique leur effet sur la qualité des données.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8179-8c2e-df0d2bf1d5bf",
+    "slug": "creer-un-plan-de-mission",
+    "title": "Créer un plan de mission",
+    "application_slug": "planner",
+    "description": "Crée un plan pour la mission [MISSION] à partir de [NOTE DE CADRAGE].",
+    "body": "Crée un plan pour la mission [MISSION] à partir de [NOTE DE CADRAGE].\nDécompose par phases, livrables et jalons.\nPour chaque tâche : résultat, responsable à attribuer, début, échéance, dépendances, priorité et critère de fin.\nPrésente un brouillon avant de créer les tâches.",
+    "variables": [
+      "MISSION",
+      "NOTE DE CADRAGE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81ac-bcf1-ca8b52130155",
+    "slug": "enquete-de-satisfaction",
+    "title": "Enquête de satisfaction",
+    "application_slug": "forms",
+    "description": "Crée une enquête courte après [ATELIER/FORMATION/LIVRABLE].",
+    "body": "Crée une enquête courte après [ATELIER/FORMATION/LIVRABLE].\nMesure utilité, clarté, applicabilité, animation et améliorations attendues.\nLimite à 8 questions et ajoute une question ouverte orientée action.",
+    "variables": [
+      "ATELIER/FORMATION/LIVRABLE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81ae-8e83-e4b51d6766f0",
+    "slug": "ameliorer-une-page-sharepoint",
+    "title": "Améliorer une page SharePoint",
+    "application_slug": "sharepoint",
+    "description": "Évalue cette page pour [AUDIENCE].",
+    "body": "Évalue cette page pour [AUDIENCE].\nIdentifie contenu obsolète, liens cassés, doublons, manque de structure et informations absentes.\nPropose une nouvelle arborescence et un plan de mise à jour avant toute modification.",
+    "variables": [
+      "AUDIENCE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81ae-9dc8-d57698628327",
+    "slug": "rechercher-une-preuve",
+    "title": "Rechercher une preuve",
+    "application_slug": "onedrive",
+    "description": "Dans les fichiers sélectionnés, trouve les éléments qui confirment ou contredisent l’affirmation suivante : [AFFIRMATION].",
+    "body": "Dans les fichiers sélectionnés, trouve les éléments qui confirment ou contredisent l’affirmation suivante : [AFFIRMATION].\nPrésente les extraits pertinents, le fichier, la date, le niveau de preuve et ta conclusion.\nNe conclus pas si les sources sont insuffisantes.",
+    "variables": [
+      "AFFIRMATION"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81f0-bf81-fa8ca2b9376f",
+    "slug": "liste-d-actions-depuis-les-notes",
+    "title": "Liste d’actions depuis les notes",
+    "application_slug": "onenote",
+    "description": "Extrais toutes les actions de cette page.",
+    "body": "Extrais toutes les actions de cette page.\nTableau : action, résultat attendu, responsable, échéance, priorité et source dans les notes.\nN’invente aucune attribution. Ajoute une section « engagements possibles mais non confirmés ».",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81f1-9871-e5cee23a18e3",
+    "slug": "revue-de-statut",
+    "title": "Revue de statut",
+    "application_slug": "planner",
+    "description": "Génère le rapport de statut pour [PÉRIODE].",
+    "body": "Génère le rapport de statut pour [PÉRIODE].\nInclue progrès, travaux terminés, prochains jalons, retards, tâches bloquées, dépendances, risques et décisions attendues.\nCompare au plan initial et signale les changements importants.",
+    "variables": [
+      "PÉRIODE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81fd-a3f3-c2b525818c17",
+    "slug": "questionnaire-de-diagnostic",
+    "title": "Questionnaire de diagnostic",
+    "application_slug": "forms",
+    "description": "Crée un questionnaire de diagnostic sur [SUJET] destiné à [POPULATION].",
+    "body": "Crée un questionnaire de diagnostic sur [SUJET] destiné à [POPULATION].\nObjectif : [OBJECTIF].\nDurée maximale : [X] minutes.\nCombine échelles, choix et questions ouvertes. Évite les questions orientées, doubles ou ambiguës.\nAjoute les dimensions mesurées et la logique d’analyse prévue.",
+    "variables": [
+      "SUJET",
+      "POPULATION",
+      "OBJECTIF",
+      "X"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81fe-87b9-e7c4fe26e88e",
+    "slug": "comparer-plusieurs-livrables",
+    "title": "Comparer plusieurs livrables",
+    "application_slug": "onedrive",
+    "description": "Compare les fichiers sélectionnés.",
+    "body": "Compare les fichiers sélectionnés.\nTableau : thème, éléments communs, différences, contradictions, version la plus récente et action recommandée.\nAppuie chaque constat sur le fichier et la section concernés.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-812e-b4ce-e99316615a21",
+    "slug": "organiser-des-notes-brutes",
+    "title": "Organiser des notes brutes",
+    "application_slug": "onenote",
+    "description": "Réorganise ces notes sans supprimer d’information.",
+    "body": "Réorganise ces notes sans supprimer d’information.\nCrée les sections : contexte, faits, décisions, actions, risques, idées, questions ouvertes et références.\nDéduplique les éléments répétés et marque les passages ambigus « À clarifier ».",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-813d-86ec-ce2f3879bd35",
+    "slug": "synthese-hebdomadaire-client",
+    "title": "Synthèse hebdomadaire client",
+    "application_slug": "outlook",
+    "description": "Synthétise les e-mails liés à [CLIENT/PROJET] reçus ou envoyés cette semaine.",
+    "body": "Synthétise les e-mails liés à [CLIENT/PROJET] reçus ou envoyés cette semaine.\nRegroupe par thème : avancement, décisions, demandes, risques, actions et éléments à escalader.\nÉvite les doublons et indique les conversations sources.",
+    "variables": [
+      "CLIENT/PROJET"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-813f-ac9d-f98895d3be41",
+    "slug": "reponse-a-une-escalade",
+    "title": "Réponse à une escalade",
+    "application_slug": "outlook",
+    "description": "Rédige une réponse à cette escalade.",
+    "body": "Rédige une réponse à cette escalade.\nReconnais le problème sans admettre une responsabilité non établie, résume les faits vérifiés, précise les actions immédiates, les informations manquantes et la prochaine communication.\nTon calme, responsable et orienté résolution.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-814a-8d3c-c5e135b6b673",
+    "slug": "creer-une-reunion-depuis-un-fil",
+    "title": "Créer une réunion depuis un fil",
+    "application_slug": "outlook",
+    "description": "Prépare une invitation de réunion à partir de ce fil.",
+    "body": "Prépare une invitation de réunion à partir de ce fil.\nPropose un titre, objectif, participants, durée et ordre du jour minuté.\nAjoute les décisions à prendre, les prélectures et la préparation attendue de chaque participant.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-814f-a5ee-f0aef25012c0",
+    "slug": "resumer-un-fil-client",
+    "title": "Résumer un fil client",
+    "application_slug": "outlook",
+    "description": "Résume ce fil d’e-mails.",
+    "body": "Résume ce fil d’e-mails.\nPrésente chronologiquement : demandes, réponses, décisions, engagements, changements de position et points non résolus.\nAjoute les citations vers les messages concernés et signale les pièces jointes à examiner.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-815a-9253-c79796211f18",
+    "slug": "preparer-une-reunion",
+    "title": "Préparer une réunion",
+    "application_slug": "outlook",
+    "description": "Prépare ma réunion [TITRE] du [DATE].",
+    "body": "Prépare ma réunion [TITRE] du [DATE].\nSynthétise l’invitation, les échanges associés, les documents et les réunions précédentes accessibles.\nFournis : objectif probable, contexte, décisions antérieures, actions ouvertes, participants et rôles, points sensibles, questions à poser et résultat à obtenir.\nCite les sources.",
+    "variables": [
+      "TITRE",
+      "DATE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8162-a8bd-d0c73d474724",
+    "slug": "compte-rendu-par-e-mail",
+    "title": "Compte rendu par e-mail",
+    "application_slug": "outlook",
+    "description": "Rédige un e-mail de compte rendu à partir de [RÉUNION/NOTES].",
+    "body": "Rédige un e-mail de compte rendu à partir de [RÉUNION/NOTES].\nCommence par les décisions, puis actions avec responsables et dates, points ouverts et prochaine échéance.\nAjoute une phrase demandant aux destinataires de signaler toute correction avant [DATE].",
+    "variables": [
+      "RÉUNION/NOTES",
+      "DATE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-816c-89b1-c16ef5ec10a2",
+    "slug": "coaching-avant-envoi",
+    "title": "Coaching avant envoi",
+    "application_slug": "outlook",
+    "description": "Évalue ce brouillon selon clarté, concision, ton, empathie, précision de la demande et risque d’ambiguïté.",
+    "body": "Évalue ce brouillon selon clarté, concision, ton, empathie, précision de la demande et risque d’ambiguïté.\nExplique les trois améliorations prioritaires puis propose une version révisée.\nNe modifie pas les engagements ni les faits.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8179-9151-e9c8cf1995dd",
+    "slug": "relance-diplomatique",
+    "title": "Relance diplomatique",
+    "application_slug": "outlook",
+    "description": "Rédige une relance concernant [SUJET].",
+    "body": "Rédige une relance concernant [SUJET].\nRappelle brièvement le contexte, l’élément attendu et son importance pour [IMPACT].\nPropose une nouvelle échéance et une alternative simple.\nTon cordial, sans reproche, maximum 120 mots.",
+    "variables": [
+      "SUJET",
+      "IMPACT"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8183-ab5e-de9bb27eb125",
+    "slug": "prioriser-la-boite-de-reception",
+    "title": "Prioriser la boîte de réception",
+    "application_slug": "outlook",
+    "description": "Identifie les e-mails non lus nécessitant mon attention depuis [DATE].",
+    "body": "Identifie les e-mails non lus nécessitant mon attention depuis [DATE].\nPriorise selon urgence, impact client, échéance et dépendance.\nPour chacun : expéditeur, objet, résumé, action attendue, échéance et réponse recommandée.\nN’effectue aucune action sans mon accord.",
+    "variables": [
+      "DATE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81a9-a236-e61163ce7284",
+    "slug": "reponse-client-structuree",
+    "title": "Réponse client structurée",
+    "application_slug": "outlook",
+    "description": "Rédige une réponse à ce fil.",
+    "body": "Rédige une réponse à ce fil.\nObjectif : [OBJECTIF].\nConfirme ce qui est acté, réponds point par point, signale les éléments à confirmer et propose la prochaine étape.\nTon : professionnel, rassurant et précis. Maximum [X] mots.\nN’engage pas de délai, budget ou périmètre non validé.",
+    "variables": [
+      "OBJECTIF",
+      "X"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81bb-ae7e-d1fcf2d31dd9",
+    "slug": "compte-rendu-client",
+    "title": "Compte rendu client",
+    "application_slug": "teams",
+    "description": "Rédige un compte rendu partageable avec le client à partir de la transcription.",
+    "body": "Rédige un compte rendu partageable avec le client à partir de la transcription.\nInclue participants, objectifs, décisions, points discutés, actions et prochaines étapes.\nExclus les échanges internes, opinions non validées et formulations sensibles.\nSignale tout passage dont le caractère partageable est incertain.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81ca-897b-f6259e49b89b",
+    "slug": "plan-d-actions-de-fin-de-reunion",
+    "title": "Plan d’actions de fin de réunion",
+    "application_slug": "teams",
+    "description": "Prépare le plan d’actions final.",
+    "body": "Prépare le plan d’actions final.\nTableau : action, résultat attendu, responsable, contributeur, échéance, dépendance et statut.\nN’invente aucune attribution. Ajoute ensuite les questions à résoudre avant de clôturer la réunion.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81f5-922c-d0b92c66307a",
+    "slug": "capitaliser-une-mission",
+    "title": "Capitaliser une mission",
+    "application_slug": "onenote",
+    "description": "Transforme ces notes en fiche de capitalisation.",
+    "body": "Transforme ces notes en fiche de capitalisation.\nInclue : problème client, contexte, démarche, livrables, résultats, difficultés, solutions, enseignements réutilisables et éléments confidentiels à ne pas diffuser.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81fe-bed9-f82fdbffd8e3",
+    "slug": "preparer-un-entretien-ou-atelier",
+    "title": "Préparer un entretien ou atelier",
+    "application_slug": "onenote",
+    "description": "À partir de cette page et des fichiers référencés, crée un plan pour [ENTRETIEN/ATELIER].",
+    "body": "À partir de cette page et des fichiers référencés, crée un plan pour [ENTRETIEN/ATELIER].\nInclue objectif, participants, préparation, séquence, questions, livrables attendus et critères de réussite.",
+    "variables": [
+      "ENTRETIEN/ATELIER"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-810b-a866-dd4c7848580f",
+    "slug": "options-et-recommandation",
+    "title": "Options et recommandation",
+    "application_slug": "powerpoint",
+    "description": "Crée deux diapositives : une comparaison de [OPTIONS], puis la recommandation.",
+    "body": "Crée deux diapositives : une comparaison de [OPTIONS], puis la recommandation.\nCompare selon [CRITÈRES] avec éléments de preuve.\nLa recommandation doit expliquer choix, compromis, risques, conditions de réussite et décision attendue.",
+    "variables": [
+      "OPTIONS",
+      "CRITÈRES"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8114-8531-f47f74bf8611",
+    "slug": "preparation-des-questions-difficiles",
+    "title": "Préparation des questions difficiles",
+    "application_slug": "powerpoint",
+    "description": "À partir de cette présentation, génère 15 questions difficiles que [AUDIENCE] pourrait poser.",
+    "body": "À partir de cette présentation, génère 15 questions difficiles que [AUDIENCE] pourrait poser.\nPour chacune, propose une réponse courte fondée sur les données du deck et indique les informations supplémentaires à préparer.",
+    "variables": [
+      "AUDIENCE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8122-8e52-e2a2acdcc225",
+    "slug": "ce-que-j-ai-manque",
+    "title": "Ce que j’ai manqué",
+    "application_slug": "teams",
+    "description": "Qu’ai-je manqué depuis [HEURE] ?",
+    "body": "Qu’ai-je manqué depuis [HEURE] ?\nMets en avant les changements de position, décisions, risques et éléments pour lesquels mon nom ou mon périmètre a été mentionné.\nTermine par les 3 interventions les plus utiles que je peux faire maintenant.",
+    "variables": [
+      "HEURE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8131-a8af-c263c629e410",
+    "slug": "detecter-les-decisions-ambigues",
+    "title": "Détecter les décisions ambiguës",
+    "application_slug": "teams",
+    "description": "Liste les décisions évoquées dans cette réunion.",
+    "body": "Liste les décisions évoquées dans cette réunion.\nClasse-les en : confirmée, accord de principe, proposition ou non tranchée.\nPour chacune, indique la formulation entendue, les personnes concernées et la clarification nécessaire.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8144-a1fc-edba1aba5342",
+    "slug": "visualiser-une-recommandation",
+    "title": "Visualiser une recommandation",
+    "application_slug": "powerpoint",
+    "description": "Transforme cette recommandation en visuel de niveau exécutif.",
+    "body": "Transforme cette recommandation en visuel de niveau exécutif.\nMontre clairement : situation actuelle, changement proposé, bénéfices, dépendances et résultat cible.\nUtilise les couleurs de la marque et évite les illustrations décoratives sans valeur informative.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8155-b7d9-eb25893655e7",
+    "slug": "revue-critique-du-deck",
+    "title": "Revue critique du deck",
+    "application_slug": "powerpoint",
+    "description": "Passe en revue cette présentation comme un associé de cabinet.",
+    "body": "Passe en revue cette présentation comme un associé de cabinet.\nÉvalue narration, cohérence des titres, qualité des preuves, surcharge, doublons, transitions, lisibilité et clarté de la décision attendue.\nClasse les corrections par priorité et indique les diapositives concernées.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8164-8a09-cef03ba1bd79",
+    "slug": "resume-de-reunion",
+    "title": "Résumé de réunion",
+    "application_slug": "teams",
+    "description": "Résume la réunion jusqu’à présent.",
+    "body": "Résume la réunion jusqu’à présent.\nStructure : objectifs, points discutés, décisions confirmées, désaccords, questions ouvertes et actions.\nPour chaque action, indique responsable et échéance uniquement s’ils ont été mentionnés.\nAjoute les références au passage concerné lorsque disponibles.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-816a-8689-d99a3e915be3",
+    "slug": "message-teams-clair",
+    "title": "Message Teams clair",
+    "application_slug": "teams",
+    "description": "Réécris ce message pour [AUDIENCE].",
+    "body": "Réécris ce message pour [AUDIENCE].\nTon : professionnel, direct et constructif.\nCommence par l’information ou la demande principale, puis contexte, échéance et prochaine action.\nMaximum [X] mots. Ne change pas le sens.",
+    "variables": [
+      "AUDIENCE",
+      "X"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-816b-a303-d63ea648d833",
+    "slug": "facilitation-d-atelier",
+    "title": "Facilitation d’atelier",
+    "application_slug": "teams",
+    "description": "Suis l’avancement par rapport à l’ordre du jour.",
+    "body": "Suis l’avancement par rapport à l’ordre du jour.\nIndique les sujets terminés, le temps restant, les points hors périmètre à placer dans un parking et les décisions encore nécessaires.\nPropose une question de convergence lorsque la discussion tourne en rond.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8185-8971-d96e5936127d",
+    "slug": "analyse-des-parties-prenantes",
+    "title": "Analyse des parties prenantes",
+    "application_slug": "teams",
+    "description": "À partir de la discussion, identifie les positions exprimées par les participants sur [SUJET].",
+    "body": "À partir de la discussion, identifie les positions exprimées par les participants sur [SUJET].\nDistingue soutien, réserve, opposition et absence de position.\nAppuie chaque constat sur une intervention explicite et évite toute interprétation psychologique.",
+    "variables": [
+      "SUJET"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-818c-a49d-ce7401ed0482",
+    "slug": "synthese-d-un-canal",
+    "title": "Synthèse d’un canal",
+    "application_slug": "teams",
+    "description": "Résume les échanges de ce canal sur [SUJET] pour la période [PÉRIODE].",
+    "body": "Résume les échanges de ce canal sur [SUJET] pour la période [PÉRIODE].\nExtrais décisions, liens utiles, actions, blocages, changements de priorité et questions restées sans réponse.\nOrganise le résultat chronologiquement puis par thème.",
+    "variables": [
+      "SUJET",
+      "PÉRIODE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81ba-936c-c138a312e813",
+    "slug": "preparer-la-reunion-suivante",
+    "title": "Préparer la réunion suivante",
+    "application_slug": "teams",
+    "description": "À partir de cette réunion, propose l’objectif, l’ordre du jour, les participants indispensables, les prélectures et les décisions attendues pour la…",
+    "body": "À partir de cette réunion, propose l’objectif, l’ordre du jour, les participants indispensables, les prélectures et les décisions attendues pour la prochaine séance.\nJustifie les participants proposés par leur rôle dans les actions ou décisions.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81d4-8df9-db5da417898d",
+    "slug": "feuille-de-route",
+    "title": "Feuille de route",
+    "application_slug": "powerpoint",
+    "description": "Crée une diapositive de feuille de route pour [PROGRAMME].",
+    "body": "Crée une diapositive de feuille de route pour [PROGRAMME].\nOrganise-la par horizons [HORIZONS] et chantiers [CHANTIERS].\nPour chaque étape, affiche résultat, jalon, responsable et dépendance critique.\nSignale les informations manquantes au lieu de les inventer.",
+    "variables": [
+      "PROGRAMME",
+      "HORIZONS",
+      "CHANTIERS"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81da-8539-ddc5d6f6ddd7",
+    "slug": "storyline-avant-production",
+    "title": "Storyline avant production",
+    "application_slug": "powerpoint",
+    "description": "Avant de créer les diapositives, propose trois storylines possibles pour présenter [SUJET] à [AUDIENCE].",
+    "body": "Avant de créer les diapositives, propose trois storylines possibles pour présenter [SUJET] à [AUDIENCE].\nPour chacune : logique narrative, messages clés, avantages, risques et séquence de diapositives.\nRecommande l’option la plus adaptée à [OBJECTIF] et attends ma validation.",
+    "variables": [
+      "SUJET",
+      "AUDIENCE",
+      "OBJECTIF"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81dc-aed2-f8079e631563",
+    "slug": "notes-du-presentateur",
+    "title": "Notes du présentateur",
+    "application_slug": "powerpoint",
+    "description": "Rédige des notes de présentation pour chaque diapositive.",
+    "body": "Rédige des notes de présentation pour chaque diapositive.\nInclue : message à faire retenir, explication de 45 à 60 secondes, transition et question probable de l’audience.\nNe répète pas simplement le texte visible.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8104-9e02-c2624c4a4847",
+    "slug": "analyse-exploratoire",
+    "title": "Analyse exploratoire",
+    "application_slug": "excel",
+    "description": "Analyse [TABLE] pour répondre à [QUESTION].",
+    "body": "Analyse [TABLE] pour répondre à [QUESTION].\nCalcule les indicateurs pertinents, segmente par [DIMENSIONS], identifie tendances, saisonnalité, ruptures et anomalies.\nCrée une feuille « Analyse » avec tableaux, commentaires et 3 graphiques maximum.\nExplique les méthodes et limites.",
+    "variables": [
+      "TABLE",
+      "QUESTION",
+      "DIMENSIONS"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-811d-97d9-dd73f97e950e",
+    "slug": "reecriture-niveau-comite-de-direction",
+    "title": "Réécriture niveau comité de direction",
+    "application_slug": "word",
+    "description": "Réécris la section sélectionnée pour un comité de direction.",
+    "body": "Réécris la section sélectionnée pour un comité de direction.\nCommence par le message essentiel, réduis le jargon, conserve les chiffres et nuances, et limite chaque paragraphe à une idée.\nN’ajoute aucun fait. Termine par la décision ou l’action attendue.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8142-8f1f-cd0587b740c2",
+    "slug": "revue-du-classeur",
+    "title": "Revue du classeur",
+    "application_slug": "excel",
+    "description": "Audite ce classeur avant partage au client.",
+    "body": "Audite ce classeur avant partage au client.\nVérifie formules incohérentes, références cassées, valeurs en dur dans les calculs, unités, formats, filtres, feuilles masquées et lisibilité.\nCrée une liste priorisée des corrections sans modifier le classeur.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-814f-9f2d-ef448d3aa58a",
+    "slug": "segmentation",
+    "title": "Segmentation",
+    "application_slug": "excel",
+    "description": "Segmente les lignes de [TABLE] selon [CRITÈRES/OBJECTIF].",
+    "body": "Segmente les lignes de [TABLE] selon [CRITÈRES/OBJECTIF].\nExplique la logique de segmentation, crée une colonne « Segment » et un tableau récapitulatif par segment.\nCompare volume, valeur, évolution et caractéristiques distinctives.\nSignale si les données ne permettent pas une segmentation fiable.",
+    "variables": [
+      "TABLE",
+      "CRITÈRES/OBJECTIF"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8152-8d1e-cb368214610f",
+    "slug": "revue-contradictoire",
+    "title": "Revue contradictoire",
+    "application_slug": "word",
+    "description": "Mets ce document à l’épreuve.",
+    "body": "Mets ce document à l’épreuve.\nIdentifie les affirmations non prouvées, contradictions, biais, hypothèses cachées, risques ignorés et recommandations insuffisamment reliées aux constats.\nPour chaque faiblesse, propose la question à poser ou la preuve à obtenir.\nNe modifie pas encore le document.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-816e-85d4-f1a478091e89",
+    "slug": "prevision-et-scenarios",
+    "title": "Prévision et scénarios",
+    "application_slug": "excel",
+    "description": "À partir de l’historique [PLAGE], propose une prévision jusqu’à [DATE].",
+    "body": "À partir de l’historique [PLAGE], propose une prévision jusqu’à [DATE].\nTeste une méthode simple et une méthode tenant compte de la tendance/saisonnalité.\nPrésente hypothèses, erreur historique, intervalle d’incertitude et facteurs que le modèle ne capture pas.\nCrée trois scénarios modifiables.",
+    "variables": [
+      "PLAGE",
+      "DATE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81aa-86e2-f9477b91edbe",
+    "slug": "construction-d-un-business-case",
+    "title": "Construction d’un business case",
+    "application_slug": "excel",
+    "description": "Crée un modèle de business case sur [HORIZON] à partir de ces données.",
+    "body": "Crée un modèle de business case sur [HORIZON] à partir de ces données.\nSépare hypothèses, calculs et résultats.\nInclue scénario bas, central et haut, coûts ponctuels/récurrents, bénéfices, flux de trésorerie, ROI, délai de retour et analyse de sensibilité.\nUtilise des formules Excel modifiables, jamais des valeurs calculées en dur.",
+    "variables": [
+      "HORIZON"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81b6-a9cc-db61f2cc7395",
+    "slug": "reduire-une-diapositive-trop-dense",
+    "title": "Réduire une diapositive trop dense",
+    "application_slug": "powerpoint",
+    "description": "Simplifie la diapositive sélectionnée sans perdre le message essentiel.",
+    "body": "Simplifie la diapositive sélectionnée sans perdre le message essentiel.\nConserve au maximum 3 idées et 40 mots visibles.\nPropose une structure visuelle adaptée : comparaison, processus, chronologie, matrice ou graphique.\nPlace les détails secondaires dans les notes du présentateur.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81ba-a4c6-dfd909eb44bb",
+    "slug": "construire-une-presentation-de-restitution",
+    "title": "Construire une présentation de restitution",
+    "application_slug": "powerpoint",
+    "description": "Crée une présentation de [X] diapositives à partir de [SOURCE].",
+    "body": "Crée une présentation de [X] diapositives à partir de [SOURCE].\nAudience : [COMITÉ/DIRECTION/ÉQUIPE].\nObjectif : [INFORMER/DÉCIDER/VALIDER].\nStructure : message clé, contexte, constats, preuves, implications, options, recommandation, feuille de route et décisions attendues.\nUne idée forte par diapositive, titre formulé comme une conclusion, style sobre.",
+    "variables": [
+      "X",
+      "SOURCE",
+      "COMITÉ/DIRECTION/ÉQUIPE",
+      "INFORMER/DÉCIDER/VALIDER"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81cf-b29f-fa8a6e2c6a71",
+    "slug": "formule-expliquee",
+    "title": "Formule expliquée",
+    "application_slug": "excel",
+    "description": "Crée la formule nécessaire pour [BESOIN] dans la colonne [COLONNE].",
+    "body": "Crée la formule nécessaire pour [BESOIN] dans la colonne [COLONNE].\nPrivilégie une formule lisible et robuste aux cellules vides.\nExplique chaque partie, indique les références utilisées, applique-la à la plage concernée et ajoute un contrôle permettant de vérifier le résultat.",
+    "variables": [
+      "BESOIN",
+      "COLONNE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81df-b6c0-eb922d46f0f6",
+    "slug": "analyse-d-ecarts",
+    "title": "Analyse d’écarts",
+    "application_slug": "excel",
+    "description": "Compare Réalisé, Budget et Prévision dans [TABLE].",
+    "body": "Compare Réalisé, Budget et Prévision dans [TABLE].\nCalcule écarts absolus et relatifs, classe les écarts par importance et identifie les contributeurs principaux.\nCrée une synthèse par [ENTITÉ/PÉRIODE] et un graphique en cascade si pertinent.\nNe formule une cause que si les données la prouvent ; sinon parle d’hypothèse.",
+    "variables": [
+      "TABLE",
+      "ENTITÉ/PÉRIODE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81e1-b177-dd885a943c60",
+    "slug": "analyse-de-verbatims",
+    "title": "Analyse de verbatims",
+    "application_slug": "excel",
+    "description": "Analyse les verbatims de la colonne [COLONNE].",
+    "body": "Analyse les verbatims de la colonne [COLONNE].\nCrée des catégories mutuellement compréhensibles, attribue une catégorie principale et un sentiment à chaque ligne, puis synthétise fréquence et exemples.\nConserve le texte original et marque les classifications incertaines.",
+    "variables": [
+      "COLONNE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81ef-8cd3-f1a9b94c8ed6",
+    "slug": "tableau-de-bord-executif",
+    "title": "Tableau de bord exécutif",
+    "application_slug": "excel",
+    "description": "Crée un tableau de bord sur une nouvelle feuille pour suivre [OBJECTIF].",
+    "body": "Crée un tableau de bord sur une nouvelle feuille pour suivre [OBJECTIF].\nUtilise les KPI [LISTE] et propose les indicateurs complémentaires réellement calculables.\nAjoute cartes KPI, tendance temporelle, segmentation et alertes.\nGarde les graphiques liés aux données sources et applique une mise en forme sobre.",
+    "variables": [
+      "OBJECTIF",
+      "LISTE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81f6-8509-cf39b01b09a5",
+    "slug": "transformer-une-analyse-en-messages-executifs",
+    "title": "Transformer une analyse en messages exécutifs",
+    "application_slug": "powerpoint",
+    "description": "Analyse cette présentation et réécris les titres pour qu’ils expriment la conclusion de chaque diapositive.",
+    "body": "Analyse cette présentation et réécris les titres pour qu’ils expriment la conclusion de chaque diapositive.\nLes titres doivent être factuels, spécifiques et cohérents entre eux.\nN’ajoute aucune information absente. Fournis d’abord un tableau « titre actuel / titre proposé / justification ».",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81f8-9766-cefb4bc5a1c2",
+    "slug": "audit-de-qualite-des-donnees",
+    "title": "Audit de qualité des données",
+    "application_slug": "excel",
+    "description": "Analyse la table [TABLE/PLAGE].",
+    "body": "Analyse la table [TABLE/PLAGE].\nIdentifie cellules vides, doublons, formats incohérents, valeurs impossibles, ruptures de série et valeurs atypiques.\nCrée une feuille « Contrôles » avec : anomalie, emplacement, règle violée, gravité et correction proposée.\nNe corrige rien avant de me présenter le plan.",
+    "variables": [
+      "TABLE/PLAGE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8104-9eb5-d3223e990feb",
+    "slug": "analyse-de-plusieurs-fichiers-avec-analyst",
+    "title": "Analyse de plusieurs fichiers avec Analyst",
+    "application_slug": "copilot",
+    "description": "Analyse les fichiers [FICHIERS EXCEL/CSV/PDF].",
+    "body": "Analyse les fichiers [FICHIERS EXCEL/CSV/PDF].\nObjectif : [QUESTION DÉCISIONNELLE].\nNettoie conceptuellement les données, identifie les tendances, ruptures, valeurs atypiques et relations significatives.\nPrésente les calculs et hypothèses, puis propose 3 visualisations et 5 implications métier.\nNe confonds pas corrélation et causalité.",
+    "variables": [
+      "FICHIERS EXCEL/CSV/PDF",
+      "QUESTION DÉCISIONNELLE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:06:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8114-b91a-c99b81ff1e91",
+    "slug": "rapport-de-diagnostic",
+    "title": "Rapport de diagnostic",
+    "application_slug": "word",
+    "description": "Transforme les sources jointes en rapport de diagnostic destiné à [AUDIENCE].",
+    "body": "Transforme les sources jointes en rapport de diagnostic destiné à [AUDIENCE].\nStructure : résumé exécutif, méthode, situation actuelle, constats étayés, causes racines, impacts, risques, scénarios et recommandations.\nChaque recommandation doit préciser bénéfice, effort, dépendances, responsable pressenti et horizon.\nLongueur cible : [X] pages.",
+    "variables": [
+      "AUDIENCE",
+      "X"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8118-8721-c312868f162e",
+    "slug": "brief-de-preparation-client",
+    "title": "Brief de préparation client",
+    "application_slug": "copilot",
+    "description": "Prépare un brief pour ma réunion avec [CLIENT] prévue le [DATE].",
+    "body": "Prépare un brief pour ma réunion avec [CLIENT] prévue le [DATE].\nUtilise les e-mails, réunions, chats et fichiers auxquels j’ai accès sur les [X] derniers jours.\nStructure le résultat en : contexte, actualités récentes, décisions prises, points en suspens, risques, personnes clés et 5 questions à poser.\nPour chaque élément, indique la source. Ne déduis pas une information non présente.",
+    "variables": [
+      "CLIENT",
+      "DATE",
+      "X"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:06:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8119-9d01-ce462c8c8dc4",
+    "slug": "synthese-multi-sources-avec-tracabilite",
+    "title": "Synthèse multi-sources avec traçabilité",
+    "application_slug": "copilot",
+    "description": "Analyse les sources suivantes : [FICHIERS/LIENS].",
+    "body": "Analyse les sources suivantes : [FICHIERS/LIENS].\nRéponds à la question : [QUESTION].\nCrée un tableau : constat, preuve, source, niveau de confiance, implication pour le client.\nSépare explicitement les faits, interprétations et hypothèses. Signale les contradictions et informations manquantes.",
+    "variables": [
+      "FICHIERS/LIENS",
+      "QUESTION"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:06:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-811b-8976-d7961b5cf1a9",
+    "slug": "plan-d-actions",
+    "title": "Plan d’actions",
+    "application_slug": "word",
+    "description": "Extrais de ce document toutes les actions explicites et implicites.",
+    "body": "Extrais de ce document toutes les actions explicites et implicites.\nPrésente-les dans un tableau : action, résultat attendu, responsable, contributeurs, échéance, dépendances, priorité, preuve de réalisation.\nN’invente pas les responsables ou dates : écris « À attribuer » ou « À planifier ».",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8120-88e5-d6eb4273aad9",
+    "slug": "recherche-approfondie-avec-researcher",
+    "title": "Recherche approfondie avec Researcher",
+    "application_slug": "copilot",
+    "description": "Réalise une recherche approfondie sur [SUJET] pour [SECTEUR/PAYS].",
+    "body": "Réalise une recherche approfondie sur [SUJET] pour [SECTEUR/PAYS].\nCouvre : état du marché, tendances, acteurs, cas d’usage, risques, réglementation et implications pour [CLIENT].\nCombine sources publiques récentes et documents de travail autorisés.\nProduis un rapport sourcé, avec date de publication des sources, limites de l’analyse et recommandations prioritaires.",
+    "variables": [
+      "SUJET",
+      "SECTEUR/PAYS",
+      "CLIENT"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8123-891d-e6f808fbae5c",
+    "slug": "resume-executif",
+    "title": "Résumé exécutif",
+    "application_slug": "word",
+    "description": "Rédige un résumé exécutif autonome de 250 mots maximum.",
+    "body": "Rédige un résumé exécutif autonome de 250 mots maximum.\nIl doit répondre à : pourquoi maintenant, que montre l’analyse, quels impacts, quelles décisions et quelles prochaines étapes.\nUtilise uniquement les informations du document et conserve les chiffres clés.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-813c-8ae6-df42cd93f250",
+    "slug": "note-de-cadrage",
+    "title": "Note de cadrage",
+    "application_slug": "word",
+    "description": "Rédige une note de cadrage pour la mission [MISSION] chez [CLIENT].",
+    "body": "Rédige une note de cadrage pour la mission [MISSION] chez [CLIENT].\nUtilise [PROPOSITION/COMPTE RENDU/CONTRAT].\nInclue : contexte, objectifs, périmètre inclus et exclu, livrables, gouvernance, méthode, planning, hypothèses, dépendances, risques et critères de succès.\nStyle professionnel, factuel et concis. Indique « À confirmer » pour toute information absente.",
+    "variables": [
+      "MISSION",
+      "CLIENT",
+      "PROPOSITION/COMPTE RENDU/CONTRAT"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8149-8c56-cacab06743e6",
+    "slug": "notebook-de-mission",
+    "title": "Notebook de mission",
+    "application_slug": "copilot",
+    "description": "À partir des références de ce Notebook, crée une note de cadrage comprenant : objectifs, périmètre, parties prenantes, hypothèses, contraintes, livrables,…",
+    "body": "À partir des références de ce Notebook, crée une note de cadrage comprenant : objectifs, périmètre, parties prenantes, hypothèses, contraintes, livrables, calendrier, risques et questions ouvertes.\nN’utilise que les références présentes dans le Notebook.\nPour chaque point non documenté, écris « À confirmer ».",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-815f-9bde-e82a85bb31fb",
+    "slug": "revue-hebdomadaire-d-une-mission",
+    "title": "Revue hebdomadaire d’une mission",
+    "application_slug": "copilot",
+    "description": "Produis la revue hebdomadaire de la mission [MISSION] pour la période [PÉRIODE].",
+    "body": "Produis la revue hebdomadaire de la mission [MISSION] pour la période [PÉRIODE].\nRecherche dans les réunions, e-mails, chats et fichiers associés.\nDistingue : réalisations, livrables produits, décisions, actions ouvertes avec responsable et échéance, risques, dépendances et arbitrages attendus.\nTermine par un résumé exécutif de 8 lignes maximum.",
+    "variables": [
+      "MISSION",
+      "PÉRIODE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8184-8a15-f2c865cdadbe",
+    "slug": "synthese-d-entretiens",
+    "title": "Synthèse d’entretiens",
+    "application_slug": "word",
+    "description": "À partir des comptes rendus fournis, rédige une synthèse transversale.",
+    "body": "À partir des comptes rendus fournis, rédige une synthèse transversale.\nIdentifie : thèmes récurrents, divergences, irritants, besoins, exemples concrets et citations représentatives.\nN’attribue une citation que si son auteur est clairement identifié.\nAjoute une matrice « constat / fréquence / impact / preuve / implication » et distingue observation et interprétation.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-8187-af3e-c59d34b906d6",
+    "slug": "controle-qualite-d-un-livrable",
+    "title": "Contrôle qualité d’un livrable",
+    "application_slug": "copilot",
+    "description": "Évalue le livrable [FICHIER] comme un directeur de mission exigeant.",
+    "body": "Évalue le livrable [FICHIER] comme un directeur de mission exigeant.\nContrôle : exactitude, cohérence, traçabilité, clarté, structure, niveau exécutif, solidité des recommandations et risques de surinterprétation.\nClasse les problèmes par Critique / Important / Amélioration et propose une correction concrète pour chacun.",
+    "variables": [
+      "FICHIER"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-818c-99da-e1fe0379b83c",
+    "slug": "transformer-des-notes-en-procedure",
+    "title": "Transformer des notes en procédure",
+    "application_slug": "word",
+    "description": "Transforme ces notes en procédure opérationnelle.",
+    "body": "Transforme ces notes en procédure opérationnelle.\nAjoute : objectif, déclencheur, prérequis, rôles, étapes numérotées, points de contrôle, exceptions, escalade, preuves à conserver et indicateurs.\nCrée un tableau RACI lorsque les rôles sont suffisamment documentés.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81a5-9032-c922ce68b564",
+    "slug": "transformer-une-reponse-en-copilot-page",
+    "title": "Transformer une réponse en Copilot Page",
+    "application_slug": "copilot",
+    "description": "Transforme cette analyse en page de travail collaborative.",
+    "body": "Transforme cette analyse en page de travail collaborative.\nAjoute : résumé exécutif, décisions attendues, tableau des actions, risques, hypothèses, questions ouvertes et section de commentaires pour l’équipe.\nGarde les sources et citations existantes.",
+    "variables": [],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a4b883b-8f84-81ca-8b20-d5861df1c2e8",
+    "slug": "guide-d-entretien",
+    "title": "Guide d’entretien",
+    "application_slug": "word",
+    "description": "Crée un guide d’entretien semi-directif de [DURÉE] pour interroger [PROFIL].",
+    "body": "Crée un guide d’entretien semi-directif de [DURÉE] pour interroger [PROFIL].\nObjectif de l’entretien : [OBJECTIF].\nOrganise les questions par thèmes, du général au spécifique. Ajoute les relances, signaux à observer et informations à ne pas suggérer au répondant.\nTermine par une grille de synthèse comparable entre entretiens.",
+    "variables": [
+      "DURÉE",
+      "PROFIL",
+      "OBJECTIF"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-21T13:03:00.000Z"
+  }
+]

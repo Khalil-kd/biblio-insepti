@@ -1,0 +1,1 @@
+ALTER TABLE `prompts` ADD `search_text` text DEFAULT '' NOT NULL;

@@ -1,0 +1,61 @@
+{
+  "name": "insepti-biblio-prompts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "cf:types": "wrangler types",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply insepti_biblio --local",
+    "db:migrate:remote": "wrangler d1 migrations apply insepti_biblio --remote",
+    "db:studio": "drizzle-kit studio",
+    "import:notion": "node scripts/notion-export.mjs",
+    "import:seed": "node --import tsx scripts/build-seed.ts",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
+  },
+  "dependencies": {
+    "next": "^15.5.21",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "jose": "^5.9.6",
+    "drizzle-orm": "^0.44.2",
+    "zod": "^3.24.2",
+    "nanoid": "^5.0.9",
+    "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8.5.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.5.21",
+    "@eslint/eslintrc": "^3.2.0",
+    "drizzle-kit": "^0.31.1",
+    "wrangler": "^4.0.0",
+    "@opennextjs/cloudflare": "^1.0.0",
+    "vitest": "^3.0.4",
+    "@playwright/test": "^1.50.0",
+    "@axe-core/playwright": "^4.10.1",
+    "tsx": "^4.19.2"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true,
+    "esbuild@0.18.20": true,
+    "esbuild@0.25.4": true,
+    "esbuild@0.28.1": true,
+    "unrs-resolver@1.12.2": true,
+    "workerd@1.20260721.1": true
+  }
+}

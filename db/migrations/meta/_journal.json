@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1784730950845,
+      "tag": "0000_brown_susan_delgado",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1784731035812,
+      "tag": "0001_massive_agent_brand",
+      "breakpoints": true
+    }
+  ]
+}
