@@ -27,21 +27,15 @@ export default async function ProfilePage() {
       {session.role === "admin" && (
         <section>
           <p className="brand-kicker">Réservé aux administrateurs</p>
-          <h2 className="mb-4 mt-1 text-xl font-semibold">Administration</h2>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <Link href="/admin/prompts" className="focus-ring surface rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:shadow-soft">
-              <span className="font-semibold">Prompts</span>
-              <span className="mt-1 block text-sm" style={{ color: "var(--fg-muted)" }}>Importer, publier et archiver.</span>
-            </Link>
-            <Link href="/admin/utilisateurs" className="focus-ring surface rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:shadow-soft">
-              <span className="font-semibold">Comptes et accès</span>
-              <span className="mt-1 block text-sm" style={{ color: "var(--fg-muted)" }}>Autoriser des e-mails et gérer les rôles.</span>
-            </Link>
-            <Link href="/admin/journal" className="focus-ring surface rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:shadow-soft">
-              <span className="font-semibold">Journal de sécurité</span>
-              <span className="mt-1 block text-sm" style={{ color: "var(--fg-muted)" }}>Consulter les actions sensibles.</span>
-            </Link>
-          </div>
+          <Link href="/admin" className="focus-ring surface mt-3 flex items-center justify-between rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:shadow-soft">
+            <span>
+              <span className="block font-semibold">Espace administrateur</span>
+              <span className="mt-1 block text-sm" style={{ color: "var(--fg-muted)" }}>
+                Gérer les prompts, les utilisateurs et le journal de sécurité.
+              </span>
+            </span>
+            <span className="text-xl text-insepti-green" aria-hidden="true">→</span>
+          </Link>
         </section>
       )}
 

@@ -88,11 +88,18 @@ export function SearchPalette() {
         style={{ color: "var(--fg-muted)" }}
         aria-haspopup="dialog"
       >
-        <span aria-hidden="true">🔍</span>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="h-5 w-5 shrink-0 text-insepti-green"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+        >
+          <circle cx="11" cy="11" r="6.5" />
+          <path d="m16 16 4 4" strokeLinecap="round" />
+        </svg>
         <span className="flex-1">Rechercher un prompt…</span>
-        <kbd className="rounded border px-1.5 py-0.5 text-xs" style={{ borderColor: "var(--border)" }}>
-          Ctrl K
-        </kbd>
       </button>
 
       {open && (

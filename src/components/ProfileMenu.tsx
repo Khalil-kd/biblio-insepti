@@ -60,12 +60,9 @@ export function ProfileMenu({
               Profil et réglages
             </Link>
             {isAdmin && (
-              <>
-                <p className="px-3 pb-1 pt-3 text-[11px] font-bold uppercase tracking-[0.12em]" style={{ color: "var(--fg-muted)" }}>Administration</p>
-                <Link role="menuitem" href="/admin/prompts" className="focus-ring block rounded-xl px-3 py-2.5 text-sm hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>Gérer les prompts</Link>
-                <Link role="menuitem" href="/admin/utilisateurs" className="focus-ring block rounded-xl px-3 py-2.5 text-sm hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>Comptes et accès</Link>
-                <Link role="menuitem" href="/admin/journal" className="focus-ring block rounded-xl px-3 py-2.5 text-sm hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>Journal de sécurité</Link>
-              </>
+              <Link role="menuitem" href="/admin" className="focus-ring mt-1 block rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+                Espace administrateur
+              </Link>
             )}
           </div>
           <div className="border-t p-2" style={{ borderColor: "var(--border)" }}>

@@ -13,6 +13,9 @@ export function Header({ session, favoritesCount }: { session: CurrentSession; f
         </Link>
 
         <nav aria-label="Navigation principale" className="ml-auto hidden items-center rounded-xl bg-[color:var(--bg-soft)] p-1 text-sm sm:flex">
+          <Link href="/" className="focus-ring rounded-lg px-4 py-2 font-semibold hover:bg-[color:var(--bg-elevated)]">
+            Accueil
+          </Link>
           <Link href="/catalogue" className="focus-ring rounded-lg px-4 py-2 font-semibold hover:bg-[color:var(--bg-elevated)]">
             Prompts
           </Link>
@@ -28,6 +31,7 @@ export function Header({ session, favoritesCount }: { session: CurrentSession; f
         <ProfileMenu displayName={session.displayName} email={session.email} isAdmin={session.role === "admin"} />
       </div>
       <nav aria-label="Navigation mobile" className="flex border-t px-4 py-2 text-sm sm:hidden" style={{ borderColor: "var(--border)" }}>
+        <Link href="/" className="focus-ring flex-1 rounded-lg px-3 py-2 text-center font-semibold">Accueil</Link>
         <Link href="/catalogue" className="focus-ring flex-1 rounded-lg px-3 py-2 text-center font-semibold">Prompts</Link>
         <Link href="/favoris" className="focus-ring flex-1 rounded-lg px-3 py-2 text-center font-semibold">Favoris{favoritesCount > 0 ? ` · ${favoritesCount}` : ""}</Link>
       </nav>

@@ -9,7 +9,6 @@ interface SearchParams {
   q?: string;
   application?: string;
   tri?: string;
-  favoris?: string;
 }
 
 export default async function CataloguePage({
@@ -25,7 +24,6 @@ export default async function CataloguePage({
       userId: session.userId,
       query: params.q,
       applicationSlug: params.application,
-      favoritesOnly: params.favoris === "1",
       sort: (params.tri as SortOption) ?? "pertinence",
     }),
   ]);

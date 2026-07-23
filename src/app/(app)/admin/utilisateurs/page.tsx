@@ -1,16 +1,15 @@
-import { listAllUsers, listAllowlist } from "@/lib/admin";
+import { listAllUsers } from "@/lib/admin";
 import { requireAdmin } from "@/lib/require-session";
 import { UserRowControls } from "@/components/UserRowControls";
-import { AllowlistManager } from "@/components/AllowlistManager";
 
 export const metadata = { title: "Utilisateurs — Administration" };
 
 export default async function AdminUsersPage() {
   const session = await requireAdmin();
-  const [users, allowlist] = await Promise.all([listAllUsers(), listAllowlist()]);
+  const users = await listAllUsers();
 
   return (
-    <div className="flex flex-col gap-10">
+    <div>
       <section>
         <h1 className="mb-6 text-2xl font-semibold tracking-tight">Utilisateurs ({users.length})</h1>
         <div className="surface overflow-hidden rounded-xl2">
@@ -41,13 +40,6 @@ export default async function AdminUsersPage() {
             </tbody>
           </table>
         </div>
-      </section>
-
-      <section>
-        <h2 className="mb-4 text-lg font-semibold">Allowlist (domaines / e-mails autorisés)</h2>
-        <AllowlistManager
-          initialEntries={allowlist.map((a) => ({ id: a.id, type: a.type, value: a.value }))}
-        />
       </section>
     </div>
   );
