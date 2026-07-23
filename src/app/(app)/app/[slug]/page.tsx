@@ -24,7 +24,7 @@ export default async function ApplicationPage({ params }: { params: Promise<{ sl
   return (
     <div>
       <Link
-        href="/"
+        href="/bibliotheque"
         className="focus-ring mb-6 inline-flex items-center gap-2 rounded-lg text-sm font-semibold text-insepti-green-deep hover:underline dark:text-insepti-green-light"
       >
         <span aria-hidden="true">←</span>

@@ -6,7 +6,7 @@ import { PromptCardView } from "@/components/PromptCardView";
 import { SearchPalette } from "@/components/SearchPalette";
 import { importPromptsFromSeed } from "@/lib/import-prompts";
 
-export const metadata = { title: "Accueil — Bibliothèque de prompts INSEPTI" };
+export const metadata = { title: "Bibliothèque — Prompts INSEPTI" };
 
 export default async function HomePage() {
   const session = await requireSession();

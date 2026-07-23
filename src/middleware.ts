@@ -19,11 +19,13 @@ function randomToken(): string {
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-const PUBLIC_PREFIXES = ["/api/auth", "/login", "/erreur"];
+const PUBLIC_PREFIXES = ["/api/auth", "/login", "/erreur", "/brand", "/icons"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isPublic = PUBLIC_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  const isPublic =
+    pathname === "/" ||
+    PUBLIC_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   let response: NextResponse;
   if (!isPublic) {

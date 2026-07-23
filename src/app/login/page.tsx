@@ -7,7 +7,7 @@ export const metadata = { title: "Connexion — Bibliothèque de prompts INSEPTI
 export default async function LoginPage() {
   const requestHeaders = await headers();
   if (requestHeaders.get("oai-authenticated-user-email")) {
-    redirect("/");
+    redirect("/bibliotheque");
   }
 
   return (
