@@ -113,38 +113,37 @@ async function getSitesSession(): Promise<CurrentSession | null> {
     const role = "member" as const;
     const now = new Date();
     const userId = nanoid();
-    await db.insert(users).values({
-      id: userId,
-      entraSubject: `sites:${pairwiseId ?? email}`,
-      email,
-      displayName,
-      role,
-      status: "active",
-      createdAt: now,
-      updatedAt: now,
-      lastLoginAt: now,
-    });
-    await db.insert(auditLog).values({
-      id: nanoid(),
-      actorUserId: userId,
-      action: "user.created.sites",
-      targetType: "user",
-      targetId: userId,
-      summary: `Premier accès privé Sites de ${email}`,
-      createdAt: now,
-    });
-    user = {
-      id: userId,
-      entraSubject: `sites:${pairwiseId ?? email}`,
-      email,
-      displayName,
-      avatarUrl: null,
-      role,
-      status: "active",
-      createdAt: now,
-      updatedAt: now,
-      lastLoginAt: now,
-    };
+    const inserted = await db
+      .insert(users)
+      .values({
+        id: userId,
+        entraSubject: `sites:${pairwiseId ?? email}`,
+        email,
+        displayName,
+        role,
+        status: "active",
+        createdAt: now,
+        updatedAt: now,
+        lastLoginAt: now,
+      })
+      .onConflictDoNothing()
+      .returning({ id: users.id });
+
+    const resolved = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    user = resolved[0];
+    if (!user) return null;
+
+    if (inserted.length > 0) {
+      await db.insert(auditLog).values({
+        id: nanoid(),
+        actorUserId: user.id,
+        action: "user.created.sites",
+        targetType: "user",
+        targetId: user.id,
+        summary: `Premier accès privé Sites de ${email}`,
+        createdAt: now,
+      });
+    }
   } else {
     if (user.status === "disabled") return null;
     await db.update(users).set({ displayName, lastLoginAt: new Date() }).where(eq(users.id, user.id));
