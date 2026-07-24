@@ -5,8 +5,8 @@ import { verifyCsrf } from "@/lib/csrf";
 import { addAllowlistEntry, removeAllowlistEntry } from "@/lib/admin";
 
 const addSchema = z.object({
-  type: z.enum(["email", "domain"]),
-  value: z.string().min(3).max(255),
+  type: z.literal("email"),
+  value: z.string().email().max(255),
 });
 const deleteSchema = z.object({ id: z.string().min(1).max(64) });
 
@@ -18,8 +18,8 @@ export async function POST(request: NextRequest) {
   const parsed = addSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Requête invalide" }, { status: 400 });
 
-  await addAllowlistEntry(parsed.data.type, parsed.data.value, auth.session.userId);
-  return NextResponse.json({ ok: true });
+  const user = await addAllowlistEntry(parsed.data.type, parsed.data.value, auth.session.userId);
+  return NextResponse.json({ ok: true, user });
 }
 
 export async function DELETE(request: NextRequest) {

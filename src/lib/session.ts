@@ -5,11 +5,10 @@ import { cache } from "react";
 import { nanoid } from "nanoid";
 import { getDb } from "./db";
 import { sessions, users } from "@db/schema";
+import { SESSION_COOKIE_NAME } from "./auth-constants";
 import { sessionDurationMs, computeRenewal } from "./session-policy";
 
 // Comportement de session défini par la passation section 3 "Option Rester connecté".
-export const SESSION_COOKIE_NAME = "insepti_session";
-
 function base64UrlToken(bytes: Uint8Array): string {
   let binary = "";
   for (const b of bytes) binary += String.fromCharCode(b);

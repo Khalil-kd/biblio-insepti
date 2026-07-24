@@ -6,6 +6,7 @@ import { applications, prompts, auditLog } from "@db/schema";
 import { APPLICATIONS } from "./applications-data";
 import { normalizeSearchText } from "./search";
 import seedPrompts from "@data/prompts.json";
+import { fetchPromptsFromNotion } from "./notion-live";
 
 interface SeedPrompt {
   source_notion_page_id: string;
@@ -31,7 +32,7 @@ export interface ImportReport {
 
 // Importeur idempotent : ne modifie jamais Notion (source en lecture seule), utilise
 // source_notion_page_id pour éviter les doublons (passation section 6 "Import de Notion").
-export async function importPromptsFromSeed(actorUserId: string): Promise<ImportReport> {
+async function importPrompts(actorUserId: string, seed: SeedPrompt[]): Promise<ImportReport> {
   const db = await getDb();
   const report: ImportReport = {
     created: 0,
@@ -62,8 +63,6 @@ export async function importPromptsFromSeed(actorUserId: string): Promise<Import
     });
     appIdBySlug.set(app.slug, id);
   }
-
-  const seed = seedPrompts as SeedPrompt[];
 
   for (const item of seed) {
     try {
@@ -162,4 +161,13 @@ export async function importPromptsFromSeed(actorUserId: string): Promise<Import
   });
 
   return report;
+}
+
+export async function importPromptsFromSeed(actorUserId: string): Promise<ImportReport> {
+  return importPrompts(actorUserId, seedPrompts as SeedPrompt[]);
+}
+
+export async function importPromptsFromNotion(actorUserId: string): Promise<ImportReport> {
+  const livePrompts = await fetchPromptsFromNotion();
+  return importPrompts(actorUserId, livePrompts);
 }

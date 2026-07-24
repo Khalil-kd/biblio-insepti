@@ -8,10 +8,12 @@ export function UserRowControls({
   userId,
   initialRole,
   initialStatus,
+  onDeleted,
 }: {
   userId: string;
   initialRole: "member" | "admin";
   initialStatus: "active" | "disabled";
+  onDeleted?: () => void;
 }) {
   const [role, setRole] = useState(initialRole);
   const [status, setStatus] = useState(initialStatus);
@@ -58,14 +60,37 @@ export function UserRowControls({
     });
   }
 
+  function deleteAccount() {
+    if (!window.confirm("Supprimer définitivement ce compte et retirer son accès ?")) return;
+    startTransition(async () => {
+      try {
+        const res = await fetch(
+          `/api/admin/users/${userId}`,
+          withCsrfHeaders({ method: "DELETE" }),
+        );
+        if (!res.ok) {
+          const data = (await res.json().catch(() => ({}))) as { error?: string };
+          throw new Error(data.error ?? "Échec");
+        }
+        onDeleted?.();
+        showToast({ message: "Compte supprimé", tone: "success" });
+      } catch (err) {
+        showToast({ message: err instanceof Error ? err.message : "Échec", tone: "error" });
+      }
+    });
+  }
+
   return (
     <div className="flex items-center gap-3 text-xs">
       <span className="rounded-full border px-2 py-1" style={{ borderColor: "var(--border)" }}>
         {role}
       </span>
       <span
-        className={`rounded-full border px-2 py-1 ${status === "disabled" ? "text-red-600 dark:text-red-300" : ""}`}
-        style={{ borderColor: "var(--border)" }}
+        className={`rounded-full border px-2 py-1 font-medium ${
+          status === "active"
+            ? "border-green-600/30 bg-green-600/10 text-green-700 dark:text-green-300"
+            : "text-red-600 dark:text-red-300"
+        }`}
       >
         {status}
       </span>
@@ -74,6 +99,9 @@ export function UserRowControls({
       </button>
       <button type="button" onClick={toggleStatus} className="focus-ring underline">
         {status === "active" ? "Désactiver" : "Réactiver"}
+      </button>
+      <button type="button" onClick={deleteAccount} className="focus-ring font-medium text-red-600 underline dark:text-red-300">
+        Supprimer
       </button>
     </div>
   );

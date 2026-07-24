@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdminApi } from "@/lib/require-admin-api";
 import { verifyCsrf } from "@/lib/csrf";
-import { setUserRole, setUserStatus } from "@/lib/admin";
+import { deleteUserAccount, setUserRole, setUserStatus } from "@/lib/admin";
 import { revokeAllUserSessions } from "@/lib/session";
 
 const roleSchema = z.object({ role: z.enum(["member", "admin"]) });
@@ -38,4 +38,18 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   }
 
   return NextResponse.json({ error: "Requête invalide" }, { status: 400 });
+}
+
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdminApi();
+  if ("response" in auth) return auth.response;
+  if (!(await verifyCsrf(request))) return NextResponse.json({ error: "CSRF invalide" }, { status: 403 });
+
+  const { id } = await params;
+  if (id === auth.session.userId) {
+    return NextResponse.json({ error: "Vous ne pouvez pas supprimer votre propre compte" }, { status: 400 });
+  }
+
+  await deleteUserAccount(id, auth.session.userId);
+  return NextResponse.json({ ok: true });
 }

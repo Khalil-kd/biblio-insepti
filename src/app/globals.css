@@ -37,8 +37,12 @@
 }
 
 html {
-  color-scheme: light dark;
+  color-scheme: light;
   background: var(--bg);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -54,6 +58,16 @@ body {
 
 a, button, input, select {
   -webkit-tap-highlight-color: transparent;
+}
+
+input, select {
+  background-color: var(--bg-soft);
+  color: var(--fg);
+}
+
+input::placeholder {
+  color: var(--fg-muted);
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

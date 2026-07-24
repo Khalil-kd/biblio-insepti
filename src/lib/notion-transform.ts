@@ -148,12 +148,12 @@ export function transformNotionRows(raw: NotionRawRow[]): TransformResult {
 
   for (const [app, expected] of Object.entries(EXPECTED_DISTRIBUTION)) {
     const actual = byApp[app] ?? 0;
-    if (actual !== expected) {
-      errors.push(`Répartition incorrecte pour ${app}: attendu ${expected}, obtenu ${actual}`);
+    if (actual < expected) {
+      errors.push(`Répartition insuffisante pour ${app}: minimum ${expected}, obtenu ${actual}`);
     }
   }
-  if (seedPrompts.length !== 75) {
-    errors.push(`Total incorrect: attendu 75, obtenu ${seedPrompts.length}`);
+  if (seedPrompts.length < 75) {
+    errors.push(`Total insuffisant: minimum 75, obtenu ${seedPrompts.length}`);
   }
 
   const duplicateIds = seedPrompts.map((p) => p.source_notion_page_id).filter((id, i, arr) => arr.indexOf(id) !== i);

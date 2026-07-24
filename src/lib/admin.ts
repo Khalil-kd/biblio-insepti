@@ -101,17 +101,44 @@ export async function listAllowlist() {
 
 export async function addAllowlistEntry(type: "email" | "domain", value: string, actorUserId: string) {
   const db = await getDb();
+  const normalizedValue = value.toLowerCase().trim();
   const id = nanoid();
-  await db.insert(allowlistEntries).values({ id, type, value: value.toLowerCase().trim() });
+  await db.insert(allowlistEntries).values({ id, type, value: normalizedValue }).onConflictDoNothing();
+
+  let user = (await db.select().from(users).where(eq(users.email, normalizedValue)).limit(1))[0];
+  if (type === "email" && !user) {
+    const userId = nanoid();
+    const localPart = normalizedValue.split("@")[0] ?? normalizedValue;
+    const displayName = localPart
+      .split(/[._-]+/)
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+    const now = new Date();
+    await db.insert(users).values({
+      id: userId,
+      entraSubject: `pending:${userId}`,
+      email: normalizedValue,
+      displayName: displayName || normalizedValue,
+      role: "member",
+      status: "active",
+      createdAt: now,
+      updatedAt: now,
+      lastLoginAt: null,
+    });
+    user = (await db.select().from(users).where(eq(users.id, userId)).limit(1))[0];
+  }
+
   await db.insert(auditLog).values({
     id: nanoid(),
     actorUserId,
     action: "allowlist.added",
     targetType: "allowlist_entry",
     targetId: id,
-    summary: `Ajout ${type}: ${value}`,
+    summary: `Ajout ${type}: ${normalizedValue}`,
     createdAt: new Date(),
   });
+  return user;
 }
 
 export async function removeAllowlistEntry(id: string, actorUserId: string) {
@@ -124,6 +151,24 @@ export async function removeAllowlistEntry(id: string, actorUserId: string) {
     targetType: "allowlist_entry",
     targetId: id,
     summary: "Suppression d'une entrée d'allowlist",
+    createdAt: new Date(),
+  });
+}
+
+export async function deleteUserAccount(userId: string, actorUserId: string) {
+  const db = await getDb();
+  const user = (await db.select().from(users).where(eq(users.id, userId)).limit(1))[0];
+  if (!user) return;
+
+  await db.delete(allowlistEntries).where(eq(allowlistEntries.value, user.email.toLowerCase()));
+  await db.delete(users).where(eq(users.id, userId));
+  await db.insert(auditLog).values({
+    id: nanoid(),
+    actorUserId,
+    action: "user.deleted",
+    targetType: "user",
+    targetId: userId,
+    summary: `Compte supprimé: ${user.email}`,
     createdAt: new Date(),
   });
 }

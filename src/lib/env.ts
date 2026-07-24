@@ -20,5 +20,7 @@ export function getAuthEnv() {
       .map((d) => d.trim().toLowerCase())
       .filter(Boolean),
     postLogoutRedirectUri: env.ENTRA_POST_LOGOUT_REDIRECT_URI ?? env.ENTRA_REDIRECT_URI!,
+    authorityBaseUrl: env.ENTRA_AUTHORITY_BASE_URL ?? "https://login.microsoftonline.com",
+    logoutEndpoint: env.ENTRA_LOGOUT_ENDPOINT ?? "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/logout",
   };
 }

@@ -36,7 +36,7 @@ export default async function HomePage() {
           <p className="hero-muted mt-4 max-w-2xl text-sm leading-6 sm:text-base">
             Des prompts Microsoft 365 sélectionnés, prêts à personnaliser et à utiliser dans vos missions.
           </p>
-          <div className="mt-8 w-full max-w-2xl">
+          <div className="mt-8 w-full max-w-[34rem]">
             <SearchPalette prompts={recentPrompts} />
           </div>
         </div>

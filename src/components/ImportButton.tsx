@@ -45,7 +45,7 @@ export function ImportButton() {
         disabled={running}
         className="focus-ring self-start rounded-lg bg-insepti-green px-4 py-2.5 text-sm font-medium text-white"
       >
-        {running ? "Import en cours…" : "Importer / réimporter depuis le seed"}
+        {running ? "Import Notion en cours…" : "Importer les nouveautés depuis Notion"}
       </button>
 
       {report && (

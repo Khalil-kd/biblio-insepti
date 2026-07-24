@@ -1,5 +1,49 @@
 [
   {
+    "source_notion_page_id": "3a7b883b-8f84-8124-b595-f041ed81a5fa",
+    "slug": "test-synthese-pour-decision-executive",
+    "title": "TEST — Synthèse pour décision exécutive",
+    "application_slug": "powerpoint",
+    "description": "Transforme une analyse détaillée en une synthèse courte orientée décision exécutive.",
+    "body": "Transforme [ANALYSE SOURCE] en une synthèse PowerPoint destinée à [AUDIENCE] pour obtenir la décision suivante : [DÉCISION ATTENDUE]. Propose cinq diapositives maximum avec un titre-conclusion par page : contexte, constats prouvés, options, recommandation et décision demandée. N’ajoute aucune information absente de la source.",
+    "variables": [
+      "ANALYSE SOURCE",
+      "DÉCISION ATTENDUE",
+      "AUDIENCE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-24T09:51:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a7b883b-8f84-815c-bd5b-dd24ab54e932",
+    "slug": "test-controler-un-budget-de-mission",
+    "title": "TEST — Contrôler un budget de mission",
+    "application_slug": "excel",
+    "description": "Contrôle la cohérence d’un budget de mission et met en évidence les anomalies prioritaires.",
+    "body": "Analyse la table budgétaire [TABLE BUDGÉTAIRE]. Vérifie les totaux, doublons, cellules vides, écarts entre budget et réalisé ainsi que toute variation supérieure à [SEUIL D’ALERTE]. Présente les anomalies par niveau de priorité, indique les cellules concernées et propose un contrôle de validation sans modifier les données sources.",
+    "variables": [
+      "TABLE BUDGÉTAIRE",
+      "SEUIL D’ALERTE"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-24T09:51:00.000Z"
+  },
+  {
+    "source_notion_page_id": "3a7b883b-8f84-81ce-a5da-d34de726e4cb",
+    "slug": "test-preparer-un-comite-de-pilotage",
+    "title": "TEST — Préparer un comité de pilotage",
+    "application_slug": "word",
+    "description": "Prépare un document de synthèse pour un comité de pilotage à partir des informations de mission.",
+    "body": "Prépare le support écrit du comité de pilotage de la mission [MISSION] pour la période [PÉRIODE]. Structure le document en faits marquants, avancement, livrables, risques, décisions attendues [DÉCISIONS ATTENDUES] et prochaines étapes. Distingue les faits, les alertes et les recommandations. N’invente aucune donnée absente.",
+    "variables": [
+      "MISSION",
+      "PÉRIODE",
+      "DÉCISIONS ATTENDUES"
+    ],
+    "tags": [],
+    "source_updated_at": "2026-07-24T09:51:00.000Z"
+  },
+  {
     "source_notion_page_id": "3a4b883b-8f84-8112-8917-d1bc4ad227f9",
     "slug": "faq-de-projet",
     "title": "FAQ de projet",

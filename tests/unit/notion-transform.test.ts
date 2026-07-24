@@ -66,9 +66,9 @@ function makeRow(overrides: Partial<NotionRawRow>): NotionRawRow {
 }
 
 describe("transformNotionRows", () => {
-  it("échoue si le total n'est pas 75", () => {
+  it("échoue si le catalogue de référence de 75 prompts est incomplet", () => {
     const { errors } = transformNotionRows([makeRow({})]);
-    expect(errors.some((e) => e.includes("Total incorrect"))).toBe(true);
+    expect(errors.some((e) => e.includes("Total insuffisant"))).toBe(true);
   });
 
   it("ignore les lignes sans titre ou sans application", () => {

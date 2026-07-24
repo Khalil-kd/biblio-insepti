@@ -24,7 +24,7 @@ function main() {
   console.log("Total:", seedPrompts.length);
 
   if (errors.length) {
-    console.error("\nÉCHEC — l'import doit produire exactement 75 prompts avec la répartition attendue.");
+    console.error("\nÉCHEC — l'import doit conserver au minimum le catalogue de référence de 75 prompts.");
     for (const e of errors) console.error(" -", e);
     process.exit(1);
   }

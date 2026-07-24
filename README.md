@@ -1,8 +1,8 @@
 # Bibliothèque de prompts INSEPTI
 
-Portail web privé pour les consultants INSEPTI : connexion Microsoft Entra ID, recherche, personnalisation et copie des 75 prompts Microsoft 365 Copilot, favoris personnels, administration du catalogue.
+Portail web privé pour les consultants INSEPTI : connexion Microsoft Entra ID, recherche, personnalisation et copie des prompts Microsoft 365 Copilot, favoris personnels, administration du catalogue.
 
-Voir [PASSATION_BIBLIOTHEQUE_PROMPTS_INSEPTI.md](./PASSATION_BIBLIOTHEQUE_PROMPTS_INSEPTI.md) pour la spécification complète, et [IMPLEMENTATION_STATUS.md](./IMPLEMENTATION_STATUS.md) pour l'état d'avancement détaillé.
+Voir [HANDOFF_COMPLET_BIBLIOTHEQUE_PROMPTS_INSEPTI.md](./HANDOFF_COMPLET_BIBLIOTHEQUE_PROMPTS_INSEPTI.md) pour la reprise complète et l’état actuel, [PASSATION_BIBLIOTHEQUE_PROMPTS_INSEPTI.md](./PASSATION_BIBLIOTHEQUE_PROMPTS_INSEPTI.md) pour la spécification initiale, et [IMPLEMENTATION_STATUS.md](./IMPLEMENTATION_STATUS.md) pour l’historique d’implémentation.
 
 ## Stack technique
 
@@ -33,7 +33,13 @@ npm run dev
 
 ## Import des prompts depuis Notion
 
-L'import est un pipeline en trois étapes, toutes idempotentes et sans écriture dans Notion :
+L'import est en lecture seule côté Notion et idempotent côté application.
+
+### Import direct depuis l'administration
+
+Le bouton **Importer les nouveautés depuis Notion** de `/admin/prompts` interroge directement la base Notion, transforme les pages puis crée ou met à jour la base applicative. Il nécessite `NOTION_TOKEN` et `NOTION_DATABASE_ID` dans l'environnement du serveur. L'identifiant de page Notion empêche les doublons.
+
+### Régénération locale du seed
 
 1. **Extraction** (nécessite `NOTION_TOKEN`, voir `.env.notion.local`, jamais commité) :
    ```bash
@@ -45,9 +51,9 @@ L'import est un pipeline en trois étapes, toutes idempotentes et sans écriture
    ```bash
    npm run import:seed
    ```
-   Transforme `data/notion-raw.json` en `data/prompts.json` (commité, source de vérité applicative). Échoue explicitement si le total n'est pas 75 ou si la répartition par application ne correspond pas exactement à la passation.
+   Transforme `data/notion-raw.json` en `data/prompts.json` (commité, copie de secours reproductible). Échoue si le catalogue descend sous la base de référence de 75 prompts ou si une application perd des prompts de référence.
 
-3. **Import en base** : depuis `/admin` (rôle administrateur), bouton **Importer / réimporter depuis le seed**. Idempotent via `source_notion_page_id` : réexécutable sans créer de doublons. Le rapport (créés / mis à jour / inchangés / erreurs) s'affiche immédiatement.
+3. **Import du seed en base** : la fonction de secours reste disponible côté code. Le flux normal utilise désormais le bouton d'import Notion direct décrit ci-dessus.
 
 ## Authentification Microsoft Entra ID
 
@@ -107,6 +113,6 @@ Configurez les secrets (`ENTRA_CLIENT_SECRET`, etc.) via `wrangler secret put <N
 - `src/lib` — logique serveur (session, auth OIDC, requêtes Drizzle) et logique pure testée unitairement.
 - `src/components` — composants d'interface (client et serveur).
 - `db/schema.ts`, `db/migrations/` — schéma et migrations Drizzle/D1.
-- `data/prompts.json` — seed reproductible des 75 prompts (source de vérité applicative).
+- `data/prompts.json` — copie de secours reproductible du catalogue.
 - `scripts/notion-export.mjs`, `scripts/build-seed.ts` — pipeline d'import Notion → seed.
 - `tests/unit/` — tests Vitest.

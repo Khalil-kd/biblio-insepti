@@ -1,9 +1,4 @@
 import type { NextConfig } from "next";
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-
-// Permet à getCloudflareContext() de fonctionner avec `next dev` en local, en s'appuyant sur
-// les bindings déclarés dans wrangler.toml (D1 "DB", etc.) via Miniflare.
-initOpenNextCloudflareForDev();
 
 const csp = [
   "default-src 'self'",
@@ -20,6 +15,7 @@ const csp = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  output: "standalone",
   async headers() {
     return [
       {

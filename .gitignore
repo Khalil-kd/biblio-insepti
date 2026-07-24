@@ -6,6 +6,7 @@ tsconfig.tsbuildinfo
 .env
 .env.local
 .env.notion.local
+render-env.txt
 *.local
 dist/
 .turbo/

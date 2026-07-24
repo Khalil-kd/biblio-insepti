@@ -26,14 +26,17 @@ export async function generatePkcePair() {
 }
 
 function endpoints(tenantId: string) {
-  const base = `https://login.microsoftonline.com/${tenantId}`;
+  const { authorityBaseUrl, logoutEndpoint } = getAuthEnv();
+  const base = authorityBaseUrl.replace(/\/$/, "");
+  const authorityBase = `${base}/${tenantId}`;
+  const logout = logoutEndpoint.replace("{tenant}", tenantId);
   return {
-    authorization: `${base}/oauth2/v2.0/authorize`,
-    token: `${base}/oauth2/v2.0/token`,
-    jwks: `${base}/discovery/v2.0/keys`,
+    authorization: `${authorityBase}/oauth2/v2.0/authorize`,
+    token: `${authorityBase}/oauth2/v2.0/token`,
+    jwks: `${authorityBase}/discovery/v2.0/keys`,
     issuerV1: `https://sts.windows.net/${tenantId}/`,
-    issuerV2: `${base}/v2.0`,
-    logout: `${base}/oauth2/v2.0/logout`,
+    issuerV2: `${authorityBase}/v2.0`,
+    logout,
   };
 }
 

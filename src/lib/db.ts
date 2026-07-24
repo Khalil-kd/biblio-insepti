@@ -1,11 +1,23 @@
-import { drizzle } from "drizzle-orm/d1";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import "server-only";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import * as schema from "@db/schema";
 
-// Point d'accès centralisé à D1 (voir passation section 6 : "accès D1 centralisé dans un petit module serveur").
+function getDatabaseUrl() {
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL is required for PostgreSQL access.");
+  }
+  return url;
+}
+
+let pool: Pool | null = null;
+
 export async function getDb() {
-  const { env } = await getCloudflareContext({ async: true });
-  return drizzle(env.DB, { schema });
+  if (!pool) {
+    pool = new Pool({ connectionString: getDatabaseUrl() });
+  }
+  return drizzle(pool, { schema });
 }
 
 export type Db = Awaited<ReturnType<typeof getDb>>;

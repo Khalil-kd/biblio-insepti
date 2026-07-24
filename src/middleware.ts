@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SESSION_COOKIE_NAME } from "@/lib/session";
-import { CSRF_COOKIE_NAME } from "@/lib/csrf";
+import { CSRF_COOKIE_NAME, SESSION_COOKIE_NAME } from "@/lib/auth-constants";
 
 // Première ligne de défense uniquement (présence du cookie). La vérification autoritaire
 // (validité, révocation, rôle) est toujours refaite côté serveur dans les layouts, car
