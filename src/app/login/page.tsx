@@ -2,32 +2,30 @@ export const metadata = { title: "Connexion — Bibliothèque de prompts INSEPTI
 
 export default function LoginPage() {
   return (
-    <main className="grid min-h-screen bg-insepti-ivory lg:grid-cols-[1.15fr_0.85fr]">
-      <section
-        className="relative hidden overflow-hidden bg-white p-12 lg:flex lg:items-center lg:justify-center"
-        style={{
-          backgroundImage: "url('/brand/insepti-arrows-light.png')",
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-        }}
-      >
-        <div className="relative w-full max-w-xl">
+    <main className="grid min-h-screen bg-insepti-ivory lg:grid-cols-2">
+      <section className="relative hidden overflow-hidden bg-insepti-graphite p-12 lg:flex lg:items-center lg:justify-center">
+        <div className="relative w-full max-w-2xl">
           <video
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-            poster="/brand/insepti-logo-primary.png"
+            disablePictureInPicture
+            disableRemotePlayback
             aria-label="Logo INSEPTI animé"
-            className="h-auto w-full rounded-2xl bg-white object-contain drop-shadow-[0_18px_35px_rgba(39,50,56,0.10)]"
+            className="h-auto w-full bg-insepti-graphite object-contain"
+            style={{
+              WebkitMaskImage: "radial-gradient(ellipse 92% 82% at center, black 62%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 92% 82% at center, black 62%, transparent 100%)",
+            }}
           >
             <source src="/brand/insepti-logo-reveal.mp4" type="video/mp4" />
           </video>
           <div className="mt-14 grid grid-cols-3 gap-3" aria-hidden="true">
             <span className="h-2 rounded-full bg-insepti-green-light" />
-            <span className="h-2 rounded-full bg-insepti-slate/45" />
-            <span className="h-2 rounded-full bg-insepti-mist" />
+            <span className="h-2 rounded-full bg-white/25" />
+            <span className="h-2 rounded-full bg-white/10" />
           </div>
         </div>
       </section>

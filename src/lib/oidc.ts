@@ -112,6 +112,18 @@ export interface EntraIdClaims {
 let jwksCache: ReturnType<typeof createRemoteJWKSet> | null = null;
 let jwksCacheTenant: string | null = null;
 
+// Les comptes invités Entra peuvent être renvoyés sous la forme
+// prenom_domaine.com#EXT#@tenant.onmicrosoft.com au lieu de leur adresse réelle.
+function emailFromGuestUpn(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const markerIndex = value.toUpperCase().indexOf("#EXT#");
+  if (markerIndex < 0) return undefined;
+  const externalId = value.slice(0, markerIndex);
+  const separatorIndex = externalId.lastIndexOf("_");
+  if (separatorIndex <= 0 || separatorIndex === externalId.length - 1) return undefined;
+  return `${externalId.slice(0, separatorIndex)}@${externalId.slice(separatorIndex + 1)}`;
+}
+
 export async function verifyIdToken(idToken: string, expectedNonce: string): Promise<EntraIdClaims> {
   const { tenantId, clientId } = getAuthEnv();
   const ep = endpoints(tenantId);
@@ -132,7 +144,14 @@ export async function verifyIdToken(idToken: string, expectedNonce: string): Pro
 
   const sub = payload.sub;
   const tid = typeof payload.tid === "string" ? payload.tid : undefined;
-  const email = typeof payload.email === "string" ? payload.email : typeof payload.preferred_username === "string" ? payload.preferred_username : undefined;
+  const preferredUsername =
+    typeof payload.preferred_username === "string" ? payload.preferred_username : undefined;
+  const emailClaim = typeof payload.email === "string" ? payload.email : undefined;
+  const email =
+    emailFromGuestUpn(emailClaim) ??
+    emailClaim ??
+    emailFromGuestUpn(preferredUsername) ??
+    preferredUsername;
   const name = typeof payload.name === "string" ? payload.name : email;
 
   if (!sub || !tid || !email || !name) {
