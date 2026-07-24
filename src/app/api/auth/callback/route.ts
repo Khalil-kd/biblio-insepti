@@ -3,11 +3,11 @@ import { cookies } from "next/headers";
 import { exchangeCodeForTokens, verifyIdToken } from "@/lib/oidc";
 import { findOrCreateAllowedUser, AccessDeniedError, AccountDisabledError } from "@/lib/users";
 import { createSession, setSessionCookie } from "@/lib/session";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 function redirectToError(request: NextRequest, code: string) {
-  const url = request.nextUrl.clone();
-  url.pathname = "/erreur/acces-refuse";
-  url.search = `?raison=${encodeURIComponent(code)}`;
+  const url = new URL("/erreur/acces-refuse", getPublicOrigin(request));
+  url.searchParams.set("raison", code);
   return NextResponse.redirect(url);
 }
 
@@ -57,9 +57,7 @@ export async function GET(request: NextRequest) {
     await clearTempCookies();
     await setSessionCookie(session.token, rememberMe, session.expiresAt);
 
-    const url = request.nextUrl.clone();
-    url.pathname = "/bibliotheque";
-    url.search = "";
+    const url = new URL("/bibliotheque", getPublicOrigin(request));
     return NextResponse.redirect(url);
   } catch (err) {
     await clearTempCookies();

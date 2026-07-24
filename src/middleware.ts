@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { CSRF_COOKIE_NAME, SESSION_COOKIE_NAME } from "@/lib/auth-constants";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 // Première ligne de défense uniquement (présence du cookie). La vérification autoritaire
 // (validité, révocation, rôle) est toujours refaite côté serveur dans les layouts, car
@@ -30,9 +31,7 @@ export function middleware(request: NextRequest) {
   if (!isPublic) {
     const hasSessionCookie = request.cookies.has(SESSION_COOKIE_NAME);
     if (!hasSessionCookie) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      url.search = "";
+      const url = new URL("/login", getPublicOrigin(request));
       url.searchParams.set("depuis", pathname);
       response = NextResponse.redirect(url);
       return withCsrfCookie(request, response);

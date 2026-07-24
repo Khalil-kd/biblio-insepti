@@ -96,9 +96,17 @@ export async function exchangeCodeForTokens(code: string, codeVerifier: string):
   });
 
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Échec de l'échange de code OIDC (${res.status})`);
-    void text;
+    const payload = await res.json().catch(() => null) as {
+      error?: string;
+      error_description?: string;
+    } | null;
+    const errorCode = payload?.error ?? "unknown_error";
+    const description = payload?.error_description
+      ?.replace(/\s+/g, " ")
+      .slice(0, 500);
+    throw new Error(
+      `Échec de l'échange de code OIDC (${res.status}, ${errorCode})${description ? `: ${description}` : ""}`,
+    );
   }
 
   return res.json();
