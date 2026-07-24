@@ -10,6 +10,7 @@ RUN npm run build
 FROM node:20-slim AS runner
 ENV NODE_ENV=production
 ENV PORT=8080
+ENV HOSTNAME=0.0.0.0
 WORKDIR /app
 COPY --from=build /app/.next/standalone /app
 COPY --from=build /app/.next/static /app/.next/static
