@@ -47,13 +47,6 @@ export function PromptPersonalizer({
         </section>
       )}
 
-      <section>
-        <h2 className="mb-2 text-sm font-semibold" style={{ color: "var(--fg-muted)" }}>
-          Aperçu
-        </h2>
-        <p className="surface whitespace-pre-wrap rounded-xl2 p-4 text-sm leading-relaxed">{finalText}</p>
-      </section>
-
       <section className={`rounded-xl2 border-2 p-5 ${applicationColorClass}`}>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide">Prompt prêt à copier</h2>
         <pre className="mb-4 whitespace-pre-wrap font-sans text-sm leading-relaxed">{finalText}</pre>
