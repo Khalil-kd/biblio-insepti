@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     await setSessionCookie(session.token, rememberMe, session.expiresAt);
 
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/bibliotheque";
     url.search = "";
     return NextResponse.redirect(url);
   } catch (err) {

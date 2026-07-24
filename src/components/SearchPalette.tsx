@@ -37,7 +37,7 @@ export function SearchPalette({ prompts }: { prompts: SearchablePrompt[] }) {
     <div className="relative w-full">
       <form
         onSubmit={submit}
-        className="surface flex w-full items-stretch overflow-hidden rounded-2xl shadow-[0_18px_45px_rgba(39,50,56,0.14)]"
+        className="surface flex w-full items-stretch overflow-hidden rounded-2xl shadow-[0_18px_45px_rgba(39,50,56,0.14)] transition-colors focus-within:border-insepti-green-deep"
       >
         <span className="flex items-center pl-5 text-insepti-green" aria-hidden="true">
           <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -53,7 +53,7 @@ export function SearchPalette({ prompts }: { prompts: SearchablePrompt[] }) {
           onBlur={() => window.setTimeout(() => setFocused(false), 150)}
           placeholder="Titre, mot-clé, contenu ou application…"
           aria-label="Rechercher un prompt"
-          className="focus-ring min-w-0 flex-1 bg-transparent px-4 py-4 text-base outline-none sm:py-5"
+          className="min-w-0 flex-1 bg-transparent px-4 py-4 text-base outline-none sm:py-5"
         />
         <button
           type="submit"
