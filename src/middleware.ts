@@ -30,8 +30,7 @@ export function middleware(request: NextRequest) {
   let response: NextResponse;
   if (!isPublic) {
     const hasSessionCookie = request.cookies.has(SESSION_COOKIE_NAME);
-    const hasSitesIdentity = Boolean(request.headers.get("oai-authenticated-user-email"));
-    if (!hasSessionCookie && !hasSitesIdentity) {
+    if (!hasSessionCookie) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       url.search = "";

@@ -37,8 +37,11 @@ export async function findOrCreateAllowedUser(claims: EntraIdClaims) {
   const isBootstrapAdmin = !!bootstrapAdminEmail && bootstrapAdminEmail === claims.email;
 
   const db = await getDb();
-  const existing = await db.select().from(users).where(eq(users.entraSubject, claims.sub)).limit(1);
-  const existingUser = existing[0];
+  const existingBySubject = await db.select().from(users).where(eq(users.entraSubject, claims.sub)).limit(1);
+  const existingByEmail = existingBySubject[0]
+    ? []
+    : await db.select().from(users).where(eq(users.email, claims.email)).limit(1);
+  const existingUser = existingBySubject[0] ?? existingByEmail[0];
 
   if (!existingUser) {
     const allowed = isBootstrapAdmin || isEmailDomainAllowed(claims.email) || (await isAllowedByDbAllowlist(claims.email));
@@ -77,8 +80,19 @@ export async function findOrCreateAllowedUser(claims: EntraIdClaims) {
 
   await db
     .update(users)
-    .set({ lastLoginAt: new Date(), displayName: claims.name })
+    .set({
+      entraSubject: claims.sub,
+      email: claims.email,
+      displayName: claims.name,
+      role: isBootstrapAdmin ? "admin" : existingUser.role,
+      lastLoginAt: new Date(),
+      updatedAt: new Date(),
+    })
     .where(eq(users.id, existingUser.id));
 
-  return { id: existingUser.id, role: existingUser.role, status: existingUser.status };
+  return {
+    id: existingUser.id,
+    role: (isBootstrapAdmin ? "admin" : existingUser.role) as "admin" | "member",
+    status: existingUser.status,
+  };
 }

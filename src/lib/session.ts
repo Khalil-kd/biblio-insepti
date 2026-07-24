@@ -1,11 +1,10 @@
 import "server-only";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { and, eq, isNull, gt } from "drizzle-orm";
-import { nanoid } from "nanoid";
 import { cache } from "react";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { nanoid } from "nanoid";
 import { getDb } from "./db";
-import { auditLog, sessions, users } from "@db/schema";
+import { sessions, users } from "@db/schema";
 import { sessionDurationMs, computeRenewal } from "./session-policy";
 
 // Comportement de session défini par la passation section 3 "Option Rester connecté".
@@ -90,103 +89,12 @@ export interface CurrentSession {
   rememberMe: boolean;
 }
 
-async function getSitesSession(): Promise<CurrentSession | null> {
-  const requestHeaders = await headers();
-  const sourceEmail = requestHeaders.get("oai-authenticated-user-email")?.trim().toLowerCase();
-  if (!sourceEmail) return null;
-
-  const encodedName = requestHeaders.get("oai-authenticated-user-full-name");
-  const nameEncoding = requestHeaders.get("oai-authenticated-user-full-name-encoding");
-  let displayName = sourceEmail.split("@")[0] ?? sourceEmail;
-  if (encodedName && nameEncoding === "percent-encoded-utf-8") {
-    try {
-      displayName = decodeURIComponent(encodedName);
-    } catch {
-      // L'e-mail reste le repli sûr si le nom transmis est mal encodé.
-    }
-  }
-
-  const pairwiseId = requestHeaders.get("oai-authenticated-user-pairwise-id");
-  const entraSubject = `sites:${pairwiseId ?? sourceEmail}`;
-  const { env } = await getCloudflareContext({ async: true });
-  const isConfiguredOwner =
-    Boolean(env.SITES_OWNER_EMAIL) && sourceEmail === env.SITES_OWNER_EMAIL?.trim().toLowerCase();
-  const email = isConfiguredOwner ? env.APP_ADMIN_EMAIL?.trim().toLowerCase() || sourceEmail : sourceEmail;
-  if (isConfiguredOwner && env.APP_ADMIN_NAME?.trim()) displayName = env.APP_ADMIN_NAME.trim();
-  const requestedRole = isConfiguredOwner ? ("admin" as const) : ("member" as const);
-
-  const db = await getDb();
-  const existingBySubject = await db.select().from(users).where(eq(users.entraSubject, entraSubject)).limit(1);
-  const existingByEmail = existingBySubject[0]
-    ? []
-    : await db.select().from(users).where(eq(users.email, email)).limit(1);
-  let user = existingBySubject[0] ?? existingByEmail[0];
-
-  if (!user) {
-    const now = new Date();
-    const userId = nanoid();
-    const inserted = await db
-      .insert(users)
-      .values({
-        id: userId,
-        entraSubject,
-        email,
-        displayName,
-        role: requestedRole,
-        status: "active",
-        createdAt: now,
-        updatedAt: now,
-        lastLoginAt: now,
-      })
-      .onConflictDoNothing()
-      .returning({ id: users.id });
-
-    const resolvedBySubject = await db.select().from(users).where(eq(users.entraSubject, entraSubject)).limit(1);
-    const resolvedByEmail = resolvedBySubject[0]
-      ? []
-      : await db.select().from(users).where(eq(users.email, email)).limit(1);
-    user = resolvedBySubject[0] ?? resolvedByEmail[0];
-    if (!user) return null;
-
-    if (inserted.length > 0) {
-      await db.insert(auditLog).values({
-        id: nanoid(),
-        actorUserId: user.id,
-        action: "user.created.sites",
-        targetType: "user",
-        targetId: user.id,
-        summary: `Premier accès privé Sites de ${email}`,
-        createdAt: now,
-      });
-    }
-  } else {
-    if (user.status === "disabled") return null;
-    const role = isConfiguredOwner ? ("admin" as const) : user.role;
-    await db
-      .update(users)
-      .set({ entraSubject, email, displayName, role, lastLoginAt: new Date(), updatedAt: new Date() })
-      .where(eq(users.id, user.id));
-    user = { ...user, entraSubject, email, displayName, role };
-  }
-
-  return {
-    sessionId: `sites:${user.id}`,
-    userId: user.id,
-    email: user.email,
-    displayName: user.displayName,
-    role: user.role,
-    status: user.status,
-    rememberMe: true,
-  };
-}
-
 // Lit la session depuis le cookie, vérifie l'expiration/révocation côté serveur, et applique
 // un renouvellement glissant raisonnable (jamais une session infinie).
 async function getCurrentSessionUncached(): Promise<CurrentSession | null> {
-  const sitesSession = await getSitesSession();
   const store = await cookies();
   const token = store.get(SESSION_COOKIE_NAME)?.value;
-  if (!token) return sitesSession;
+  if (!token) return null;
 
   const tokenHash = await hashToken(token);
   const db = await getDb();
@@ -211,7 +119,7 @@ async function getCurrentSessionUncached(): Promise<CurrentSession | null> {
     .limit(1);
 
   const row = rows[0];
-  if (!row) return sitesSession;
+  if (!row) return null;
   if (row.status === "disabled") return null;
 
   const renewal = computeRenewal({
