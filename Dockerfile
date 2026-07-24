@@ -8,9 +8,8 @@ RUN npm ci --omit=dev --ignore-scripts
 
 FROM base AS build
 WORKDIR /app
-ENV NODE_ENV=development
 COPY package.json package-lock.json ./
-RUN npm ci --ignore-scripts
+RUN npm ci --include=dev
 COPY . .
 RUN npm run build
 
