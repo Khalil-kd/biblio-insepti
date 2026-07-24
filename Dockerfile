@@ -1,20 +1,16 @@
-FROM node:20-alpine AS base
-ENV NODE_ENV=production
+FROM node:20-slim AS base
 WORKDIR /app
-
-FROM base AS deps
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev --ignore-scripts
 
 FROM base AS build
-WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --include=dev
 COPY . .
 RUN npm run build
 
-FROM base AS runner
+FROM node:20-slim AS runner
+ENV NODE_ENV=production
 ENV PORT=8080
+WORKDIR /app
 COPY --from=build /app/.next/standalone /app
 COPY --from=build /app/.next/static /app/.next/static
 COPY --from=build /app/public /app/public
