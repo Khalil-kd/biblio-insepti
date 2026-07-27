@@ -59,25 +59,25 @@ export function LoginExperience() {
           </div>
         </div>
 
-        <div className="flex min-h-screen flex-col bg-white px-6 py-7 sm:px-10 lg:px-12 lg:py-9">
+        <div className="flex min-h-screen flex-col bg-[#273238] px-6 py-7 text-white sm:px-10 lg:px-12 lg:py-9">
+          <video
+            src="/brand/insepti-logo-reveal.mp4"
+            autoPlay
+            muted
+            playsInline
+            loop
+            preload="auto"
+            aria-label="Animation du logo INSEPTI"
+            className="h-auto w-3/5 max-w-[17rem] object-contain"
+          />
+
           <div className="flex flex-1 items-center justify-center py-10">
             <div className="w-full max-w-md">
-              <video
-                src="/brand/insepti-logo-reveal.mp4"
-                autoPlay
-                muted
-                playsInline
-                loop
-                preload="auto"
-                aria-label="Animation du logo INSEPTI"
-                className="mb-10 h-auto w-full object-contain sm:mb-16 lg:mb-20"
-              />
-
               <p className="brand-kicker">Espace collaborateurs</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
                 Bienvenue dans votre bibliothèque
               </h2>
-              <p className="mt-4 text-sm leading-6 text-insepti-slate">
+              <p className="mt-4 text-sm leading-6 text-white/70">
                 Connectez-vous avec votre adresse professionnelle Microsoft pour accéder au catalogue et à vos prompts privés.
               </p>
 
@@ -96,10 +96,10 @@ export function LoginExperience() {
                 </button>
               </form>
 
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-insepti-slate">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-white/65">
                 <span>Accès professionnel sécurisé</span>
                 <span aria-hidden="true">•</span>
-                <a href="#faq" className="focus-ring font-semibold text-insepti-green-deep hover:underline">
+                <a href="#faq" className="focus-ring font-semibold text-insepti-green-light hover:underline">
                   Consulter la FAQ
                 </a>
               </div>
