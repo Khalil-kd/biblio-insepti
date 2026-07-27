@@ -1,5 +1,6 @@
 import { PromptEditorForm } from "@/components/PromptEditorForm";
 import { listManagedPromptsForAdmin, listPromptApplications } from "@/lib/prompt-management";
+import { DeletePromptButton } from "@/components/DeletePromptButton";
 
 export const metadata = { title: "Prompts — Administration" };
 
@@ -19,7 +20,7 @@ export default async function AdminPromptsPage() {
         </p>
         <div className="surface mt-5 rounded-xl2 p-5">
           <PromptEditorForm
-            applications={applications.map(({ id, name }) => ({ id, name }))}
+            applications={applications.map(({ id, name, slug }) => ({ id, name, slug }))}
             endpoint="/api/admin/prompts"
             adminMode
           />
@@ -30,8 +31,9 @@ export default async function AdminPromptsPage() {
         <h2 className="mb-5 text-2xl font-semibold tracking-tight">Tous les prompts ({allPrompts.length})</h2>
         <div className="grid gap-4">
           {allPrompts.map((prompt) => (
-            <details key={prompt.id} className="surface rounded-xl2 p-5">
-              <summary className="focus-ring cursor-pointer list-none">
+            <div key={prompt.id} className="surface flex items-start gap-3 rounded-xl2 p-5">
+              <details className="min-w-0 flex-1">
+                <summary className="focus-ring cursor-pointer list-none">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <span className="font-semibold">{prompt.title}</span>
@@ -46,25 +48,28 @@ export default async function AdminPromptsPage() {
                     <span className="rounded-full border px-2.5 py-1" style={{ borderColor: "var(--border)" }}>{prompt.status}</span>
                   </div>
                 </div>
-              </summary>
-              <div className="mt-5 border-t pt-5" style={{ borderColor: "var(--border)" }}>
-                <PromptEditorForm
-                  applications={applications.map(({ id, name }) => ({ id, name }))}
-                  endpoint={`/api/admin/prompts/${prompt.id}`}
-                  adminMode
-                  prompt={{
-                    id: prompt.id,
-                    title: prompt.title,
-                    description: prompt.description,
-                    body: prompt.body,
-                    applicationId: prompt.applicationId,
-                    variables: prompt.variables,
-                    tags: prompt.tags,
-                    status: prompt.status,
-                  }}
-                />
-              </div>
-            </details>
+                </summary>
+                <div className="mt-5 border-t pt-5" style={{ borderColor: "var(--border)" }}>
+                  <PromptEditorForm
+                    applications={applications.map(({ id, name, slug }) => ({ id, name, slug }))}
+                    endpoint={`/api/admin/prompts/${prompt.id}`}
+                    adminMode
+                    prompt={{
+                      id: prompt.id,
+                      title: prompt.title,
+                      description: prompt.description,
+                      body: prompt.body,
+                      applicationId: prompt.applicationId,
+                      customIconKey: prompt.customIconKey,
+                      variables: prompt.variables,
+                      tags: prompt.tags,
+                      status: prompt.status,
+                    }}
+                  />
+                </div>
+              </details>
+              <DeletePromptButton endpoint={`/api/admin/prompts/${prompt.id}`} title={prompt.title} />
+            </div>
           ))}
         </div>
       </section>

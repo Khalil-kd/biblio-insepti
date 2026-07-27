@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/require-session";
 import { listPrompts, listApplicationsWithCounts } from "@/lib/prompts";
 import { PromptCardView } from "@/components/PromptCardView";
-import { APPLICATIONS } from "@/lib/applications-data";
+import { ApplicationIcon } from "@/components/ApplicationIcon";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -17,8 +16,6 @@ export default async function ApplicationPage({ params }: { params: Promise<{ sl
   const apps = await listApplicationsWithCounts();
   const app = apps.find((a) => a.slug === slug);
   if (!app) notFound();
-  const application = APPLICATIONS.find((item) => item.slug === slug);
-
   const prompts = await listPrompts({ userId: session.userId, applicationSlug: slug, sort: "alphabetique" });
 
   return (
@@ -31,9 +28,7 @@ export default async function ApplicationPage({ params }: { params: Promise<{ sl
         Retour à l&apos;accueil
       </Link>
       <div className="mb-6 flex items-center gap-3">
-        {application && (
-          <Image src={application.iconPath} alt="" width={42} height={42} className="h-10 w-10 object-contain" aria-hidden="true" />
-        )}
+        <ApplicationIcon slug={slug} size={42} />
         <h1 className="text-2xl font-semibold tracking-tight">{app.name}</h1>
       </div>
       {prompts.length === 0 ? (

@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { APPLICATIONS } from "@/lib/applications-data";
 
-const RAIN_ICONS = [...APPLICATIONS, ...APPLICATIONS].map((application, index) => ({
+const LOGIN_APPLICATIONS = APPLICATIONS.filter((application) => application.iconPath);
+const RAIN_ICONS = [...LOGIN_APPLICATIONS, ...LOGIN_APPLICATIONS].map((application, index) => ({
   ...application,
   key: `${application.slug}-${index}`,
   left: `${4 + ((index * 17) % 88)}%`,

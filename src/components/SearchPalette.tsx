@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { APPLICATIONS } from "@/lib/applications-data";
 import { normalizeSearchText } from "@/lib/search";
+import { ApplicationIcon } from "./ApplicationIcon";
 
 export interface SearchablePrompt {
   slug: string;
@@ -13,6 +12,7 @@ export interface SearchablePrompt {
   applicationName: string;
   applicationSlug: string;
   searchText: string;
+  customIconKey?: string | null;
 }
 
 export function SearchPalette({ prompts }: { prompts: SearchablePrompt[] }) {
@@ -71,7 +71,6 @@ export function SearchPalette({ prompts }: { prompts: SearchablePrompt[] }) {
             </p>
           ) : (
             results.map((result) => {
-              const application = APPLICATIONS.find((item) => item.slug === result.applicationSlug);
               return (
                 <button
                   key={result.slug}
@@ -80,9 +79,7 @@ export function SearchPalette({ prompts }: { prompts: SearchablePrompt[] }) {
                   onClick={() => router.push(`/prompt/${result.slug}`)}
                   className="focus-ring flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-black/5 dark:hover:bg-white/10"
                 >
-                  {application && (
-                    <Image src={application.iconPath} alt="" width={28} height={28} className="h-7 w-7 object-contain" aria-hidden="true" />
-                  )}
+                  <ApplicationIcon slug={result.applicationSlug} customIconKey={result.customIconKey} size={28} />
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-semibold">{result.title}</span>
                     <span className="block truncate text-xs" style={{ color: "var(--fg-muted)" }}>

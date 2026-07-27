@@ -71,6 +71,7 @@ export const prompts = pgTable(
     tagsJson: text("tags_json").notNull().default("[]"),
     searchText: text("search_text").notNull().default(""),
     sourceType: text("source_type", { enum: ["insepti", "personal"] }).notNull().default("insepti"),
+    customIconKey: text("custom_icon_key"),
     ownerUserId: text("owner_user_id").references(() => users.id, { onDelete: "cascade" }),
     sourceNotionPageId: text("source_notion_page_id"),
     sourceUpdatedAt: timestamp("source_updated_at", { mode: "date" }),

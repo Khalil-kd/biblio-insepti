@@ -22,6 +22,7 @@ export const APPLICATIONS: ApplicationDef[] = [
   { slug: "sharepoint", name: "SharePoint", color: "sharepoint", iconKey: "sharepoint", iconPath: "/icons/sharepoint.svg", sortOrder: 8 },
   { slug: "forms", name: "Forms", color: "forms", iconKey: "forms", iconPath: "/icons/forms.svg", sortOrder: 9 },
   { slug: "planner", name: "Planner", color: "planner", iconKey: "planner", iconPath: "/icons/planner.svg", sortOrder: 10 },
+  { slug: "other", name: "Autre", color: "other", iconKey: "other", iconPath: "", sortOrder: 11 },
 ];
 
 // URL de lancement utilisée par le bouton "Utiliser" (ouvre l'application, sans préremplissage

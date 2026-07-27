@@ -3,6 +3,7 @@ import { and, eq, like, desc, asc, or, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { prompts, applications, favorites } from "@db/schema";
 import { normalizeSearchText } from "./search";
+import { isFavoriteValue } from "./favorite-value";
 
 export interface PromptCard {
   id: string;
@@ -16,6 +17,7 @@ export interface PromptCard {
   searchText: string;
   updatedAt: Date;
   sourceType: "insepti" | "personal";
+  customIconKey: string | null;
 }
 
 export interface PromptDetail extends PromptCard {
@@ -70,16 +72,17 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
       applicationColor: applications.color,
       searchText: prompts.searchText,
       sourceType: prompts.sourceType,
+      customIconKey: prompts.customIconKey,
       isFavorite: opts.userId
-        ? sql<number>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${opts.userId})`
-        : sql<number>`0`,
+        ? sql<unknown>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${opts.userId})`
+        : sql<unknown>`0`,
     })
     .from(prompts)
     .innerJoin(applications, eq(prompts.applicationId, applications.id))
     .where(and(...conditions))
     .orderBy(orderBy);
 
-  let results = rows.map((r) => ({ ...r, isFavorite: Boolean(r.isFavorite) }));
+  let results = rows.map((r) => ({ ...r, isFavorite: isFavoriteValue(r.isFavorite) }));
 
   if (opts.favoritesOnly) {
     results = results.filter((r) => r.isFavorite);
@@ -119,9 +122,10 @@ export async function getPromptBySlug(
       applicationColor: applications.color,
       searchText: prompts.searchText,
       sourceType: prompts.sourceType,
+      customIconKey: prompts.customIconKey,
       isFavorite: userId
-        ? sql<number>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${userId})`
-        : sql<number>`0`,
+        ? sql<unknown>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${userId})`
+        : sql<unknown>`0`,
     })
     .from(prompts)
     .innerJoin(applications, eq(prompts.applicationId, applications.id))
@@ -149,9 +153,10 @@ export async function getPromptBySlug(
     applicationSlug: row.applicationSlug,
     applicationName: row.applicationName,
     applicationColor: row.applicationColor,
-    isFavorite: Boolean(row.isFavorite),
+    isFavorite: isFavoriteValue(row.isFavorite),
     searchText: row.searchText,
     sourceType: row.sourceType,
+    customIconKey: row.customIconKey,
   };
 }
 

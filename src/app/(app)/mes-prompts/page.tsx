@@ -1,6 +1,7 @@
 import { PromptEditorForm } from "@/components/PromptEditorForm";
 import { requireSession } from "@/lib/require-session";
 import { listPersonalPrompts, listPromptApplications } from "@/lib/prompt-management";
+import { DeletePromptButton } from "@/components/DeletePromptButton";
 
 export const metadata = { title: "Mes prompts — Bibliothèque de prompts INSEPTI" };
 
@@ -10,7 +11,7 @@ export default async function MyPromptsPage() {
     listPersonalPrompts(session.userId),
     listPromptApplications(),
   ]);
-  const formApplications = applications.map(({ id, name }) => ({ id, name }));
+  const formApplications = applications.map(({ id, name, slug }) => ({ id, name, slug }));
 
   return (
     <div className="flex flex-col gap-10">
@@ -35,8 +36,9 @@ export default async function MyPromptsPage() {
         ) : (
           <div className="grid gap-4">
             {personalPrompts.map((prompt) => (
-              <details key={prompt.id} className="surface rounded-xl2 p-5">
-                <summary className="focus-ring cursor-pointer list-none">
+              <div key={prompt.id} className="surface flex items-start gap-3 rounded-xl2 p-5">
+                <details className="min-w-0 flex-1">
+                  <summary className="focus-ring cursor-pointer list-none">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <span className="font-semibold">{prompt.title}</span>
@@ -48,24 +50,27 @@ export default async function MyPromptsPage() {
                       Personnel
                     </span>
                   </div>
-                </summary>
-                <div className="mt-5 border-t pt-5" style={{ borderColor: "var(--border)" }}>
-                  <PromptEditorForm
-                    applications={formApplications}
-                    endpoint={`/api/profile/prompts/${prompt.id}`}
-                    prompt={{
-                      id: prompt.id,
-                      title: prompt.title,
-                      description: prompt.description,
-                      body: prompt.body,
-                      applicationId: prompt.applicationId,
-                      variables: prompt.variables,
-                      tags: prompt.tags,
-                      status: prompt.status,
-                    }}
-                  />
-                </div>
-              </details>
+                  </summary>
+                  <div className="mt-5 border-t pt-5" style={{ borderColor: "var(--border)" }}>
+                    <PromptEditorForm
+                      applications={formApplications}
+                      endpoint={`/api/profile/prompts/${prompt.id}`}
+                      prompt={{
+                        id: prompt.id,
+                        title: prompt.title,
+                        description: prompt.description,
+                        body: prompt.body,
+                        applicationId: prompt.applicationId,
+                        customIconKey: prompt.customIconKey,
+                        variables: prompt.variables,
+                        tags: prompt.tags,
+                        status: prompt.status,
+                      }}
+                    />
+                  </div>
+                </details>
+                <DeletePromptButton endpoint={`/api/profile/prompts/${prompt.id}`} title={prompt.title} />
+              </div>
             ))}
           </div>
         )}

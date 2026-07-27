@@ -38,7 +38,7 @@ export function PromptPersonalizer({
                   type="text"
                   value={values[variable] ?? ""}
                   onChange={(e) => setValues((prev) => ({ ...prev, [variable]: e.target.value }))}
-                  placeholder={`Remplacez [${variable}]`}
+                  placeholder={`Valeur de @${variable}`}
                   className="focus-ring surface rounded-lg px-3 py-2 text-sm"
                 />
               </div>

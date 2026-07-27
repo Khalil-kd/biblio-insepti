@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { withCsrfHeaders } from "@/lib/csrf-client";
 import { showToast } from "@/lib/toast-client";
+import { extractAtVariables } from "@/lib/prompt-variables";
+import { CUSTOM_PROMPT_ICONS, type CustomPromptIconKey } from "@/lib/custom-icons";
+import { CustomPromptIcon } from "./CustomPromptIcon";
 
 type PromptStatus = "draft" | "published" | "archived";
 
 interface PromptFormApplication {
   id: string;
   name: string;
+  slug: string;
 }
 
 interface EditablePrompt {
@@ -18,6 +22,7 @@ interface EditablePrompt {
   description: string;
   body: string;
   applicationId: string;
+  customIconKey: string | null;
   variables: string[];
   tags: string[];
   status: PromptStatus;
@@ -40,13 +45,12 @@ export function PromptEditorForm({
   const [description, setDescription] = useState(prompt?.description ?? "");
   const [body, setBody] = useState(prompt?.body ?? "");
   const [applicationId, setApplicationId] = useState(prompt?.applicationId ?? applications[0]?.id ?? "");
-  const [variables, setVariables] = useState(prompt?.variables.join(", ") ?? "");
-  const [tags, setTags] = useState(prompt?.tags.join(", ") ?? "");
+  const [customIconKey, setCustomIconKey] = useState<CustomPromptIconKey>(
+    (prompt?.customIconKey as CustomPromptIconKey | null) ?? "spark",
+  );
   const [status, setStatus] = useState<PromptStatus>(prompt?.status ?? (adminMode ? "draft" : "published"));
-
-  function splitValues(value: string) {
-    return value.split(",").map((item) => item.trim()).filter(Boolean);
-  }
+  const selectedApplication = applications.find((application) => application.id === applicationId);
+  const detectedVariables = useMemo(() => extractAtVariables(body), [body]);
 
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,8 +66,9 @@ export function PromptEditorForm({
               description,
               body,
               applicationId,
-              variables: splitValues(variables),
-              tags: splitValues(tags),
+              customIconKey: selectedApplication?.slug === "other" ? customIconKey : null,
+              variables: detectedVariables.length > 0 ? detectedVariables : (prompt?.variables ?? []),
+              tags: prompt?.tags ?? [],
               ...(adminMode ? { status } : {}),
             }),
           }),
@@ -75,8 +80,7 @@ export function PromptEditorForm({
           setTitle("");
           setDescription("");
           setBody("");
-          setVariables("");
-          setTags("");
+          setCustomIconKey("spark");
           setStatus(adminMode ? "draft" : "published");
         }
         router.refresh();
@@ -126,6 +130,30 @@ export function PromptEditorForm({
         </label>
       </div>
 
+      {selectedApplication?.slug === "other" && (
+        <fieldset className="grid gap-2">
+          <legend className="text-sm font-medium">Icône du prompt</legend>
+          <div className="flex flex-wrap gap-3">
+            {CUSTOM_PROMPT_ICONS.map((icon) => (
+              <label key={icon.key} className={`focus-within:ring-2 focus-within:ring-insepti-green flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 ${
+                customIconKey === icon.key ? "border-insepti-green bg-insepti-green/10" : ""
+              }`} style={{ borderColor: customIconKey === icon.key ? undefined : "var(--border)" }}>
+                <input
+                  type="radio"
+                  name={`custom-icon-${prompt?.id ?? "new"}`}
+                  value={icon.key}
+                  checked={customIconKey === icon.key}
+                  onChange={() => setCustomIconKey(icon.key)}
+                  className="sr-only"
+                />
+                <CustomPromptIcon iconKey={icon.key} className="h-9 w-9" />
+                <span className="text-xs font-semibold">{icon.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
+
       <label className="grid gap-1.5 text-sm font-medium">
         Description
         <textarea required maxLength={500} rows={2} value={description} onChange={(event) => setDescription(event.target.value)} className={fieldClass} />
@@ -133,20 +161,23 @@ export function PromptEditorForm({
 
       <label className="grid gap-1.5 text-sm font-medium">
         Contenu du prompt
-        <textarea required maxLength={20000} rows={8} value={body} onChange={(event) => setBody(event.target.value)} className={`${fieldClass} font-mono`} />
+        <textarea required maxLength={20000} rows={8} value={body} onChange={(event) => setBody(event.target.value)} placeholder="Exemple : Rédige un résumé pour @client avec l’objectif @objectif" className={`${fieldClass} font-mono`} />
       </label>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="grid gap-1.5 text-sm font-medium">
-          Champs à personnaliser
-          <input value={variables} onChange={(event) => setVariables(event.target.value)} placeholder="client, objectif, secteur" className={fieldClass} />
-          <span className="text-xs font-normal" style={{ color: "var(--fg-muted)" }}>Séparez les champs par des virgules.</span>
-        </label>
-        <label className="grid gap-1.5 text-sm font-medium">
-          Tags
-          <input value={tags} onChange={(event) => setTags(event.target.value)} placeholder="réunion, synthèse, conseil" className={fieldClass} />
-          <span className="text-xs font-normal" style={{ color: "var(--fg-muted)" }}>Séparez les tags par des virgules.</span>
-        </label>
+      <div className="rounded-xl border border-dashed p-3" style={{ borderColor: "var(--border)" }}>
+        <p className="text-sm font-medium">Champs détectés automatiquement</p>
+        <p className="mt-1 text-xs" style={{ color: "var(--fg-muted)" }}>
+          Dans le prompt, écrivez <code>@client</code> ou <code>@objectif</code>. Ces champs apparaîtront automatiquement après l’enregistrement.
+        </p>
+        {detectedVariables.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {detectedVariables.map((variable) => (
+              <span key={variable} className="rounded-full bg-blue-600/10 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:text-blue-300">
+                @{variable}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {adminMode && (

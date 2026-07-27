@@ -1,13 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { FavoriteButton } from "./FavoriteButton";
 import { APP_TEXT_CLASS } from "@/lib/app-style";
-import { APPLICATIONS } from "@/lib/applications-data";
 import type { PromptCard } from "@/lib/prompts";
+import { ApplicationIcon } from "./ApplicationIcon";
 
 export function PromptCardView({ prompt }: { prompt: PromptCard }) {
-  const application = APPLICATIONS.find((item) => item.slug === prompt.applicationSlug);
-
   return (
     <div className="surface flex flex-col gap-3 rounded-xl2 p-5 transition-transform duration-150 hover:-translate-y-0.5">
       <div className="flex items-start justify-between gap-2">
@@ -18,16 +15,7 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
             aria-label={`Voir les prompts ${prompt.applicationName}`}
             className={`focus-ring inline-flex items-center gap-2 rounded-lg pr-2 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-75 ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}
           >
-            {application && (
-              <Image
-                src={application.iconPath}
-                alt=""
-                width={24}
-                height={24}
-                className="h-6 w-6 object-contain"
-                aria-hidden="true"
-              />
-            )}
+            <ApplicationIcon slug={prompt.applicationSlug} customIconKey={prompt.customIconKey} size={24} />
             <span>{prompt.applicationName}</span>
           </Link>
           <span className={`rounded-full px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide ${

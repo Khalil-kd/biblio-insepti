@@ -15,6 +15,8 @@ interface DropdownOption {
   label: string;
 }
 
+type SourceFilter = "" | "insepti" | "personal";
+
 function FilterDropdown({
   label,
   value,
@@ -115,18 +117,20 @@ export function CatalogueExplorer({
   const [query, setQuery] = useState(initialQuery);
   const [application, setApplication] = useState(initialApplication);
   const [sort, setSort] = useState<SortOption>(initialSort);
+  const [source, setSource] = useState<SourceFilter>("");
 
   const filteredPrompts = useMemo(() => {
     const terms = normalizeSearchText(query).split(" ").filter(Boolean);
     return prompts
       .filter((prompt) => !application || prompt.applicationSlug === application)
+      .filter((prompt) => !source || prompt.sourceType === source)
       .filter((prompt) => terms.every((term) => prompt.searchText.includes(term)))
       .sort((left, right) => {
         if (sort === "alphabetique") return left.title.localeCompare(right.title, "fr");
         if (sort === "recent") return new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime();
         return 0;
       });
-  }, [application, prompts, query, sort]);
+  }, [application, prompts, query, sort, source]);
 
   return (
     <>
@@ -157,6 +161,16 @@ export function CatalogueExplorer({
           options={[
             { value: "", label: "Toutes les applications" },
             ...apps.map((app) => ({ value: app.slug, label: app.name })),
+          ]}
+        />
+        <FilterDropdown
+          label="Filtrer par origine"
+          value={source}
+          onChange={(value) => setSource(value as SourceFilter)}
+          options={[
+            { value: "", label: "Tous les prompts" },
+            { value: "insepti", label: "Prompts INSEPTI" },
+            { value: "personal", label: "Mes prompts personnels" },
           ]}
         />
         <FilterDropdown

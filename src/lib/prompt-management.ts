@@ -6,6 +6,7 @@ import { getDb } from "./db";
 import { normalizeSearchText } from "./search";
 import { uniqueCleanValues, type PromptInput } from "./prompt-input";
 import { canManagePrompt } from "./prompt-access";
+import { extractPromptVariables } from "./prompt-variables";
 
 export type PromptSourceType = "insepti" | "personal";
 export type PromptStatus = "draft" | "published" | "archived";
@@ -18,6 +19,8 @@ export interface ManagedPrompt {
   body: string;
   applicationId: string;
   applicationName: string;
+  applicationSlug: string;
+  customIconKey: string | null;
   variables: string[];
   tags: string[];
   status: PromptStatus;
@@ -48,14 +51,16 @@ function slugify(value: string): string {
     .slice(0, 70) || "prompt";
 }
 
-function serializeInput(input: PromptInput) {
-  const variables = uniqueCleanValues(input.variables);
+function serializeInput(input: PromptInput, applicationSlug: string) {
+  const detectedVariables = extractPromptVariables(input.body);
+  const variables = uniqueCleanValues(detectedVariables.length > 0 ? detectedVariables : input.variables);
   const tags = uniqueCleanValues(input.tags);
   return {
     title: input.title.trim(),
     description: input.description.trim(),
     body: input.body.trim(),
     applicationId: input.applicationId,
+    customIconKey: applicationSlug === "other" ? (input.customIconKey ?? "spark") : null,
     variablesJson: JSON.stringify(variables),
     tagsJson: JSON.stringify(tags),
     searchText: normalizeSearchText(
@@ -84,6 +89,8 @@ async function selectManagedPrompts(ownerUserId?: string): Promise<ManagedPrompt
       body: prompts.body,
       applicationId: prompts.applicationId,
       applicationName: applications.name,
+      applicationSlug: applications.slug,
+      customIconKey: prompts.customIconKey,
       variablesJson: prompts.variablesJson,
       tagsJson: prompts.tagsJson,
       status: prompts.status,
@@ -136,7 +143,7 @@ export async function createManagedPrompt(
   await db.insert(prompts).values({
     id,
     slug,
-    ...serializeInput(input),
+    ...serializeInput(input, application[0].slug),
     sourceType: options.sourceType,
     ownerUserId: options.ownerUserId,
     status: options.status,
@@ -170,7 +177,7 @@ export async function updateManagedPrompt(
   }
 
   const application = await db
-    .select({ id: applications.id })
+    .select({ id: applications.id, slug: applications.slug })
     .from(applications)
     .where(and(eq(applications.id, input.applicationId), eq(applications.isActive, true)))
     .limit(1);
@@ -180,7 +187,7 @@ export async function updateManagedPrompt(
   await db
     .update(prompts)
     .set({
-      ...serializeInput(input),
+      ...serializeInput(input, application[0].slug),
       status,
       publishedAt: status === "published" ? (prompt.publishedAt ?? new Date()) : prompt.publishedAt,
       updatedAt: new Date(),

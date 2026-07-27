@@ -2,7 +2,6 @@ import Link from "next/link";
 import { requireSession } from "@/lib/require-session";
 import { getUserPreferences } from "@/lib/user-preferences";
 import { PreferencesForm } from "@/components/PreferencesForm";
-import { LogoutButton } from "@/components/LogoutButton";
 import { DeleteAccountButton } from "@/components/DeleteAccountButton";
 
 export const metadata = { title: "Profil — Bibliothèque de prompts INSEPTI" };
@@ -39,10 +38,6 @@ export default async function ProfilePage() {
       <section className="px-7 sm:px-9">
         <h2 className="mb-3 text-lg font-semibold">Préférences</h2>
         <PreferencesForm initialTheme={prefs.theme} />
-      </section>
-
-      <section className="px-7 sm:px-9">
-        <LogoutButton />
       </section>
 
       <section className="px-7 pb-8 sm:px-9">

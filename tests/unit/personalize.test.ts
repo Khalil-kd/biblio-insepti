@@ -22,6 +22,16 @@ describe("applyVariables", () => {
     expect(result).toBe("1 et 2");
   });
 
+  it("remplace les champs utilisant la syntaxe @", () => {
+    expect(
+      applyVariables(
+        "Prépare un résumé pour @client avec @objectif.",
+        ["client", "objectif"],
+        { client: "INSEPTI", objectif: "les décisions" },
+      ),
+    ).toBe("Prépare un résumé pour INSEPTI avec les décisions.");
+  });
+
   it("ignore les espaces superflus dans la valeur saisie", () => {
     const result = applyVariables("[CLIENT]", ["CLIENT"], { CLIENT: "  Acme  " });
     expect(result).toBe("Acme");

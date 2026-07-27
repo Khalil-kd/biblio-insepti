@@ -15,6 +15,13 @@
       "when": 1785137531504,
       "tag": "0001_crazy_the_hood",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785141386170,
+      "tag": "0002_nappy_hairball",
+      "breakpoints": true
     }
   ]
 }
