@@ -1,5 +1,6 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { applications, auditLog, prompts, users } from "@db/schema";
 import { getDb } from "./db";
@@ -27,6 +28,10 @@ export interface ManagedPrompt {
   sourceType: PromptSourceType;
   ownerUserId: string | null;
   ownerName: string | null;
+  responsibleUserId: string | null;
+  responsibleName: string | null;
+  lastReviewedAt: Date | null;
+  createdAt: Date;
   updatedAt: Date;
 }
 
@@ -80,6 +85,8 @@ export async function listPromptApplications() {
 
 async function selectManagedPrompts(ownerUserId?: string): Promise<ManagedPrompt[]> {
   const db = await getDb();
+  const owners = alias(users, "prompt_owners");
+  const responsibles = alias(users, "prompt_responsibles");
   const rows = await db
     .select({
       id: prompts.id,
@@ -96,12 +103,17 @@ async function selectManagedPrompts(ownerUserId?: string): Promise<ManagedPrompt
       status: prompts.status,
       sourceType: prompts.sourceType,
       ownerUserId: prompts.ownerUserId,
-      ownerName: users.displayName,
+      ownerName: owners.displayName,
+      responsibleUserId: prompts.responsibleUserId,
+      responsibleName: responsibles.displayName,
+      lastReviewedAt: prompts.lastReviewedAt,
+      createdAt: prompts.createdAt,
       updatedAt: prompts.updatedAt,
     })
     .from(prompts)
     .innerJoin(applications, eq(prompts.applicationId, applications.id))
-    .leftJoin(users, eq(prompts.ownerUserId, users.id))
+    .leftJoin(owners, eq(prompts.ownerUserId, owners.id))
+    .leftJoin(responsibles, eq(prompts.responsibleUserId, responsibles.id))
     .where(ownerUserId ? eq(prompts.ownerUserId, ownerUserId) : undefined)
     .orderBy(desc(prompts.updatedAt));
 
@@ -146,6 +158,8 @@ export async function createManagedPrompt(
     ...serializeInput(input, application[0].slug),
     sourceType: options.sourceType,
     ownerUserId: options.ownerUserId,
+    createdByUserId: options.actorUserId,
+    responsibleUserId: options.sourceType === "personal" ? options.ownerUserId : options.actorUserId,
     status: options.status,
     publishedAt: options.status === "published" ? now : null,
     createdAt: now,

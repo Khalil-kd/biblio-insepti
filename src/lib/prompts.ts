@@ -1,7 +1,8 @@
 import "server-only";
 import { and, eq, like, desc, asc, or, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { getDb } from "./db";
-import { prompts, applications, favorites } from "@db/schema";
+import { prompts, applications, favorites, users } from "@db/schema";
 import { normalizeSearchText } from "./search";
 import { isFavoriteValue } from "./favorite-value";
 
@@ -18,6 +19,9 @@ export interface PromptCard {
   updatedAt: Date;
   sourceType: "insepti" | "personal";
   customIconKey: string | null;
+  responsibleName: string | null;
+  status: "draft" | "published" | "archived";
+  lastReviewedAt: Date | null;
 }
 
 export interface PromptDetail extends PromptCard {
@@ -37,6 +41,7 @@ export interface ListPromptsOptions {
 
 export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[]> {
   const db = await getDb();
+  const responsibles = alias(users, "list_prompt_responsibles");
 
   const visibility = opts.userId
     ? or(
@@ -73,12 +78,16 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
       searchText: prompts.searchText,
       sourceType: prompts.sourceType,
       customIconKey: prompts.customIconKey,
+      responsibleName: responsibles.displayName,
+      status: prompts.status,
+      lastReviewedAt: prompts.lastReviewedAt,
       isFavorite: opts.userId
         ? sql<unknown>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${opts.userId})`
         : sql<unknown>`0`,
     })
     .from(prompts)
     .innerJoin(applications, eq(prompts.applicationId, applications.id))
+    .leftJoin(responsibles, eq(prompts.responsibleUserId, responsibles.id))
     .where(and(...conditions))
     .orderBy(orderBy);
 
@@ -97,6 +106,7 @@ export async function getPromptBySlug(
   isAdmin = false,
 ): Promise<PromptDetail | null> {
   const db = await getDb();
+  const responsibles = alias(users, "detail_prompt_responsibles");
   const visibility = isAdmin
     ? or(
         and(eq(prompts.sourceType, "insepti"), eq(prompts.status, "published")),
@@ -123,12 +133,16 @@ export async function getPromptBySlug(
       searchText: prompts.searchText,
       sourceType: prompts.sourceType,
       customIconKey: prompts.customIconKey,
+      responsibleName: responsibles.displayName,
+      status: prompts.status,
+      lastReviewedAt: prompts.lastReviewedAt,
       isFavorite: userId
         ? sql<unknown>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${userId})`
         : sql<unknown>`0`,
     })
     .from(prompts)
     .innerJoin(applications, eq(prompts.applicationId, applications.id))
+    .leftJoin(responsibles, eq(prompts.responsibleUserId, responsibles.id))
     .where(and(eq(prompts.slug, slug), visibility))
     .limit(1);
 
@@ -157,6 +171,9 @@ export async function getPromptBySlug(
     searchText: row.searchText,
     sourceType: row.sourceType,
     customIconKey: row.customIconKey,
+    responsibleName: row.responsibleName,
+    status: row.status,
+    lastReviewedAt: row.lastReviewedAt,
   };
 }
 

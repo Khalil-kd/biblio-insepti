@@ -11,8 +11,11 @@ export default async function FavoritesPage() {
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">Mes favoris</h1>
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="brand-kicker">Accès rapide</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.04em]">Mes favoris</h1>
+        </div>
         {prompts.length > 0 && <ClearFavoritesButton />}
       </div>
       {prompts.length === 0 ? (

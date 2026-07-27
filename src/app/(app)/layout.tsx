@@ -16,7 +16,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <>
       <ThemeApplier theme={preferences.theme} />
       <Header session={session} favoritesCount={favoritesCount} />
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">{children}</main>
+      <main className="app-grid-bg relative mx-auto min-h-[calc(100vh-5rem)] max-w-[90rem] px-4 py-8 sm:px-6 sm:py-10">{children}</main>
       <Toaster />
     </>
   );

@@ -5,14 +5,14 @@ const FAQ_ITEMS = [
       "L’accès est réservé aux collaborateurs autorisés par INSEPTI. La connexion utilise votre compte professionnel Microsoft.",
   },
   {
-    question: "Quelle est la différence entre un prompt INSEPTI et un prompt personnel ?",
+    question: "Quelle est la différence entre un prompt officiel et une création privée ?",
     answer:
-      "Les prompts INSEPTI composent le catalogue officiel. Les prompts personnels sont créés par chaque utilisateur pour ses propres besoins.",
+      "Les prompts INSEPTI composent le catalogue officiel. Les créations privées sont conçues par chaque utilisateur pour ses propres besoins.",
   },
   {
-    question: "Mes prompts personnels sont-ils visibles par les autres collaborateurs ?",
+    question: "Mes créations privées sont-elles visibles par les autres collaborateurs ?",
     answer:
-      "Non. Un prompt personnel est visible uniquement par son auteur et par l’administrateur de la plateforme.",
+      "Non. Une création privée est visible uniquement par son auteur et par l’administrateur de la plateforme.",
   },
   {
     question: "Comment créer des champs à personnaliser ?",
@@ -52,7 +52,7 @@ export function LoginExperience() {
               au bon moment.
             </h1>
             <p className="mt-7 max-w-2xl text-base font-medium leading-7 text-white/75 lg:text-lg">
-              Retrouvez les prompts INSEPTI et créez votre bibliothèque personnelle, pour Microsoft 365 comme pour vos outils spécialisés.
+              Retrouvez les prompts INSEPTI et développez votre bibliothèque privée, pour Microsoft 365 comme pour vos outils spécialisés.
             </p>
           </div>
         </div>

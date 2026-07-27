@@ -47,9 +47,9 @@ export function PromptPersonalizer({
         </section>
       )}
 
-      <section className={`rounded-xl2 border-2 p-5 ${applicationColorClass}`}>
+      <section className={`surface rounded-[1.5rem] border p-5 sm:p-6 ${applicationColorClass}`}>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide">Prompt prêt à copier</h2>
-        <pre className="mb-4 whitespace-pre-wrap font-sans text-sm leading-relaxed">{finalText}</pre>
+        <pre className="code-panel mb-4 whitespace-pre-wrap p-5 font-mono text-sm leading-relaxed">{finalText}</pre>
         <div className="flex flex-wrap gap-3">
           <CopyButton text={finalText} />
           <UseButton text={finalText} launchUrl={launchUrl} applicationName={applicationName} />

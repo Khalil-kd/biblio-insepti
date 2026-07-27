@@ -27,17 +27,37 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-14">
-      <section className="brand-trajectory relative overflow-visible rounded-[2rem] px-6 py-9 sm:px-10 sm:py-12">
-        <div className="relative max-w-4xl">
-          <p className="hero-kicker text-xs font-bold uppercase tracking-[0.16em]">Bibliothèque INSEPTI</p>
-          <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.035em] sm:text-5xl">
-            Bonjour {firstName}, trouvez le bon prompt au bon moment.
-          </h1>
-          <p className="hero-muted mt-4 max-w-2xl text-sm leading-6 sm:text-base">
-            Des prompts Microsoft 365 sélectionnés, prêts à personnaliser et à utiliser dans vos missions.
-          </p>
-          <div className="mt-8 w-full max-w-[34rem]">
-            <SearchPalette prompts={recentPrompts} />
+      <section className="brand-trajectory relative overflow-hidden rounded-[2rem] border border-white/10 px-6 py-9 sm:px-10 sm:py-12">
+        <div className="absolute right-6 top-6 hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-white/60 sm:flex">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-insepti-green-light shadow-[0_0_14px_#75c044]" />
+          Library online
+        </div>
+        <div className="relative grid items-end gap-10 lg:grid-cols-[1fr_20rem]">
+          <div className="max-w-4xl">
+            <p className="hero-kicker text-xs font-bold uppercase tracking-[0.16em]">INSEPTI Prompt System / 01</p>
+            <h1 className="mt-4 text-3xl font-semibold leading-[1.03] tracking-[-0.05em] sm:text-5xl lg:text-6xl">
+              Bonjour {firstName}.<br />
+              <span className="text-white/55">Le bon contexte, instantanément.</span>
+            </h1>
+            <p className="hero-muted mt-5 max-w-2xl text-sm leading-6 sm:text-base">
+              Explorez les prompts officiels, développez vos propres créations et organisez votre bibliothèque technique.
+            </p>
+            <div className="mt-8 w-full max-w-[38rem]">
+              <SearchPalette prompts={recentPrompts} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur">
+              <p className="font-mono text-3xl font-semibold text-white">{recentPrompts.length}</p>
+              <p className="mt-1 text-xs uppercase tracking-[0.12em] text-white/45">Prompts actifs</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur">
+              <p className="font-mono text-3xl font-semibold text-insepti-green-light">{apps.length}</p>
+              <p className="mt-1 text-xs uppercase tracking-[0.12em] text-white/45">Outils</p>
+            </div>
+            <Link href="/dossiers" className="focus-ring col-span-2 rounded-2xl border border-insepti-green-light/25 bg-insepti-green-light/10 p-4 text-sm font-semibold text-insepti-green-light hover:bg-insepti-green-light/15">
+              Organiser mes dossiers <span className="float-right">↗</span>
+            </Link>
           </div>
         </div>
       </section>

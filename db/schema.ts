@@ -73,9 +73,12 @@ export const prompts = pgTable(
     sourceType: text("source_type", { enum: ["insepti", "personal"] }).notNull().default("insepti"),
     customIconKey: text("custom_icon_key"),
     ownerUserId: text("owner_user_id").references(() => users.id, { onDelete: "cascade" }),
+    createdByUserId: text("created_by_user_id").references(() => users.id, { onDelete: "set null" }),
+    responsibleUserId: text("responsible_user_id").references(() => users.id, { onDelete: "set null" }),
     sourceNotionPageId: text("source_notion_page_id"),
     sourceUpdatedAt: timestamp("source_updated_at", { mode: "date" }),
     status: text("status", { enum: ["draft", "published", "archived"] }).notNull().default("draft"),
+    lastReviewedAt: timestamp("last_reviewed_at", { mode: "date" }),
     sortOrder: integer("sort_order").notNull().default(0),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
@@ -87,6 +90,76 @@ export const prompts = pgTable(
     appIdx: index("prompts_application_idx").on(t.applicationId),
     statusIdx: index("prompts_status_idx").on(t.status),
     ownerIdx: index("prompts_owner_idx").on(t.ownerUserId),
+    responsibleIdx: index("prompts_responsible_idx").on(t.responsibleUserId),
+  }),
+);
+
+export const promptSubmissions = pgTable(
+  "prompt_submissions",
+  {
+    id: text("id").primaryKey(),
+    promptId: text("prompt_id").notNull().references(() => prompts.id, { onDelete: "cascade" }),
+    submittedByUserId: text("submitted_by_user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    status: text("status", { enum: ["pending", "changes_requested", "accepted", "rejected"] }).notNull().default("pending"),
+    adminNote: text("admin_note"),
+    officialPromptId: text("official_prompt_id").references(() => prompts.id, { onDelete: "set null" }),
+    reviewedByUserId: text("reviewed_by_user_id").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+    reviewedAt: timestamp("reviewed_at", { mode: "date" }),
+  },
+  (t) => ({
+    promptIdx: index("prompt_submissions_prompt_idx").on(t.promptId),
+    statusIdx: index("prompt_submissions_status_idx").on(t.status),
+    submitterIdx: index("prompt_submissions_submitter_idx").on(t.submittedByUserId),
+  }),
+);
+
+export const promptReports = pgTable(
+  "prompt_reports",
+  {
+    id: text("id").primaryKey(),
+    promptId: text("prompt_id").notNull().references(() => prompts.id, { onDelete: "cascade" }),
+    reporterUserId: text("reporter_user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    reason: text("reason", { enum: ["not_working", "error", "outdated"] }).notNull(),
+    details: text("details"),
+    status: text("status", { enum: ["open", "resolved", "dismissed"] }).notNull().default("open"),
+    resolvedByUserId: text("resolved_by_user_id").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+    resolvedAt: timestamp("resolved_at", { mode: "date" }),
+  },
+  (t) => ({
+    promptIdx: index("prompt_reports_prompt_idx").on(t.promptId),
+    statusIdx: index("prompt_reports_status_idx").on(t.status),
+  }),
+);
+
+export const promptFolders = pgTable(
+  "prompt_folders",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+  },
+  (t) => ({
+    userIdx: index("prompt_folders_user_idx").on(t.userId),
+    userNameUnique: uniqueIndex("prompt_folders_user_name_unique").on(t.userId, t.name),
+  }),
+);
+
+export const promptFolderItems = pgTable(
+  "prompt_folder_items",
+  {
+    folderId: text("folder_id").notNull().references(() => promptFolders.id, { onDelete: "cascade" }),
+    promptId: text("prompt_id").notNull().references(() => prompts.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  },
+  (t) => ({
+    pk: uniqueIndex("prompt_folder_items_unique").on(t.folderId, t.promptId),
+    promptIdx: index("prompt_folder_items_prompt_idx").on(t.promptId),
   }),
 );
 

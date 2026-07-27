@@ -13,6 +13,7 @@ export async function listAllPromptsForAdmin() {
       slug: prompts.slug,
       title: prompts.title,
       status: prompts.status,
+      sourceType: prompts.sourceType,
       applicationName: applications.name,
       updatedAt: prompts.updatedAt,
     })
@@ -23,7 +24,16 @@ export async function listAllPromptsForAdmin() {
 
 export async function setPromptStatus(promptId: string, status: "draft" | "published" | "archived", actorUserId: string) {
   const db = await getDb();
-  await db.update(prompts).set({ status, updatedAt: new Date() }).where(eq(prompts.id, promptId));
+  const current = (await db.select({ publishedAt: prompts.publishedAt }).from(prompts).where(eq(prompts.id, promptId)).limit(1))[0];
+  const now = new Date();
+  await db
+    .update(prompts)
+    .set({
+      status,
+      updatedAt: now,
+      publishedAt: status === "published" ? (current?.publishedAt ?? now) : current?.publishedAt,
+    })
+    .where(eq(prompts.id, promptId));
   await db.insert(auditLog).values({
     id: nanoid(),
     actorUserId,
@@ -31,7 +41,7 @@ export async function setPromptStatus(promptId: string, status: "draft" | "publi
     targetType: "prompt",
     targetId: promptId,
     summary: `Statut changé en ${status}`,
-    createdAt: new Date(),
+    createdAt: now,
   });
 }
 

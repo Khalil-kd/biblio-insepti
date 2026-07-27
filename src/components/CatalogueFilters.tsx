@@ -170,7 +170,7 @@ export function CatalogueExplorer({
           options={[
             { value: "", label: "Tous les prompts" },
             { value: "insepti", label: "Prompts INSEPTI" },
-            { value: "personal", label: "Mes prompts personnels" },
+            { value: "personal", label: "Mes créations" },
           ]}
         />
         <FilterDropdown

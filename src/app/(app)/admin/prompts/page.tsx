@@ -1,6 +1,7 @@
 import { PromptEditorForm } from "@/components/PromptEditorForm";
 import { listManagedPromptsForAdmin, listPromptApplications } from "@/lib/prompt-management";
 import { DeletePromptButton } from "@/components/DeletePromptButton";
+import { MarkReviewedButton } from "@/components/AdminGovernanceControls";
 
 export const metadata = { title: "Prompts — Administration" };
 
@@ -13,10 +14,10 @@ export default async function AdminPromptsPage() {
   return (
     <div className="flex flex-col gap-9">
       <section>
-        <p className="brand-kicker">Gestion native</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Créer un prompt INSEPTI</h1>
+        <p className="brand-kicker">Catalogue officiel</p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Gérer les prompts INSEPTI</h1>
         <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>
-          Les prompts sont désormais créés et administrés directement ici, sans dépendance à Notion.
+          Créez un brouillon, publiez-le ou archivez-le sans supprimer son historique.
         </p>
         <div className="surface mt-5 rounded-xl2 p-5">
           <PromptEditorForm
@@ -43,9 +44,11 @@ export default async function AdminPromptsPage() {
                   </div>
                   <div className="flex gap-2 text-xs font-semibold">
                     <span className={`rounded-full px-2.5 py-1 ${prompt.sourceType === "personal" ? "bg-blue-600/10 text-blue-700 dark:text-blue-300" : "bg-insepti-green/15 text-insepti-green-deep dark:text-insepti-green-light"}`}>
-                      {prompt.sourceType === "personal" ? `Personnel · ${prompt.ownerName ?? "Utilisateur supprimé"}` : "INSEPTI"}
+                      {prompt.sourceType === "personal" ? `Ma création · ${prompt.ownerName ?? "Utilisateur supprimé"}` : "Officiel INSEPTI"}
                     </span>
-                    <span className="rounded-full border px-2.5 py-1" style={{ borderColor: "var(--border)" }}>{prompt.status}</span>
+                    <span className="rounded-full border px-2.5 py-1" style={{ borderColor: "var(--border)" }}>
+                      {prompt.status === "draft" ? "Brouillon" : prompt.status === "published" ? "Publié" : "Archivé"}
+                    </span>
                   </div>
                 </div>
                 </summary>
@@ -67,8 +70,16 @@ export default async function AdminPromptsPage() {
                     }}
                   />
                 </div>
-              </details>
-              <DeletePromptButton endpoint={`/api/admin/prompts/${prompt.id}`} title={prompt.title} />
+                </details>
+              <div className="flex shrink-0 flex-col items-end gap-2">
+                <p className="max-w-52 text-right text-xs" style={{ color: "var(--fg-muted)" }}>
+                  Responsable : {prompt.responsibleName ?? prompt.ownerName ?? "Administration"}
+                  <br />
+                  Dernière vérification : {prompt.lastReviewedAt ? new Date(prompt.lastReviewedAt).toLocaleDateString("fr-FR") : "Jamais"}
+                </p>
+                <MarkReviewedButton promptId={prompt.id} />
+                <DeletePromptButton endpoint={`/api/admin/prompts/${prompt.id}`} title={prompt.title} />
+              </div>
             </div>
           ))}
         </div>
