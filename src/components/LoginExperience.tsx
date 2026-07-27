@@ -1,15 +1,4 @@
 import Image from "next/image";
-import { APPLICATIONS } from "@/lib/applications-data";
-
-const LOGIN_APPLICATIONS = APPLICATIONS.filter((application) => application.iconPath);
-const RAIN_ICONS = [...LOGIN_APPLICATIONS, ...LOGIN_APPLICATIONS].map((application, index) => ({
-  ...application,
-  key: `${application.slug}-${index}`,
-  left: `${3 + ((index * 17) % 91)}%`,
-  delay: `${-((index * 1.35) % 14)}s`,
-  duration: `${10 + (index % 6) * 1.4}s`,
-  size: 42 + (index % 4) * 10,
-}));
 
 const FAQ_ITEMS = [
   {
@@ -53,25 +42,6 @@ export function LoginExperience() {
             className="object-cover"
             aria-hidden="true"
           />
-          <div className="app-rain" aria-hidden="true">
-            {RAIN_ICONS.map((application) => (
-              <Image
-                key={application.key}
-                src={application.iconPath}
-                alt=""
-                width={application.size}
-                height={application.size}
-                className="app-rain-icon"
-                style={{
-                  left: application.left,
-                  width: application.size,
-                  height: application.size,
-                  animationDelay: application.delay,
-                  animationDuration: application.duration,
-                }}
-              />
-            ))}
-          </div>
           <div className="absolute inset-0 bg-gradient-to-b from-insepti-graphite/5 via-insepti-graphite/40 to-insepti-graphite" aria-hidden="true" />
 
           <div className="relative z-10 flex min-h-[calc(68vh-5rem)] max-w-3xl flex-col justify-end lg:min-h-[calc(100vh-7rem)]">
@@ -90,21 +60,19 @@ export function LoginExperience() {
         </div>
 
         <div className="flex min-h-screen flex-col bg-white px-6 py-7 sm:px-10 lg:px-12 lg:py-9">
-          <div className="flex justify-start">
-            <video
-              src="/brand/insepti-logo-reveal.mp4"
-              autoPlay
-              muted
-              playsInline
-              loop
-              preload="auto"
-              aria-label="Animation du logo INSEPTI"
-              className="h-auto w-full max-w-md object-contain"
-            />
-          </div>
-
           <div className="flex flex-1 items-center justify-center py-10">
             <div className="w-full max-w-md">
+              <video
+                src="/brand/insepti-logo-reveal.mp4"
+                autoPlay
+                muted
+                playsInline
+                loop
+                preload="auto"
+                aria-label="Animation du logo INSEPTI"
+                className="mb-10 h-auto w-full object-contain sm:mb-16 lg:mb-20"
+              />
+
               <p className="brand-kicker">Espace collaborateurs</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
                 Bienvenue dans votre bibliothèque
