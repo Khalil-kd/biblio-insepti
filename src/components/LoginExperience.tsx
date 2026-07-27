@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const FAQ_ITEMS = [
   {
     question: "Qui peut accéder à la bibliothèque ?",
@@ -32,17 +30,17 @@ export function LoginExperience() {
   return (
     <main className="min-h-screen bg-[#F7F8F6] text-insepti-graphite">
       <section className="grid min-h-screen lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="relative min-h-[68vh] overflow-hidden bg-insepti-graphite px-7 py-10 text-white sm:px-12 lg:min-h-screen lg:px-14 lg:py-14">
-          <Image
-            src="/brand/insepti-login-hero.png"
-            alt=""
-            fill
-            priority
-            sizes="(min-width: 1024px) 58vw, 100vw"
-            className="object-cover"
-            aria-hidden="true"
+        <div className="relative min-h-[68vh] overflow-hidden bg-[#273238] px-7 py-10 text-white sm:px-12 lg:min-h-screen lg:px-14 lg:py-14">
+          <video
+            src="/brand/insepti-logo-reveal.mp4"
+            autoPlay
+            muted
+            playsInline
+            loop
+            preload="auto"
+            aria-label="Animation du logo INSEPTI"
+            className="absolute left-7 top-7 z-10 h-auto w-3/5 max-w-[17rem] object-contain sm:left-12 sm:top-10 lg:left-14 lg:top-14"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-insepti-graphite/5 via-insepti-graphite/40 to-insepti-graphite" aria-hidden="true" />
 
           <div className="relative z-10 flex min-h-[calc(68vh-5rem)] max-w-3xl flex-col justify-end lg:min-h-[calc(100vh-7rem)]">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-insepti-green-light">
@@ -59,25 +57,14 @@ export function LoginExperience() {
           </div>
         </div>
 
-        <div className="flex min-h-screen flex-col bg-[#273238] px-6 py-7 text-white sm:px-10 lg:px-12 lg:py-9">
-          <video
-            src="/brand/insepti-logo-reveal.mp4"
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            aria-label="Animation du logo INSEPTI"
-            className="h-auto w-3/5 max-w-[17rem] object-contain"
-          />
-
+        <div className="flex min-h-screen flex-col bg-white px-6 py-7 text-insepti-graphite sm:px-10 lg:px-12 lg:py-9">
           <div className="flex flex-1 items-center justify-center py-10">
             <div className="w-full max-w-md">
               <p className="brand-kicker">Espace collaborateurs</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
                 Bienvenue dans votre bibliothèque
               </h2>
-              <p className="mt-4 text-sm leading-6 text-white/70">
+              <p className="mt-4 text-sm leading-6 text-insepti-slate">
                 Connectez-vous avec votre adresse professionnelle Microsoft pour accéder au catalogue et à vos prompts privés.
               </p>
 
@@ -96,10 +83,10 @@ export function LoginExperience() {
                 </button>
               </form>
 
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-white/65">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-insepti-slate">
                 <span>Accès professionnel sécurisé</span>
                 <span aria-hidden="true">•</span>
-                <a href="#faq" className="focus-ring font-semibold text-insepti-green-light hover:underline">
+                <a href="#faq" className="focus-ring font-semibold text-insepti-green-deep hover:underline">
                   Consulter la FAQ
                 </a>
               </div>
