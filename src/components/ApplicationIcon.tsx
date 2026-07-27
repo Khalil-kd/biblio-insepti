@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { APPLICATIONS } from "@/lib/applications-data";
-import type { CustomPromptIconKey } from "@/lib/custom-icons";
 import { CustomPromptIcon } from "./CustomPromptIcon";
 
 export function ApplicationIcon({
@@ -16,7 +15,7 @@ export function ApplicationIcon({
   if (slug === "other" || !application?.iconPath) {
     return (
       <CustomPromptIcon
-        iconKey={(customIconKey as CustomPromptIconKey | null) ?? "spark"}
+        iconKey={customIconKey}
         className=""
         size={size}
       />

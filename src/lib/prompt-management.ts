@@ -60,7 +60,7 @@ function serializeInput(input: PromptInput, applicationSlug: string) {
     description: input.description.trim(),
     body: input.body.trim(),
     applicationId: input.applicationId,
-    customIconKey: applicationSlug === "other" ? (input.customIconKey ?? "spark") : null,
+    customIconKey: applicationSlug === "other" ? (input.customIconKey ?? "code") : null,
     variablesJson: JSON.stringify(variables),
     tagsJson: JSON.stringify(tags),
     searchText: normalizeSearchText(

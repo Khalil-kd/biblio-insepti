@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { withCsrfHeaders } from "@/lib/csrf-client";
 import { showToast } from "@/lib/toast-client";
 import { extractAtVariables } from "@/lib/prompt-variables";
-import { CUSTOM_PROMPT_ICONS, type CustomPromptIconKey } from "@/lib/custom-icons";
+import { CUSTOM_PROMPT_ICONS, resolveCustomPromptIconKey, type CustomPromptIconKey } from "@/lib/custom-icons";
 import { CustomPromptIcon } from "./CustomPromptIcon";
 
 type PromptStatus = "draft" | "published" | "archived";
@@ -46,7 +46,7 @@ export function PromptEditorForm({
   const [body, setBody] = useState(prompt?.body ?? "");
   const [applicationId, setApplicationId] = useState(prompt?.applicationId ?? applications[0]?.id ?? "");
   const [customIconKey, setCustomIconKey] = useState<CustomPromptIconKey>(
-    (prompt?.customIconKey as CustomPromptIconKey | null) ?? "spark",
+    resolveCustomPromptIconKey(prompt?.customIconKey),
   );
   const [status, setStatus] = useState<PromptStatus>(prompt?.status ?? (adminMode ? "draft" : "published"));
   const selectedApplication = applications.find((application) => application.id === applicationId);
@@ -80,7 +80,7 @@ export function PromptEditorForm({
           setTitle("");
           setDescription("");
           setBody("");
-          setCustomIconKey("spark");
+          setCustomIconKey("code");
           setStatus(adminMode ? "draft" : "published");
         }
         router.refresh();

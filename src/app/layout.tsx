@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Bibliothèque de prompts INSEPTI",
-  description: "Portail privé de prompts Microsoft 365 Copilot pour les consultants INSEPTI.",
+  description: "Bibliothèque officielle de prompts INSEPTI pour les collaborateurs autorisés.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

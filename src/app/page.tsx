@@ -1,8 +1,8 @@
 import { LoginExperience } from "@/components/LoginExperience";
 
 export const metadata = {
-  title: "Connexion — Bibliothèque de prompts INSEPTI",
-  description: "Accédez à la bibliothèque de prompts Microsoft 365 d’INSEPTI.",
+  title: "Bibliothèque de prompts — INSEPTI",
+  description: "La bibliothèque officielle de prompts INSEPTI pour les collaborateurs autorisés.",
 };
 
 export default function PublicHomePage() {
