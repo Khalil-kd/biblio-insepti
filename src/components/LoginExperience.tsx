@@ -42,8 +42,17 @@ const FAQ_ITEMS = [
 export function LoginExperience() {
   return (
     <main className="min-h-screen bg-[#F7F8F6] text-insepti-graphite">
-      <section className="grid min-h-screen lg:grid-cols-[minmax(0,1.8fr)_minmax(390px,0.72fr)]">
+      <section className="grid min-h-screen lg:grid-cols-[1.15fr_0.85fr]">
         <div className="relative min-h-[68vh] overflow-hidden bg-insepti-graphite px-7 py-10 text-white sm:px-12 lg:min-h-screen lg:px-14 lg:py-14">
+          <Image
+            src="/brand/insepti-login-hero.png"
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            className="object-cover"
+            aria-hidden="true"
+          />
           <div className="app-rain" aria-hidden="true">
             {RAIN_ICONS.map((application) => (
               <Image
@@ -80,8 +89,8 @@ export function LoginExperience() {
           </div>
         </div>
 
-        <div className="flex min-h-screen flex-col bg-[#F7F8F6] px-6 py-7 sm:px-10 lg:px-12 lg:py-9">
-          <div className="flex justify-end">
+        <div className="flex min-h-screen flex-col bg-white px-6 py-7 sm:px-10 lg:px-12 lg:py-9">
+          <div className="flex justify-start">
             <video
               src="/brand/insepti-logo-reveal.mp4"
               autoPlay
@@ -90,7 +99,7 @@ export function LoginExperience() {
               loop
               preload="auto"
               aria-label="Animation du logo INSEPTI"
-              className="h-28 w-56 object-contain sm:h-32 sm:w-64"
+              className="h-auto w-full max-w-md object-contain"
             />
           </div>
 
