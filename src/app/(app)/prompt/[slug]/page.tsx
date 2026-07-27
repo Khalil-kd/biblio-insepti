@@ -31,9 +31,8 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ s
         ← {prompt.applicationName}
       </Link>
 
-      <div className="surface relative overflow-hidden rounded-[1.75rem] p-6 sm:p-8">
-        <div className="ambient-orb absolute -right-24 -top-24 h-64 w-64" />
-        <div className="relative flex items-start justify-between gap-4">
+      <div className="surface rounded-xl2 p-6 sm:p-8">
+        <div className="flex items-start justify-between gap-4">
         <div>
           <span className={`text-xs font-semibold uppercase tracking-wide ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}>
             {prompt.applicationName}
@@ -43,7 +42,7 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ s
               ? "bg-blue-600/10 text-blue-700 dark:text-blue-300"
               : "bg-insepti-green/15 text-insepti-green-deep dark:text-insepti-green-light"
           }`}>
-            {prompt.sourceType === "personal" ? "Ma création" : "Officiel INSEPTI"}
+            {prompt.sourceType === "personal" ? "Ma création" : "INSEPTI"}
           </span>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">{prompt.title}</h1>
           <p className="mt-2" style={{ color: "var(--fg-muted)" }}>
@@ -59,13 +58,13 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ s
         </div>
         <FavoriteButton promptId={prompt.id} initialFavorite={prompt.isFavorite} />
         </div>
-        <div className="relative mt-6 flex flex-wrap items-center justify-between gap-3 border-t pt-5" style={{ borderColor: "var(--border)" }}>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t pt-5" style={{ borderColor: "var(--border)" }}>
           <FolderPicker
             promptId={prompt.id}
             folders={folders.map((folder) => ({ id: folder.id, name: folder.name }))}
             initialFolderIds={folderIds}
           />
-          <ReportPromptButton promptId={prompt.id} />
+          {prompt.sourceType === "insepti" && <ReportPromptButton promptId={prompt.id} />}
         </div>
       </div>
 

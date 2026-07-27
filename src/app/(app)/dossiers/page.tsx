@@ -24,7 +24,7 @@ export default async function FoldersPage({
         <p className="brand-kicker">Organisation privée</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">Mes dossiers</h1>
         <p className="mt-2 text-sm leading-6" style={{ color: "var(--fg-muted)" }}>
-          Regroupez les prompts officiels et vos créations selon votre propre organisation.
+          Regroupez les prompts INSEPTI et vos créations selon votre propre organisation.
         </p>
         <div className="mt-6">
           <FolderManager
@@ -56,8 +56,7 @@ export default async function FoldersPage({
             )}
           </>
         ) : (
-          <div className="surface relative overflow-hidden rounded-[1.75rem] p-8 sm:p-12">
-            <div className="ambient-orb absolute -right-20 -top-20 h-52 w-52" />
+          <div className="surface rounded-xl2 p-8 sm:p-12">
             <p className="brand-kicker">Workspace personnel</p>
             <h2 className="mt-3 max-w-xl text-3xl font-semibold tracking-[-0.04em]">Une arborescence qui suit votre façon de travailler.</h2>
             <p className="mt-4 max-w-xl text-sm leading-6" style={{ color: "var(--fg-muted)" }}>

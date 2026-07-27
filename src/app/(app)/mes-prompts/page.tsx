@@ -2,22 +2,16 @@ import { PromptEditorForm } from "@/components/PromptEditorForm";
 import { requireSession } from "@/lib/require-session";
 import { listPersonalPrompts, listPromptApplications } from "@/lib/prompt-management";
 import { DeletePromptButton } from "@/components/DeletePromptButton";
-import { listUserSubmissions } from "@/lib/prompt-governance";
-import { PromptSubmissionButton } from "@/components/PromptSubmissionButton";
 
 export const metadata = { title: "Mes prompts — Bibliothèque de prompts INSEPTI" };
 
 export default async function MyPromptsPage() {
   const session = await requireSession();
-  const [personalPrompts, applications, submissions] = await Promise.all([
+  const [personalPrompts, applications] = await Promise.all([
     listPersonalPrompts(session.userId),
     listPromptApplications(),
-    listUserSubmissions(session.userId),
   ]);
   const formApplications = applications.map(({ id, name, slug }) => ({ id, name, slug }));
-  const latestSubmissionByPrompt = new Map(
-    submissions.map((submission) => [submission.promptId, submission]),
-  );
 
   return (
     <div className="flex flex-col gap-10">
@@ -25,7 +19,7 @@ export default async function MyPromptsPage() {
         <p className="hero-kicker text-xs font-bold uppercase tracking-[0.14em]">Workspace privé</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">Mes créations</h1>
         <p className="hero-muted mt-2 max-w-2xl text-sm leading-6">
-          Créez vos prompts privés, organisez-les et proposez les plus aboutis au catalogue officiel INSEPTI.
+          Créez vos prompts privés et organisez-les librement dans votre espace.
         </p>
       </section>
 
@@ -80,18 +74,7 @@ export default async function MyPromptsPage() {
                     />
                   </div>
                 </details>
-                <div className="flex shrink-0 flex-col items-end gap-2">
-                  <PromptSubmissionButton
-                    promptId={prompt.id}
-                    status={latestSubmissionByPrompt.get(prompt.id)?.status}
-                  />
-                  {latestSubmissionByPrompt.get(prompt.id)?.adminNote && (
-                    <p className="max-w-xs text-right text-xs text-amber-500">
-                      {latestSubmissionByPrompt.get(prompt.id)?.adminNote}
-                    </p>
-                  )}
-                  <DeletePromptButton endpoint={`/api/profile/prompts/${prompt.id}`} title={prompt.title} />
-                </div>
+                <DeletePromptButton endpoint={`/api/profile/prompts/${prompt.id}`} title={prompt.title} />
               </div>
             ))}
           </div>

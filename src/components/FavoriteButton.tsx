@@ -37,10 +37,9 @@ export function FavoriteButton({ promptId, initialFavorite }: { promptId: string
       disabled={isPending}
       aria-pressed={isFavorite}
       aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
-      className={`focus-ring flex h-11 w-11 items-center justify-center rounded-full border text-xl transition-all duration-150 ${
-        isFavorite ? "border-amber-400 bg-amber-50 text-amber-400 dark:bg-amber-400/10" : ""
+      className={`focus-ring flex h-10 w-10 items-center justify-center bg-transparent text-[1.8rem] leading-none transition-all duration-150 hover:scale-110 ${
+        isFavorite ? "text-amber-400" : "text-[color:var(--fg-muted)]"
       }`}
-      style={isFavorite ? undefined : { borderColor: "var(--border)" }}
     >
       <span aria-hidden="true">{isFavorite ? "★" : "☆"}</span>
     </button>

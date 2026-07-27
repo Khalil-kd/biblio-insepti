@@ -94,27 +94,6 @@ export const prompts = pgTable(
   }),
 );
 
-export const promptSubmissions = pgTable(
-  "prompt_submissions",
-  {
-    id: text("id").primaryKey(),
-    promptId: text("prompt_id").notNull().references(() => prompts.id, { onDelete: "cascade" }),
-    submittedByUserId: text("submitted_by_user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    status: text("status", { enum: ["pending", "changes_requested", "accepted", "rejected"] }).notNull().default("pending"),
-    adminNote: text("admin_note"),
-    officialPromptId: text("official_prompt_id").references(() => prompts.id, { onDelete: "set null" }),
-    reviewedByUserId: text("reviewed_by_user_id").references(() => users.id, { onDelete: "set null" }),
-    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-    reviewedAt: timestamp("reviewed_at", { mode: "date" }),
-  },
-  (t) => ({
-    promptIdx: index("prompt_submissions_prompt_idx").on(t.promptId),
-    statusIdx: index("prompt_submissions_status_idx").on(t.status),
-    submitterIdx: index("prompt_submissions_submitter_idx").on(t.submittedByUserId),
-  }),
-);
-
 export const promptReports = pgTable(
   "prompt_reports",
   {

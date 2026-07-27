@@ -5,7 +5,7 @@ const FAQ_ITEMS = [
       "L’accès est réservé aux collaborateurs autorisés par INSEPTI. La connexion utilise votre compte professionnel Microsoft.",
   },
   {
-    question: "Quelle est la différence entre un prompt officiel et une création privée ?",
+    question: "Quelle est la différence entre un prompt INSEPTI et une création privée ?",
     answer:
       "Les prompts INSEPTI composent le catalogue officiel. Les créations privées sont conçues par chaque utilisateur pour ses propres besoins.",
   },
@@ -30,7 +30,13 @@ export function LoginExperience() {
   return (
     <main className="min-h-screen bg-[#F7F8F6] text-insepti-graphite">
       <section className="grid min-h-screen lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="relative min-h-[68vh] overflow-hidden bg-[#273238] px-7 py-10 text-white sm:px-12 lg:min-h-screen lg:px-14 lg:py-14">
+        <div
+          className="relative min-h-[68vh] overflow-hidden bg-[#273238] bg-cover bg-center px-7 py-10 text-white sm:px-12 lg:min-h-screen lg:bg-[center_right] lg:px-14 lg:py-14"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg, rgba(39,50,56,0.78) 0%, rgba(39,50,56,0.42) 48%, rgba(39,50,56,0.18) 100%), url('/brand/insepti-arrows-dark.png')",
+          }}
+        >
           <video
             src="/brand/insepti-logo-reveal.mp4"
             autoPlay

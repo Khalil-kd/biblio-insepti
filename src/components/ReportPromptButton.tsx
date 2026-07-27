@@ -17,7 +17,7 @@ export function ReportPromptButton({ promptId }: { promptId: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="focus-ring text-xs font-semibold text-[color:var(--fg-muted)] transition hover:text-amber-500"
+        className="focus-ring rounded-xl border border-amber-500/35 px-3 py-2 text-xs font-semibold text-amber-600 transition hover:bg-amber-500/10 dark:text-amber-300"
       >
         Signaler un problème
       </button>

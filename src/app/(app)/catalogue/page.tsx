@@ -35,7 +35,7 @@ export default async function CataloguePage({
         <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold tracking-[-0.04em]">Catalogue</h1>
-            <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>Prompts officiels INSEPTI et créations privées, réunis dans un espace de recherche rapide.</p>
+            <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>Prompts INSEPTI et créations privées, réunis dans un espace de recherche rapide.</p>
           </div>
           <span className="data-chip">{prompts.length} éléments indexés</span>
         </div>

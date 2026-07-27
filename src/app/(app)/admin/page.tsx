@@ -14,7 +14,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <p className="brand-kicker">Control center</p>
+        <p className="brand-kicker">Administration</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">Tableau de bord</h1>
       </div>
 
@@ -46,8 +46,8 @@ export default async function AdminDashboardPage() {
       <section className="grid gap-4 sm:grid-cols-2">
         <Link href="/admin/gouvernance" className="surface focus-ring rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--brand)]">
           <p className="brand-kicker">Qualité</p>
-          <h2 className="mt-2 text-lg font-semibold">Propositions et signalements</h2>
-          <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>Validez les contributions et maintenez les contenus à jour.</p>
+          <h2 className="mt-2 text-lg font-semibold">Signalements</h2>
+          <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>Traitez les problèmes remontés sur les prompts INSEPTI.</p>
         </Link>
         <Link href="/admin/sauvegarde" className="surface focus-ring rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--brand)]">
           <p className="brand-kicker">Portabilité</p>

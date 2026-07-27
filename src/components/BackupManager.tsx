@@ -44,7 +44,7 @@ export function BackupManager() {
     <div className="grid gap-4 md:grid-cols-3">
       <a href="/api/admin/backup?scope=insepti" className="surface focus-ring rounded-2xl p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--brand)]">
         <span className="text-2xl">↓</span>
-        <h3 className="mt-6 font-semibold">Exporter les officiels</h3>
+        <h3 className="mt-6 font-semibold">Exporter les prompts INSEPTI</h3>
         <p className="mt-1 text-sm" style={{ color: "var(--fg-muted)" }}>Sauvegarde JSON des prompts INSEPTI.</p>
       </a>
       <a href="/api/admin/backup?scope=all" className="surface focus-ring rounded-2xl p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--brand)]">

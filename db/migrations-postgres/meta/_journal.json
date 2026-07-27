@@ -29,6 +29,13 @@
       "when": 1785154241743,
       "tag": "0003_content_governance",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785157006327,
+      "tag": "0004_remove_prompt_submissions",
+      "breakpoints": true
     }
   ]
 }

@@ -67,7 +67,7 @@ export function FolderManager({ folders, activeFolderId }: { folders: Folder[]; 
         <button disabled={pending || !name.trim()} className="focus-ring rounded-xl bg-[color:var(--brand)] px-3 font-bold text-[#07100d] disabled:opacity-50" aria-label="Créer le dossier">+</button>
       </form>
       <nav className="grid gap-1" aria-label="Dossiers personnels">
-        <Link href="/dossiers" className={`focus-ring rounded-xl px-3 py-2.5 text-sm font-medium ${!activeFolderId ? "bg-[color:var(--brand)]/15 text-[color:var(--brand-bright)]" : "hover:bg-[color:var(--bg-soft)]"}`}>
+        <Link href="/dossiers" className={`focus-ring rounded-xl px-3 py-2.5 text-sm font-medium ${!activeFolderId ? "bg-insepti-green/15 text-insepti-green-deep dark:text-insepti-green-light" : "hover:bg-[color:var(--bg-soft)]"}`}>
           Tous les dossiers
         </Link>
         {folders.map((folder) => (
