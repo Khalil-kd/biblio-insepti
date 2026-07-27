@@ -16,7 +16,10 @@ export function Header({ session, favoritesCount }: { session: CurrentSession; f
             Accueil
           </Link>
           <Link href="/catalogue" className="focus-ring rounded-lg px-4 py-2 font-semibold hover:bg-[color:var(--bg-elevated)]">
-            Prompts
+            Catalogue
+          </Link>
+          <Link href="/mes-prompts" className="focus-ring rounded-lg px-4 py-2 font-semibold hover:bg-[color:var(--bg-elevated)]">
+            Créer mon prompt
           </Link>
           <Link href="/favoris" className="focus-ring rounded-lg px-4 py-2 font-semibold hover:bg-[color:var(--bg-elevated)]">
             Favoris{favoritesCount > 0 ? ` · ${favoritesCount}` : ""}
@@ -27,7 +30,8 @@ export function Header({ session, favoritesCount }: { session: CurrentSession; f
       </div>
       <nav aria-label="Navigation mobile" className="flex border-t px-4 py-2 text-sm sm:hidden" style={{ borderColor: "var(--border)" }}>
         <Link href="/bibliotheque" className="focus-ring flex-1 rounded-lg px-3 py-2 text-center font-semibold">Accueil</Link>
-        <Link href="/catalogue" className="focus-ring flex-1 rounded-lg px-3 py-2 text-center font-semibold">Prompts</Link>
+        <Link href="/catalogue" className="focus-ring flex-1 rounded-lg px-2 py-2 text-center font-semibold">Catalogue</Link>
+        <Link href="/mes-prompts" className="focus-ring flex-1 rounded-lg px-2 py-2 text-center font-semibold">Créer</Link>
         <Link href="/favoris" className="focus-ring flex-1 rounded-lg px-3 py-2 text-center font-semibold">Favoris{favoritesCount > 0 ? ` · ${favoritesCount}` : ""}</Link>
       </nav>
     </header>

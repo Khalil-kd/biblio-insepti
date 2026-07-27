@@ -1,10 +1,10 @@
-import { listAllPromptsForAdmin, getLastImportSummary } from "@/lib/admin";
-import { ImportButton } from "@/components/ImportButton";
+import Link from "next/link";
+import { listAllPromptsForAdmin } from "@/lib/admin";
 
 export const metadata = { title: "Administration — Bibliothèque de prompts INSEPTI" };
 
 export default async function AdminDashboardPage() {
-  const [allPrompts, lastImport] = await Promise.all([listAllPromptsForAdmin(), getLastImportSummary()]);
+  const allPrompts = await listAllPromptsForAdmin();
 
   const published = allPrompts.filter((p) => p.status === "published").length;
   const draft = allPrompts.filter((p) => p.status === "draft").length;
@@ -29,13 +29,14 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      <section>
-        <h2 className="mb-3 text-lg font-semibold">Import depuis Notion</h2>
-        <p className="mb-3 text-sm" style={{ color: "var(--fg-muted)" }}>
-          Dernier import : {lastImport ? new Date(lastImport.createdAt).toLocaleString("fr-FR") : "jamais"}
-          {lastImport ? ` — ${lastImport.summary}` : ""}
+      <section className="surface rounded-xl2 p-5">
+        <h2 className="text-lg font-semibold">Gestion directe des prompts</h2>
+        <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>
+          Créez, modifiez, publiez ou supprimez les prompts sans passer par Notion.
         </p>
-        <ImportButton />
+        <Link href="/admin/prompts" className="focus-ring mt-4 inline-flex rounded-xl bg-insepti-green-deep px-4 py-2.5 text-sm font-semibold text-white">
+          Gérer les prompts
+        </Link>
       </section>
     </div>
   );

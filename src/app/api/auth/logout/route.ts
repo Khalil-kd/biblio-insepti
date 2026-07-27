@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentSession, revokeSession, clearSessionCookie } from "@/lib/session";
 import { verifyCsrf } from "@/lib/csrf";
+import { getPublicOrigin } from "@/lib/public-origin";
 
 export async function POST(request: NextRequest) {
   const csrfOk = await verifyCsrf(request);
@@ -14,8 +15,6 @@ export async function POST(request: NextRequest) {
   }
   await clearSessionCookie();
 
-  const url = request.nextUrl.clone();
-  url.pathname = "/login";
-  url.search = "";
+  const url = new URL("/", getPublicOrigin(request));
   return NextResponse.redirect(url, { status: 303 });
 }

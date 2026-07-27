@@ -13,6 +13,11 @@ export async function removeFavorite(userId: string, promptId: string) {
   await db.delete(favorites).where(and(eq(favorites.userId, userId), eq(favorites.promptId, promptId)));
 }
 
+export async function clearFavorites(userId: string) {
+  const db = await getDb();
+  await db.delete(favorites).where(eq(favorites.userId, userId));
+}
+
 export async function countFavorites(userId: string): Promise<number> {
   const db = await getDb();
   const rows = await db.select().from(favorites).where(eq(favorites.userId, userId));

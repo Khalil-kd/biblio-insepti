@@ -1,43 +1,73 @@
-import Link from "next/link";
-import { listAllPromptsForAdmin } from "@/lib/admin";
-import { PromptStatusControls } from "@/components/PromptStatusControls";
+import { PromptEditorForm } from "@/components/PromptEditorForm";
+import { listManagedPromptsForAdmin, listPromptApplications } from "@/lib/prompt-management";
 
 export const metadata = { title: "Prompts — Administration" };
 
 export default async function AdminPromptsPage() {
-  const allPrompts = await listAllPromptsForAdmin();
+  const [allPrompts, applications] = await Promise.all([
+    listManagedPromptsForAdmin(),
+    listPromptApplications(),
+  ]);
 
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-semibold tracking-tight">Prompts ({allPrompts.length})</h1>
-      <div className="surface overflow-hidden rounded-xl2">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b" style={{ borderColor: "var(--border)" }}>
-              <th className="p-3">Titre</th>
-              <th className="p-3">Application</th>
-              <th className="p-3">Mis à jour</th>
-              <th className="p-3">Statut</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allPrompts.map((p) => (
-              <tr key={p.id} className="border-b last:border-0" style={{ borderColor: "var(--border)" }}>
-                <td className="p-3">
-                  <Link href={`/prompt/${p.slug}`} className="focus-ring hover:underline">
-                    {p.title}
-                  </Link>
-                </td>
-                <td className="p-3">{p.applicationName}</td>
-                <td className="p-3">{new Date(p.updatedAt).toLocaleDateString("fr-FR")}</td>
-                <td className="p-3">
-                  <PromptStatusControls promptId={p.id} initialStatus={p.status} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="flex flex-col gap-9">
+      <section>
+        <p className="brand-kicker">Gestion native</p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Créer un prompt INSEPTI</h1>
+        <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>
+          Les prompts sont désormais créés et administrés directement ici, sans dépendance à Notion.
+        </p>
+        <div className="surface mt-5 rounded-xl2 p-5">
+          <PromptEditorForm
+            applications={applications.map(({ id, name }) => ({ id, name }))}
+            endpoint="/api/admin/prompts"
+            adminMode
+          />
+        </div>
+      </section>
+
+      <section>
+        <h2 className="mb-5 text-2xl font-semibold tracking-tight">Tous les prompts ({allPrompts.length})</h2>
+        <div className="grid gap-4">
+          {allPrompts.map((prompt) => (
+            <details key={prompt.id} className="surface rounded-xl2 p-5">
+              <summary className="focus-ring cursor-pointer list-none">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <span className="font-semibold">{prompt.title}</span>
+                    <span className="ml-2 text-sm" style={{ color: "var(--fg-muted)" }}>
+                      {prompt.applicationName} · {new Date(prompt.updatedAt).toLocaleDateString("fr-FR")}
+                    </span>
+                  </div>
+                  <div className="flex gap-2 text-xs font-semibold">
+                    <span className={`rounded-full px-2.5 py-1 ${prompt.sourceType === "personal" ? "bg-blue-600/10 text-blue-700 dark:text-blue-300" : "bg-insepti-green/15 text-insepti-green-deep dark:text-insepti-green-light"}`}>
+                      {prompt.sourceType === "personal" ? `Personnel · ${prompt.ownerName ?? "Utilisateur supprimé"}` : "INSEPTI"}
+                    </span>
+                    <span className="rounded-full border px-2.5 py-1" style={{ borderColor: "var(--border)" }}>{prompt.status}</span>
+                  </div>
+                </div>
+              </summary>
+              <div className="mt-5 border-t pt-5" style={{ borderColor: "var(--border)" }}>
+                <PromptEditorForm
+                  applications={applications.map(({ id, name }) => ({ id, name }))}
+                  endpoint={`/api/admin/prompts/${prompt.id}`}
+                  adminMode
+                  prompt={{
+                    id: prompt.id,
+                    title: prompt.title,
+                    description: prompt.description,
+                    body: prompt.body,
+                    applicationId: prompt.applicationId,
+                    variables: prompt.variables,
+                    tags: prompt.tags,
+                    status: prompt.status,
+                  }}
+                />
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

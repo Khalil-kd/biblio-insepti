@@ -11,24 +11,33 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
   return (
     <div className="surface flex flex-col gap-3 rounded-xl2 p-5 transition-transform duration-150 hover:-translate-y-0.5">
       <div className="flex items-start justify-between gap-2">
-        <Link
-          href={`/app/${prompt.applicationSlug}`}
-          prefetch={false}
-          aria-label={`Voir les prompts ${prompt.applicationName}`}
-          className={`focus-ring inline-flex items-center gap-2 rounded-lg pr-2 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-75 ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}
-        >
-          {application && (
-            <Image
-              src={application.iconPath}
-              alt=""
-              width={24}
-              height={24}
-              className="h-6 w-6 object-contain"
-              aria-hidden="true"
-            />
-          )}
-          <span>{prompt.applicationName}</span>
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={`/app/${prompt.applicationSlug}`}
+            prefetch={false}
+            aria-label={`Voir les prompts ${prompt.applicationName}`}
+            className={`focus-ring inline-flex items-center gap-2 rounded-lg pr-2 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-75 ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}
+          >
+            {application && (
+              <Image
+                src={application.iconPath}
+                alt=""
+                width={24}
+                height={24}
+                className="h-6 w-6 object-contain"
+                aria-hidden="true"
+              />
+            )}
+            <span>{prompt.applicationName}</span>
+          </Link>
+          <span className={`rounded-full px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide ${
+            prompt.sourceType === "personal"
+              ? "bg-blue-600/10 text-blue-700 dark:text-blue-300"
+              : "bg-insepti-green/15 text-insepti-green-deep dark:text-insepti-green-light"
+          }`}>
+            {prompt.sourceType === "personal" ? "Personnel" : "INSEPTI"}
+          </span>
+        </div>
         <FavoriteButton promptId={prompt.id} initialFavorite={prompt.isFavorite} />
       </div>
       <Link href={`/prompt/${prompt.slug}`} prefetch={false} className="focus-ring flex flex-1 flex-col gap-1.5">

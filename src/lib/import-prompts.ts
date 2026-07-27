@@ -6,7 +6,6 @@ import { applications, prompts, auditLog } from "@db/schema";
 import { APPLICATIONS } from "./applications-data";
 import { normalizeSearchText } from "./search";
 import seedPrompts from "@data/prompts.json";
-import { fetchPromptsFromNotion } from "./notion-live";
 
 interface SeedPrompt {
   source_notion_page_id: string;
@@ -165,9 +164,4 @@ async function importPrompts(actorUserId: string, seed: SeedPrompt[]): Promise<I
 
 export async function importPromptsFromSeed(actorUserId: string): Promise<ImportReport> {
   return importPrompts(actorUserId, seedPrompts as SeedPrompt[]);
-}
-
-export async function importPromptsFromNotion(actorUserId: string): Promise<ImportReport> {
-  const livePrompts = await fetchPromptsFromNotion();
-  return importPrompts(actorUserId, livePrompts);
 }

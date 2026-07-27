@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
   if (!isPublic) {
     const hasSessionCookie = request.cookies.has(SESSION_COOKIE_NAME);
     if (!hasSessionCookie) {
-      const url = new URL("/login", getPublicOrigin(request));
+      const url = new URL("/", getPublicOrigin(request));
       url.searchParams.set("depuis", pathname);
       response = NextResponse.redirect(url);
       return withCsrfCookie(request, response);

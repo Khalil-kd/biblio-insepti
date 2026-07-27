@@ -1,5 +1,5 @@
 import "server-only";
-import { and, eq, like, desc, asc, sql } from "drizzle-orm";
+import { and, eq, like, desc, asc, or, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { prompts, applications, favorites } from "@db/schema";
 import { normalizeSearchText } from "./search";
@@ -15,6 +15,7 @@ export interface PromptCard {
   isFavorite: boolean;
   searchText: string;
   updatedAt: Date;
+  sourceType: "insepti" | "personal";
 }
 
 export interface PromptDetail extends PromptCard {
@@ -35,7 +36,13 @@ export interface ListPromptsOptions {
 export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[]> {
   const db = await getDb();
 
-  const conditions = [eq(prompts.status, "published")];
+  const visibility = opts.userId
+    ? or(
+        and(eq(prompts.sourceType, "insepti"), eq(prompts.status, "published")),
+        and(eq(prompts.sourceType, "personal"), eq(prompts.ownerUserId, opts.userId)),
+      )
+    : and(eq(prompts.sourceType, "insepti"), eq(prompts.status, "published"));
+  const conditions = [visibility];
   if (opts.applicationSlug) {
     conditions.push(eq(applications.slug, opts.applicationSlug));
   }
@@ -62,6 +69,7 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
       applicationName: applications.name,
       applicationColor: applications.color,
       searchText: prompts.searchText,
+      sourceType: prompts.sourceType,
       isFavorite: opts.userId
         ? sql<number>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${opts.userId})`
         : sql<number>`0`,
@@ -80,8 +88,23 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
   return results;
 }
 
-export async function getPromptBySlug(slug: string, userId: string | null): Promise<PromptDetail | null> {
+export async function getPromptBySlug(
+  slug: string,
+  userId: string | null,
+  isAdmin = false,
+): Promise<PromptDetail | null> {
   const db = await getDb();
+  const visibility = isAdmin
+    ? or(
+        and(eq(prompts.sourceType, "insepti"), eq(prompts.status, "published")),
+        eq(prompts.sourceType, "personal"),
+      )
+    : userId
+      ? or(
+          and(eq(prompts.sourceType, "insepti"), eq(prompts.status, "published")),
+          and(eq(prompts.sourceType, "personal"), eq(prompts.ownerUserId, userId)),
+        )
+      : and(eq(prompts.sourceType, "insepti"), eq(prompts.status, "published"));
   const rows = await db
     .select({
       id: prompts.id,
@@ -95,13 +118,14 @@ export async function getPromptBySlug(slug: string, userId: string | null): Prom
       applicationName: applications.name,
       applicationColor: applications.color,
       searchText: prompts.searchText,
+      sourceType: prompts.sourceType,
       isFavorite: userId
         ? sql<number>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${userId})`
         : sql<number>`0`,
     })
     .from(prompts)
     .innerJoin(applications, eq(prompts.applicationId, applications.id))
-    .where(and(eq(prompts.slug, slug), eq(prompts.status, "published")))
+    .where(and(eq(prompts.slug, slug), visibility))
     .limit(1);
 
   const row = rows[0];
@@ -127,6 +151,7 @@ export async function getPromptBySlug(slug: string, userId: string | null): Prom
     applicationColor: row.applicationColor,
     isFavorite: Boolean(row.isFavorite),
     searchText: row.searchText,
+    sourceType: row.sourceType,
   };
 }
 
@@ -143,7 +168,11 @@ export async function listApplicationsWithCounts() {
     .from(applications)
     .leftJoin(
       prompts,
-      and(eq(prompts.applicationId, applications.id), eq(prompts.status, "published")),
+      and(
+        eq(prompts.applicationId, applications.id),
+        eq(prompts.status, "published"),
+        eq(prompts.sourceType, "insepti"),
+      ),
     )
     .where(eq(applications.isActive, true))
     .groupBy(applications.id, applications.slug, applications.name, applications.color, applications.sortOrder)

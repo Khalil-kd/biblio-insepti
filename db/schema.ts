@@ -70,6 +70,8 @@ export const prompts = pgTable(
     variablesJson: text("variables_json").notNull().default("[]"),
     tagsJson: text("tags_json").notNull().default("[]"),
     searchText: text("search_text").notNull().default(""),
+    sourceType: text("source_type", { enum: ["insepti", "personal"] }).notNull().default("insepti"),
+    ownerUserId: text("owner_user_id").references(() => users.id, { onDelete: "cascade" }),
     sourceNotionPageId: text("source_notion_page_id"),
     sourceUpdatedAt: timestamp("source_updated_at", { mode: "date" }),
     status: text("status", { enum: ["draft", "published", "archived"] }).notNull().default("draft"),
@@ -83,6 +85,7 @@ export const prompts = pgTable(
     sourceNotionUnique: uniqueIndex("prompts_source_notion_unique").on(t.sourceNotionPageId),
     appIdx: index("prompts_application_idx").on(t.applicationId),
     statusIdx: index("prompts_status_idx").on(t.status),
+    ownerIdx: index("prompts_owner_idx").on(t.ownerUserId),
   }),
 );
 
