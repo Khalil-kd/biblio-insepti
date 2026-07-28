@@ -108,9 +108,6 @@ export async function resolveReport(
     .update(promptReports)
     .set({ status: resolution, resolvedByUserId: adminUserId, resolvedAt: now, updatedAt: now })
     .where(eq(promptReports.id, reportId));
-  if (resolution === "resolved") {
-    await db.update(prompts).set({ lastReviewedAt: now, updatedAt: now }).where(eq(prompts.id, report.promptId));
-  }
   await db.insert(auditLog).values({
     id: nanoid(),
     actorUserId: adminUserId,
@@ -118,21 +115,6 @@ export async function resolveReport(
     targetType: "prompt_report",
     targetId: reportId,
     summary: resolution === "resolved" ? "Signalement résolu" : "Signalement classé sans suite",
-    createdAt: now,
-  });
-}
-
-export async function markPromptReviewed(promptId: string, adminUserId: string) {
-  const db = await getDb();
-  const now = new Date();
-  await db.update(prompts).set({ lastReviewedAt: now, updatedAt: now }).where(eq(prompts.id, promptId));
-  await db.insert(auditLog).values({
-    id: nanoid(),
-    actorUserId: adminUserId,
-    action: "prompt.reviewed",
-    targetType: "prompt",
-    targetId: promptId,
-    summary: "Prompt vérifié par un administrateur",
     createdAt: now,
   });
 }

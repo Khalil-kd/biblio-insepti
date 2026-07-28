@@ -35,27 +35,3 @@ export function ReportResolutionControls({ reportId }: { reportId: string }) {
     </div>
   );
 }
-
-export function MarkReviewedButton({ promptId }: { promptId: string }) {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  return (
-    <button
-      type="button"
-      disabled={pending}
-      onClick={() =>
-        startTransition(async () => {
-          const response = await fetch(`/api/admin/prompts/${promptId}/review`, withCsrfHeaders({ method: "POST" }));
-          if (response.ok) {
-            showToast({ message: "Date de vérification mise à jour", tone: "success" });
-            router.refresh();
-          }
-        })
-      }
-      className="focus-ring rounded-xl border px-3 py-2 text-xs font-semibold"
-      style={{ borderColor: "var(--border)" }}
-    >
-      {pending ? "Mise à jour…" : "Vérifier"}
-    </button>
-  );
-}

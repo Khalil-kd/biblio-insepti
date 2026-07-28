@@ -34,13 +34,13 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ s
       <div className="surface rounded-xl2 p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">
         <div>
-          <span className={`text-xs font-semibold uppercase tracking-wide ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}>
+          <span className={`text-xs font-semibold uppercase tracking-wide dark:text-white ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}>
             {prompt.applicationName}
           </span>
           <span className={`ml-2 rounded-full px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide ${
             prompt.sourceType === "personal"
               ? "bg-blue-600/10 text-blue-700 dark:text-blue-300"
-              : "bg-insepti-green/15 text-insepti-green-deep dark:text-insepti-green-light"
+              : "bg-insepti-green-light/15 text-insepti-green-light"
           }`}>
             {prompt.sourceType === "personal" ? "Ma création" : "INSEPTI"}
           </span>
@@ -51,9 +51,6 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ s
           <div className="mt-5 flex flex-wrap gap-2 text-xs" style={{ color: "var(--fg-muted)" }}>
             <span className="data-chip">Mis à jour le {new Date(prompt.updatedAt).toLocaleDateString("fr-FR")}</span>
             {prompt.responsibleName && <span className="data-chip">Responsable · {prompt.responsibleName}</span>}
-            {prompt.sourceType === "insepti" && prompt.lastReviewedAt && (
-              <span className="data-chip">Vérifié le {new Date(prompt.lastReviewedAt).toLocaleDateString("fr-FR")}</span>
-            )}
           </div>
         </div>
         <FavoriteButton promptId={prompt.id} initialFavorite={prompt.isFavorite} />

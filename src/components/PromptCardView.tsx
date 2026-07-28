@@ -13,7 +13,7 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
             href={`/app/${prompt.applicationSlug}`}
             prefetch={false}
             aria-label={`Voir les prompts ${prompt.applicationName}`}
-            className={`focus-ring inline-flex items-center gap-2 rounded-lg pr-2 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-75 ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}
+            className={`focus-ring inline-flex items-center gap-2 rounded-lg pr-2 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-75 dark:text-white ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}
           >
             <ApplicationIcon slug={prompt.applicationSlug} customIconKey={prompt.customIconKey} size={24} />
             <span>{prompt.applicationName}</span>
@@ -21,7 +21,7 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
           <span className={`rounded-full px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide ${
             prompt.sourceType === "personal"
               ? "bg-blue-600/10 text-blue-700 dark:text-blue-300"
-              : "bg-insepti-green/15 text-insepti-green-deep dark:text-insepti-green-light"
+              : "bg-insepti-green-light/15 text-insepti-green-light"
           }`}>
             {prompt.sourceType === "personal" ? "Ma création" : "INSEPTI"}
           </span>

@@ -1,73 +1,49 @@
-const FAQ_ITEMS = [
-  {
-    question: "Qui peut accéder à la bibliothèque ?",
-    answer:
-      "L’accès est réservé aux collaborateurs autorisés par INSEPTI. La connexion utilise votre compte professionnel Microsoft.",
-  },
-  {
-    question: "Quelle est la différence entre un prompt INSEPTI et une création privée ?",
-    answer:
-      "Les prompts INSEPTI composent le catalogue officiel. Les créations privées sont conçues par chaque utilisateur pour ses propres besoins.",
-  },
-  {
-    question: "Mes créations privées sont-elles visibles par les autres collaborateurs ?",
-    answer:
-      "Non. Une création privée est visible uniquement par son auteur et par l’administrateur de la plateforme.",
-  },
-  {
-    question: "Comment créer des champs à personnaliser ?",
-    answer:
-      "Écrivez un champ précédé de @ dans le contenu, par exemple @client ou @objectif. Le formulaire de personnalisation sera créé automatiquement.",
-  },
-  {
-    question: "Comment gérer mes favoris et mes prompts ?",
-    answer:
-      "Depuis votre espace, vous pouvez ajouter ou retirer des favoris, créer vos propres prompts, puis les modifier ou les supprimer à tout moment.",
-  },
-];
+import Image from "next/image";
+import Link from "next/link";
 
 export function LoginExperience() {
   return (
-    <main className="min-h-screen bg-[#F7F8F6] text-insepti-graphite">
-      <section className="grid min-h-screen lg:grid-cols-[1.15fr_0.85fr]">
+    <main className="h-dvh overflow-hidden bg-[#F7F8F6] text-insepti-graphite">
+      <section className="grid h-full grid-cols-1 overflow-hidden lg:grid-cols-[1.15fr_0.85fr]">
         <div
-          className="relative min-h-[68vh] overflow-hidden bg-[#273238] bg-cover bg-center px-7 py-10 text-white sm:px-12 lg:min-h-screen lg:bg-[center_right] lg:px-14 lg:py-14"
+          className="relative hidden h-full overflow-hidden bg-[#273238] bg-cover bg-center px-7 py-10 text-white sm:px-12 lg:block lg:bg-[center_right] lg:px-14 lg:py-14"
           style={{
             backgroundImage:
               "linear-gradient(90deg, rgba(39,50,56,0.78) 0%, rgba(39,50,56,0.42) 48%, rgba(39,50,56,0.18) 100%), url('/brand/insepti-arrows-dark.png')",
           }}
         >
-          <video
-            src="/brand/insepti-logo-reveal.mp4"
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            aria-label="Animation du logo INSEPTI"
-            className="absolute left-7 top-7 z-10 h-auto w-3/5 max-w-[17rem] object-contain sm:left-12 sm:top-10 lg:left-14 lg:top-14"
+          <Image
+            src="/brand/insepti-logo-primary.png"
+            alt="INSEPTI"
+            width={1368}
+            height={270}
+            priority
+            unoptimized
+            className="absolute left-7 top-7 z-10 h-auto w-[68%] max-w-[23rem] object-contain sm:left-12 sm:top-10 lg:left-14 lg:top-14"
           />
 
-          <div className="relative z-10 flex min-h-[calc(68vh-5rem)] max-w-3xl flex-col justify-end lg:min-h-[calc(100vh-7rem)]">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-insepti-green-light">
-              Bibliothèque de prompts
-            </p>
-            <h1 className="mt-5 max-w-2xl text-5xl font-semibold leading-[1.02] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
-              Le bon prompt,
+          <div className="relative z-10 flex h-full max-w-3xl flex-col justify-end pb-4">
+            <h1 className="max-w-2xl text-5xl font-semibold leading-[1.02] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
+              Vos idées,
               <br />
-              au bon moment.
+              mieux formulées.
             </h1>
-            <p className="mt-7 max-w-2xl text-base font-medium leading-7 text-white/75 lg:text-lg">
-              Retrouvez les prompts INSEPTI et développez votre bibliothèque privée, pour Microsoft 365 comme pour vos outils spécialisés.
-            </p>
           </div>
         </div>
 
-        <div className="flex min-h-screen flex-col bg-white px-6 py-7 text-insepti-graphite sm:px-10 lg:px-12 lg:py-9">
-          <div className="flex flex-1 items-center justify-center py-10">
+        <div className="flex h-full min-h-0 flex-col overflow-hidden bg-white px-6 py-7 text-insepti-graphite sm:px-10 lg:px-12 lg:py-9">
+          <div className="flex min-h-0 flex-1 items-center justify-center">
             <div className="w-full max-w-md">
-              <p className="brand-kicker">Espace collaborateurs</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
+              <Image
+                src="/brand/insepti-logo-primary.png"
+                alt="INSEPTI"
+                width={1368}
+                height={270}
+                priority
+                unoptimized
+                className="mb-12 h-auto w-48 lg:hidden"
+              />
+              <h2 className="text-3xl font-semibold tracking-[-0.035em]">
                 Bienvenue dans votre bibliothèque
               </h2>
               <p className="mt-4 text-sm leading-6 text-insepti-slate">
@@ -92,48 +68,14 @@ export function LoginExperience() {
               <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-insepti-slate">
                 <span>Accès professionnel sécurisé</span>
                 <span aria-hidden="true">•</span>
-                <a href="#faq" className="focus-ring font-semibold text-insepti-green-deep hover:underline">
+                <Link href="/faq" className="focus-ring font-semibold text-insepti-green-deep hover:underline">
                   Consulter la FAQ
-                </a>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      <section id="faq" className="border-t border-black/10 bg-[#F7F8F6] px-6 py-20 sm:px-10 lg:px-16 lg:py-24">
-        <div className="mx-auto max-w-5xl">
-          <p className="brand-kicker">Aide et informations</p>
-          <div className="mt-3 grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
-            <div>
-              <h2 className="text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">Questions fréquentes</h2>
-              <p className="mt-4 max-w-sm text-sm leading-6 text-insepti-slate">
-                Les réponses essentielles pour utiliser la bibliothèque de prompts INSEPTI en toute autonomie.
-              </p>
-            </div>
-            <div className="divide-y divide-black/10 border-y border-black/10">
-              {FAQ_ITEMS.map((item, index) => (
-                <details key={item.question} className="group py-1" open={index === 0}>
-                  <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-5 py-5 font-semibold">
-                    <span>{item.question}</span>
-                    <span className="text-xl font-normal text-insepti-green-deep transition-transform group-open:rotate-45" aria-hidden="true">
-                      +
-                    </span>
-                  </summary>
-                  <p className="max-w-2xl pb-5 pr-10 text-sm leading-6 text-insepti-slate">{item.answer}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="border-t border-black/10 bg-[#F7F8F6] px-6 py-7 text-sm text-insepti-slate sm:px-10 lg:px-16">
-        <div className="mx-auto flex max-w-5xl flex-col justify-between gap-2 sm:flex-row">
-          <span className="font-semibold text-insepti-graphite">INSEPTI · Bibliothèque de prompts</span>
-          <span>Plateforme interne réservée aux collaborateurs autorisés.</span>
-        </div>
-      </footer>
     </main>
   );
 }

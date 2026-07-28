@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { withCsrfHeaders } from "@/lib/csrf-client";
 import { showToast } from "@/lib/toast-client";
 
@@ -22,6 +22,26 @@ export function FolderPicker({
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(() => new Set(initialFolderIds));
   const [pending, startTransition] = useTransition();
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function closeOnOutsideClick(event: PointerEvent) {
+      if (!pickerRef.current?.contains(event.target as Node)) setOpen(false);
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
 
   function toggle(folderId: string) {
     const active = selected.has(folderId);
@@ -50,7 +70,7 @@ export function FolderPicker({
   }
 
   return (
-    <div className="relative">
+    <div ref={pickerRef} className="relative">
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}

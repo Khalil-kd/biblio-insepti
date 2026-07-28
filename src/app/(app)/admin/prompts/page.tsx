@@ -1,7 +1,6 @@
 import { PromptEditorForm } from "@/components/PromptEditorForm";
 import { listManagedPromptsForAdmin, listPromptApplications } from "@/lib/prompt-management";
 import { DeletePromptButton } from "@/components/DeletePromptButton";
-import { MarkReviewedButton } from "@/components/AdminGovernanceControls";
 
 export const metadata = { title: "Prompts — Administration" };
 
@@ -42,10 +41,9 @@ export default async function AdminPromptsPage() {
                     </span>
                     <span className="hidden text-xs lg:inline" style={{ color: "var(--fg-muted)" }}>
                       Responsable : {prompt.responsibleName ?? prompt.ownerName ?? "Administration"}
-                      {prompt.sourceType === "insepti" && ` · Vérifié : ${prompt.lastReviewedAt ? new Date(prompt.lastReviewedAt).toLocaleDateString("fr-FR") : "jamais"}`}
                     </span>
                     <span className="ml-auto flex gap-2 text-xs font-semibold">
-                    <span className={`rounded-full px-2.5 py-1 ${prompt.sourceType === "personal" ? "bg-blue-600/10 text-blue-700 dark:text-blue-300" : "bg-insepti-green/15 text-insepti-green-deep dark:text-insepti-green-light"}`}>
+                    <span className={`rounded-full px-2.5 py-1 ${prompt.sourceType === "personal" ? "bg-blue-600/10 text-blue-700 dark:text-blue-300" : "bg-insepti-green-light/15 text-insepti-green-light"}`}>
                       {prompt.sourceType === "personal" ? "Ma création" : "INSEPTI"}
                     </span>
                     <span className="rounded-full border px-2.5 py-1" style={{ borderColor: "var(--border)" }}>
@@ -74,7 +72,6 @@ export default async function AdminPromptsPage() {
                 </div>
               </details>
               <div className="flex shrink-0 items-center gap-2">
-                {prompt.sourceType === "insepti" && <MarkReviewedButton promptId={prompt.id} />}
                 <DeletePromptButton endpoint={`/api/admin/prompts/${prompt.id}`} title={prompt.title} />
               </div>
             </div>

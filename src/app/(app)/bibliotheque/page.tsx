@@ -36,7 +36,7 @@ export default async function HomePage() {
           <p className="hero-muted mt-4 max-w-2xl text-sm leading-6 sm:text-base">
             Des prompts sélectionnés, prêts à personnaliser et à utiliser dans vos missions.
           </p>
-          <div className="mt-8 w-full max-w-[34rem]">
+          <div className="mt-8 w-full max-w-[24rem]">
             <SearchPalette prompts={recentPrompts} />
           </div>
         </div>

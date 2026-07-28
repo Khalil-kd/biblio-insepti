@@ -19,7 +19,7 @@ export function CustomPromptIcon({
   const resolvedKey = resolveCustomPromptIconKey(iconKey);
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 via-blue-500 to-emerald-400 text-white shadow-sm ${className}`}
+      className={`inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-[#273238] via-[#6f7a7f] to-[#75C044] text-white shadow-sm ${className}`}
       style={size ? { width: size, height: size } : undefined}
       aria-hidden="true"
     >
