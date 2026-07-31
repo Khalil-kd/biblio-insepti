@@ -10,7 +10,7 @@ function PromptMeta({ prompt }: { prompt: PromptCard }) {
   return (
     <div className="prompt-card-meta">
       <span><Image src="/icons/specialties/aime-gris.png" alt="J’aime" width={16} height={16} unoptimized />{prompt.likes}</span>
-      <span><Image src="/icons/specialties/date-gris.png" alt="Mise à jour" width={16} height={16} unoptimized />{new Date(prompt.updatedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}</span>
+      <span><Image src="/icons/specialties/date-gris.png" alt="Mise à jour" width={16} height={16} unoptimized />{new Date(prompt.updatedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })}</span>
     </div>
   );
 }
@@ -61,22 +61,24 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
               <DifficultyTag value={prompt.difficulty} />
               <AiTag value={prompt.ai} />
             </div>
-            <p className="brand-kicker mt-7">Aperçu du prompt</p>
-            <h2 className="mt-2 text-3xl font-semibold leading-tight tracking-[-0.035em]">{prompt.title}</h2>
-            <p className="mt-4 text-[15px] leading-7 text-insepti-slate">{prompt.description}</p>
+            <h2 className="prompt-preview-title">{prompt.title}</h2>
+            <p className="prompt-preview-description">{prompt.description}</p>
             <div className="prompt-preview-body">
-              Transforme votre besoin en un résultat structuré, précis et immédiatement exploitable. Les champs de personnalisation apparaîtront dans la fiche complète.
+              <strong>APERÇU DU PROMPT</strong>
+              <span>Tu es un expert éditorial. À partir du contenu fourni, génère une série de publications adaptées à @réseau, @audience et @ton...</span>
+              <button type="button">Cliquer pour afficher le prompt complet →</button>
             </div>
             <div className="mt-6">
-              <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-insepti-slate">Cas d’usage</p>
-              <div className="mt-3 grid grid-cols-2 gap-3 text-[13px]">
-                <span className="use-case">Préparer un livrable professionnel</span>
-                <span className="use-case">Accélérer une tâche récurrente</span>
+              <p className="text-[12px] font-semibold uppercase text-insepti-slate">Cas d’usage</p>
+              <div className="prompt-preview-cases">
+                <span className="use-case">Livre blanc → série LinkedIn</span>
+                <span className="use-case">Annonce produit → posts multi-réseaux</span>
+                <span className="use-case">Rapport → messages clés</span>
               </div>
             </div>
             <div className="mt-7 flex items-center justify-between gap-4">
               <PromptMeta prompt={prompt} />
-              <Link href={`/prompt/${prompt.slug}`} className="primary-action pointer-events-auto" tabIndex={0}>Découvrir le prompt <span aria-hidden="true">↗</span></Link>
+              <Link href={`/prompt/${prompt.slug}`} className="primary-action pointer-events-auto" tabIndex={0}>Découvrir</Link>
             </div>
           </section>
         </div>

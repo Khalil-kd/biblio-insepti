@@ -10,7 +10,7 @@ import type { PromptCard, SortOption } from "@/lib/prompts";
 
 type SpecialtyFilter = "Toutes" | Specialty;
 type DifficultyFilter = "Toutes" | Difficulty;
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 9;
 
 export function CatalogueExplorer({
   prompts,
@@ -45,15 +45,21 @@ export function CatalogueExplorer({
   const visiblePrompts = filteredPrompts.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   return (
-    <div className="catalogue-layout">
+    <>
+      <header className="catalogue-page-heading">
+        <div><h1>Prompts professionnels</h1><p>4 368 ressources structurées, filtrables et immédiatement personnalisables.</p></div>
+        <button type="button" className="secondary-action">+ Créer un prompt</button>
+      </header>
+      <div className="catalogue-layout">
       <aside className="catalogue-filters" aria-label="Filtres des prompts">
+        <h2 className="filter-label">Recherche</h2>
         <label className="search-field">
           <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
           <span className="sr-only">Rechercher un prompt</span>
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher un prompt…" type="search" />
         </label>
 
-        <FilterSection title="Spécialité">
+        <FilterSection title="Spécialités">
           <button type="button" className={`filter-row ${specialty === "Toutes" ? "is-active" : ""}`} onClick={() => setSpecialty("Toutes")}>
             <Image src={`/icons/specialties/toutes-${specialty === "Toutes" ? "vert" : "gris"}.png`} alt="" width={16} height={16} unoptimized />Toutes
           </button>
@@ -83,8 +89,8 @@ export function CatalogueExplorer({
 
       <section className="min-w-0">
         <div className="catalogue-results-header">
-          <p>Affichage de {filteredPrompts.length === 0 ? 0 : (safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filteredPrompts.length)} sur <strong>{filteredPrompts.length}</strong> prompts</p>
-          <button type="button" className="reset-filters" onClick={() => { setQuery(""); setSpecialty("Toutes"); setDifficulty("Toutes"); setAi("Tous IA"); }}>Réinitialiser</button>
+          <p><strong>{filteredPrompts.length === 0 ? 0 : (safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filteredPrompts.length)} sur 4 368 prompts</strong></p>
+          <button type="button" className="reset-filters">Trier : pertinence ↓</button>
         </div>
 
         {visiblePrompts.length ? (
@@ -105,7 +111,8 @@ export function CatalogueExplorer({
           </nav>
         )}
       </section>
-    </div>
+      </div>
+    </>
   );
 }
 

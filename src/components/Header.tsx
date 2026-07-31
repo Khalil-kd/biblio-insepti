@@ -9,7 +9,7 @@ export function Header({ session }: { session: CurrentSession; favoritesCount?: 
     <header className="app-header">
       <div className="app-header-inner">
         <Link href="/catalogue" className="focus-ring app-logo" aria-label="INSEPTI — Prompts">
-          <Image src="/brand/insepti-logo-primary.png" alt="INSEPTI" width={145} height={31} className="h-auto w-[124px] xl:w-[136px]" priority unoptimized />
+          <Image src="/brand/insepti-logo-primary.png" alt="INSEPTI" width={145} height={31} className="h-auto w-[145px]" priority unoptimized />
         </Link>
         <AppNavigation />
         <div className="app-header-actions">

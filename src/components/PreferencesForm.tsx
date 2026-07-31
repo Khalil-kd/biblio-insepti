@@ -4,63 +4,39 @@ import { useState } from "react";
 import { withCsrfHeaders } from "@/lib/csrf-client";
 import { showToast } from "@/lib/toast-client";
 
-export function PreferencesForm({
-  initialTheme,
-}: {
-  initialTheme: "light" | "dark" | "system";
-}) {
-  const [theme, setTheme] = useState<"light" | "dark">(initialTheme === "light" ? "light" : "dark");
+const THEMES = [["light", "Clair"], ["dark", "Sombre"], ["system", "Système"]] as const;
+
+export function PreferencesForm({ initialTheme }: { initialTheme: "light" | "dark" | "system" }) {
+  const [theme, setTheme] = useState(initialTheme);
   const [saving, setSaving] = useState(false);
 
-  async function applyTheme(nextTheme: "light" | "dark") {
-    if (saving || nextTheme === theme) return;
-    const previousTheme = theme;
-    setTheme(nextTheme);
-    document.documentElement.dataset.theme = nextTheme;
-    document.documentElement.classList.toggle("dark", nextTheme === "dark");
+  async function apply(next: "light" | "dark" | "system") {
+    if (saving) return;
+    const old = theme;
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
     setSaving(true);
     try {
-      const res = await fetch(
-        "/api/profile/preferences",
-        withCsrfHeaders({
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ theme: nextTheme, trackHistory: false }),
-        }),
-      );
-      if (!res.ok) throw new Error();
+      const response = await fetch("/api/profile/preferences", withCsrfHeaders({
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ theme: next, trackHistory: false }),
+      }));
+      if (!response.ok) throw new Error();
     } catch {
-      setTheme(previousTheme);
-      document.documentElement.dataset.theme = previousTheme;
-      document.documentElement.classList.toggle("dark", previousTheme === "dark");
-      showToast({ message: "Échec de l'enregistrement des préférences", tone: "error" });
+      setTheme(old);
+      showToast({ message: "Échec de l'enregistrement", tone: "error" });
     } finally {
       setSaving(false);
     }
   }
 
-  return (
-    <div className="surface flex flex-col gap-4 rounded-xl2 p-5">
-      <div>
-        <span className="mb-2 block text-sm font-medium">Thème</span>
-        <div className="flex gap-2">
-          {(["dark", "light"] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => applyTheme(t)}
-              disabled={saving}
-              aria-pressed={theme === t}
-              className={`focus-ring rounded-lg border px-3 py-2 text-sm capitalize transition-colors duration-150 ${
-                theme === t ? "bg-insepti-green text-white" : ""
-              }`}
-              style={{ borderColor: "var(--border)" }}
-            >
-              {t === "light" ? "Clair" : "Sombre"}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="prefs-v4">
+    <h2>Préférences générales</h2>
+    <h3>Langue de l’interface</h3>
+    <div className="language-options"><button className="selected">●　Français</button><button>○　English</button></div>
+    <h3>Apparence</h3>
+    <div className="theme-options">{THEMES.map(([id, label]) => <button key={id} onClick={() => apply(id)} className={theme === id ? "selected" : ""}><i className={id} /><span>{theme === id ? "●" : "○"} {label}</span></button>)}</div>
+    <section><h3>Notifications</h3><p>☑ Nouveaux prompts liés à mes spécialités</p><p>☑ Mise à jour d’un prompt sauvegardé</p><p>☐ Nouveaux articles du blog</p></section>
+  </div>;
 }
