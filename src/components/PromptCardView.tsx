@@ -1,42 +1,88 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
-import { FavoriteButton } from "./FavoriteButton";
-import { APP_TEXT_CLASS } from "@/lib/app-style";
+import { useId, useRef, useState } from "react";
 import type { PromptCard } from "@/lib/prompts";
-import { ApplicationIcon } from "./ApplicationIcon";
+import { AiTag, DifficultyTag, SpecialtyTag } from "./PromptTags";
+
+function PromptMeta({ prompt }: { prompt: PromptCard }) {
+  return (
+    <div className="prompt-card-meta">
+      <span><Image src="/icons/specialties/aime-gris.png" alt="J’aime" width={16} height={16} unoptimized />{prompt.likes}</span>
+      <span><Image src="/icons/specialties/date-gris.png" alt="Mise à jour" width={16} height={16} unoptimized />{new Date(prompt.updatedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })}</span>
+    </div>
+  );
+}
 
 export function PromptCardView({ prompt }: { prompt: PromptCard }) {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const titleId = useId();
+
+  function openPreview() {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setPreviewOpen(true);
+  }
+
+  function scheduleClose() {
+    closeTimer.current = setTimeout(() => setPreviewOpen(false), 160);
+  }
+
   return (
-    <div className="surface flex min-h-44 flex-col gap-3 rounded-xl2 p-5 transition-transform duration-150 hover:-translate-y-0.5">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href={`/app/${prompt.applicationSlug}`}
-            prefetch={false}
-            aria-label={`Voir les prompts ${prompt.applicationName}`}
-            className={`focus-ring inline-flex items-center gap-2 rounded-lg pr-2 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-75 dark:text-white ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}
-          >
-            <ApplicationIcon slug={prompt.applicationSlug} customIconKey={prompt.customIconKey} size={24} />
-            <span>{prompt.applicationName}</span>
-          </Link>
-          <span className={`rounded-full px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide ${
-            prompt.sourceType === "personal"
-              ? "bg-blue-600/10 text-blue-700 dark:text-blue-300"
-              : "bg-insepti-green-light/15 text-insepti-green-light"
-          }`}>
-            {prompt.sourceType === "personal" ? "Ma création" : "INSEPTI"}
-          </span>
+    <>
+      <article
+        className="prompt-card focus-within:ring-2 focus-within:ring-insepti-green"
+        onMouseEnter={openPreview}
+        onMouseLeave={scheduleClose}
+      >
+        <div className="prompt-card-tags">
+          <SpecialtyTag value={prompt.specialty} />
+          <DifficultyTag value={prompt.difficulty} />
+          <AiTag value={prompt.ai} />
         </div>
-        <FavoriteButton promptId={prompt.id} initialFavorite={prompt.isFavorite} />
-      </div>
-      <Link href={`/prompt/${prompt.slug}`} prefetch={false} className="focus-ring flex flex-1 flex-col gap-1.5">
-        <h3 className="text-base font-semibold leading-snug">{prompt.title}</h3>
-        <p className="line-clamp-2 text-sm" style={{ color: "var(--fg-muted)" }}>
-          {prompt.description}
-        </p>
-      </Link>
-      <p className="text-[0.7rem]" style={{ color: "var(--fg-muted)" }}>
-        Mis à jour le {new Date(prompt.updatedAt).toLocaleDateString("fr-FR")}
-      </p>
-    </div>
+        <Link href={`/prompt/${prompt.slug}`} prefetch={false} className="focus-ring flex flex-1 flex-col" aria-labelledby={titleId}>
+          <h2 id={titleId} className="prompt-card-title">{prompt.title}</h2>
+          <p className="prompt-card-description">{prompt.description}</p>
+        </Link>
+        <PromptMeta prompt={prompt} />
+      </article>
+
+      {previewOpen && (
+        <div className="prompt-preview-layer">
+          <section
+            className="prompt-preview"
+            onMouseEnter={openPreview}
+            onMouseLeave={scheduleClose}
+          >
+            <button className="prompt-preview-close" type="button" onClick={() => setPreviewOpen(false)} aria-label="Fermer l’aperçu">×</button>
+            <div className="prompt-card-tags justify-start">
+              <SpecialtyTag value={prompt.specialty} />
+              <DifficultyTag value={prompt.difficulty} />
+              <AiTag value={prompt.ai} />
+            </div>
+            <h2 className="prompt-preview-title">{prompt.title}</h2>
+            <p className="prompt-preview-description">{prompt.description}</p>
+            <div className="prompt-preview-body">
+              <strong>APERÇU DU PROMPT</strong>
+              <span>Tu es un expert éditorial. À partir du contenu fourni, génère une série de publications adaptées à @réseau, @audience et @ton...</span>
+              <button type="button">Cliquer pour afficher le prompt complet →</button>
+            </div>
+            <div className="mt-6">
+              <p className="text-[12px] font-semibold uppercase text-insepti-slate">Cas d’usage</p>
+              <div className="prompt-preview-cases">
+                <span className="use-case">Livre blanc → série LinkedIn</span>
+                <span className="use-case">Annonce produit → posts multi-réseaux</span>
+                <span className="use-case">Rapport → messages clés</span>
+              </div>
+            </div>
+            <div className="mt-7 flex items-center justify-between gap-4">
+              <PromptMeta prompt={prompt} />
+              <Link href={`/prompt/${prompt.slug}`} className="primary-action pointer-events-auto" tabIndex={0}>Découvrir</Link>
+            </div>
+          </section>
+        </div>
+      )}
+    </>
   );
 }

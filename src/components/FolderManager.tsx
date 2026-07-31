@@ -80,13 +80,13 @@ export function FolderManager({ folders, activeFolderId }: { folders: Folder[]; 
                 </svg>
                 <span className="min-w-0">
                   <span className="block truncate">{folder.name}</span>
-                  <span className="text-[0.65rem]" style={{ color: "var(--fg-muted)" }}>{folder.count} prompt{folder.count > 1 ? "s" : ""}</span>
+                  <span className="text-[12px]" style={{ color: "var(--fg-muted)" }}>{folder.count} prompt{folder.count > 1 ? "s" : ""}</span>
                 </span>
               </Link>
               <button
                 type="button"
                 onClick={() => setFolderToDelete(folder)}
-                className="focus-ring mr-2 grid h-5 w-5 shrink-0 place-items-center rounded-md text-[0.7rem] leading-none text-red-500 opacity-70 transition hover:bg-red-500/10 hover:opacity-100"
+                className="focus-ring mr-2 grid h-5 w-5 shrink-0 place-items-center rounded-md text-[12px] leading-none text-red-500 opacity-70 transition hover:bg-red-500/10 hover:opacity-100"
                 aria-label={`Supprimer ${folder.name}`}
               >
                 ×

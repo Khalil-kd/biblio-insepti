@@ -5,6 +5,7 @@ import { getDb } from "./db";
 import { prompts, applications, favorites, users } from "@db/schema";
 import { normalizeSearchText } from "./search";
 import { isFavoriteValue } from "./favorite-value";
+import { derivePromptTaxonomy, type Difficulty, type Specialty } from "./prompt-taxonomy";
 
 export interface PromptCard {
   id: string;
@@ -22,6 +23,10 @@ export interface PromptCard {
   responsibleName: string | null;
   status: "draft" | "published" | "archived";
   lastReviewedAt: Date | null;
+  specialty: Specialty;
+  difficulty: Difficulty;
+  ai: string;
+  likes: number;
 }
 
 export interface PromptDetail extends PromptCard {
@@ -81,6 +86,7 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
       responsibleName: responsibles.displayName,
       status: prompts.status,
       lastReviewedAt: prompts.lastReviewedAt,
+      tagsJson: prompts.tagsJson,
       isFavorite: opts.userId
         ? sql<unknown>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${opts.userId})`
         : sql<unknown>`0`,
@@ -91,7 +97,17 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
     .where(and(...conditions))
     .orderBy(orderBy);
 
-  let results = rows.map((r) => ({ ...r, isFavorite: isFavoriteValue(r.isFavorite) }));
+  let results = rows.map((r) => {
+    let tags: string[] = [];
+    try { tags = JSON.parse(r.tagsJson) as string[]; } catch { tags = []; }
+    const { tagsJson: _tagsJson, ...prompt } = r;
+    void _tagsJson;
+    return {
+      ...prompt,
+      ...derivePromptTaxonomy({ id: r.id, title: r.title, description: r.description, tags }),
+      isFavorite: isFavoriteValue(r.isFavorite),
+    };
+  });
 
   if (opts.favoritesOnly) {
     results = results.filter((r) => r.isFavorite);
@@ -136,6 +152,7 @@ export async function getPromptBySlug(
       responsibleName: responsibles.displayName,
       status: prompts.status,
       lastReviewedAt: prompts.lastReviewedAt,
+      tagsJson: prompts.tagsJson,
       isFavorite: userId
         ? sql<unknown>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${userId})`
         : sql<unknown>`0`,
@@ -150,10 +167,16 @@ export async function getPromptBySlug(
   if (!row) return null;
 
   let variables: string[] = [];
+  let tags: string[] = [];
   try {
     variables = JSON.parse(row.variablesJson);
   } catch {
     variables = [];
+  }
+  try {
+    tags = JSON.parse(row.tagsJson) as string[];
+  } catch {
+    tags = [];
   }
 
   return {
@@ -174,6 +197,7 @@ export async function getPromptBySlug(
     responsibleName: row.responsibleName,
     status: row.status,
     lastReviewedAt: row.lastReviewedAt,
+    ...derivePromptTaxonomy({ id: row.id, title: row.title, description: row.description, tags }),
   };
 }
 
