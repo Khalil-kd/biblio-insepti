@@ -1,60 +1,14 @@
 import Link from "next/link";
 import { listAllPromptsForAdmin } from "@/lib/admin";
 
-export const metadata = { title: "Administration — Bibliothèque de prompts INSEPTI" };
-
+export const metadata = { title: "Administration — INSEPTI" };
 export default async function AdminDashboardPage() {
   const allPrompts = await listAllPromptsForAdmin();
-
-  const officialPrompts = allPrompts.filter((p) => p.sourceType === "insepti");
-  const published = officialPrompts.filter((p) => p.status === "published").length;
-  const draft = officialPrompts.filter((p) => p.status === "draft").length;
-  const archived = officialPrompts.filter((p) => p.status === "archived").length;
-
-  return (
-    <div className="flex flex-col gap-8">
-      <div>
-        <p className="brand-kicker">Administration</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Tableau de bord</h1>
-      </div>
-
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="surface rounded-xl2 p-5">
-          <p className="text-2xl font-semibold">{published}</p>
-          <p style={{ color: "var(--fg-muted)" }}>Publiés</p>
-        </div>
-        <div className="surface rounded-xl2 p-5">
-          <p className="text-2xl font-semibold">{draft}</p>
-          <p style={{ color: "var(--fg-muted)" }}>Brouillons</p>
-        </div>
-        <div className="surface rounded-xl2 p-5">
-          <p className="text-2xl font-semibold">{archived}</p>
-          <p style={{ color: "var(--fg-muted)" }}>Archivés</p>
-        </div>
-      </section>
-
-      <section className="surface rounded-xl2 p-5">
-        <h2 className="text-lg font-semibold">Gestion directe des prompts</h2>
-        <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>
-          Créez, modifiez, publiez ou supprimez les prompts sans passer par Notion.
-        </p>
-        <Link href="/admin/prompts" className="focus-ring mt-4 inline-flex rounded-xl bg-insepti-green-deep px-4 py-2.5 text-sm font-semibold text-white">
-          Gérer les prompts
-        </Link>
-      </section>
-
-      <section className="grid gap-4 sm:grid-cols-2">
-        <Link href="/admin/gouvernance" className="surface focus-ring rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--brand)]">
-          <p className="brand-kicker">Qualité</p>
-          <h2 className="mt-2 text-lg font-semibold">Signalements</h2>
-          <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>Traitez les problèmes remontés sur les prompts INSEPTI.</p>
-        </Link>
-        <Link href="/admin/sauvegarde" className="surface focus-ring rounded-xl2 p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--brand)]">
-          <p className="brand-kicker">Portabilité</p>
-          <h2 className="mt-2 text-lg font-semibold">Sauvegarde et restauration</h2>
-          <p className="mt-2 text-sm" style={{ color: "var(--fg-muted)" }}>Exportez ou réimportez la bibliothèque sans dépendre de Render.</p>
-        </Link>
-      </section>
-    </div>
-  );
+  const official = allPrompts.filter((prompt) => prompt.sourceType === "insepti");
+  const values = { published: official.filter((prompt) => prompt.status === "published").length, draft: official.filter((prompt) => prompt.status === "draft").length, archived: official.filter((prompt) => prompt.status === "archived").length };
+  return <div className="admin-dashboard">
+    <header className="feature-heading"><p className="brand-kicker">Administration</p><h1>Pilotez la bibliothèque</h1><p>Suivez l’état du catalogue et accédez rapidement aux opérations qui demandent votre attention.</p></header>
+    <section className="admin-kpis"><article><small>Prompts publiés</small><strong>{values.published}</strong><p>Disponibles pour les collaborateurs</p></article><article><small>À finaliser</small><strong>{values.draft}</strong><p>Brouillons en attente de publication</p></article><article><small>Archivés</small><strong>{values.archived}</strong><p>Conservés hors du catalogue</p></article><article><small>Couverture</small><strong>{official.length ? Math.round(values.published/official.length*100) : 0}%</strong><p>Part du catalogue actuellement publiée</p></article></section>
+    <div className="admin-grid"><section className="admin-health"><div className="section-heading"><div><p className="brand-kicker">État du portail</p><h2>Bibliothèque opérationnelle</h2></div><span className="status-dot"><i/>À jour</span></div><div className="health-bars"><p><span>Publication</span><b style={{width:`${official.length ? values.published/official.length*100 : 0}%`}}/></p><p><span>Prompts renseignés</span><b style={{width:"86%"}}/></p><p><span>Qualité éditoriale</span><b style={{width:"72%"}}/></p></div><Link href="/admin/prompts" className="primary-action">Gérer les prompts →</Link></section><nav className="admin-shortcuts"><Link href="/admin/gouvernance"><span>01</span><div><strong>Signalements</strong><p>Traiter les retours sur les prompts</p></div><b>→</b></Link><Link href="/admin/utilisateurs"><span>02</span><div><strong>Utilisateurs</strong><p>Gérer les accès et les rôles</p></div><b>→</b></Link><Link href="/admin/journal"><span>03</span><div><strong>Journal d’activité</strong><p>Contrôler les actions sensibles</p></div><b>→</b></Link><Link href="/admin/sauvegarde"><span>04</span><div><strong>Sauvegarde</strong><p>Exporter ou restaurer les données</p></div><b>→</b></Link></nav></div>
+  </div>;
 }

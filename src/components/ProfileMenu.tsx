@@ -45,7 +45,7 @@ export function ProfileMenu({
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label="Ouvrir le profil et les réglages"
-        className="focus-ring flex h-11 w-11 items-center justify-center rounded-full bg-insepti-graphite text-sm font-bold text-white ring-2 ring-transparent transition hover:ring-insepti-green"
+        className="focus-ring flex h-10 w-10 items-center justify-center rounded-full bg-insepti-graphite text-[12px] font-bold text-white ring-2 ring-transparent transition hover:ring-insepti-green"
       >
         {initials}
       </button>
@@ -53,7 +53,7 @@ export function ProfileMenu({
         <div role="menu" className="surface card-shadow absolute right-0 mt-3 w-72 overflow-hidden rounded-2xl p-2">
           <div className="border-b px-3 py-3" style={{ borderColor: "var(--border)" }}>
             <p className="font-semibold">{displayName}</p>
-            <p className="truncate text-xs" style={{ color: "var(--fg-muted)" }}>{email}</p>
+            <p className="truncate text-[12px]" style={{ color: "var(--fg-muted)" }}>{email}</p>
           </div>
           <div className="py-2">
             <Link role="menuitem" href="/profil" className="focus-ring block rounded-xl px-3 py-2.5 text-sm hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>

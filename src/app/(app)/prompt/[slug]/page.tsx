@@ -1,77 +1,27 @@
-import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/require-session";
 import { getPromptBySlug } from "@/lib/prompts";
-import { FavoriteButton } from "@/components/FavoriteButton";
 import { PromptPersonalizer } from "@/components/PromptPersonalizer";
-import { APP_BORDER_CLASS, APP_TEXT_CLASS } from "@/lib/app-style";
+import { AiTag, DifficultyTag, SpecialtyTag } from "@/components/PromptTags";
+import { PromptFeedback } from "@/components/PromptFeedback";
+import { APP_BORDER_CLASS } from "@/lib/app-style";
 import { APPLICATION_LAUNCH_URL } from "@/lib/applications-data";
 import { getFolderIdsForPrompt, listPromptFolders } from "@/lib/prompt-folders";
 import { FolderPicker } from "@/components/FolderPicker";
-import { ReportPromptButton } from "@/components/ReportPromptButton";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  return { title: `${slug} — Bibliothèque de prompts INSEPTI` };
-}
-
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) { return { title: `${(await params).slug} — INSEPTI` }; }
 export default async function PromptDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
   const session = await requireSession();
-  const prompt = await getPromptBySlug(slug, session.userId, session.role === "admin");
+  const prompt = await getPromptBySlug((await params).slug, session.userId, session.role === "admin");
   if (!prompt) notFound();
-  const [folders, folderIds] = await Promise.all([
-    listPromptFolders(session.userId),
-    getFolderIdsForPrompt(session.userId, prompt.id),
-  ]);
-
-  return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-6">
-      <Link href={`/app/${prompt.applicationSlug}`} className="focus-ring text-sm" style={{ color: "var(--fg-muted)" }}>
-        ← {prompt.applicationName}
-      </Link>
-
-      <div className="surface rounded-xl2 p-6 sm:p-8">
-        <div className="flex items-start justify-between gap-4">
-        <div>
-          <span className={`text-xs font-semibold uppercase tracking-wide dark:text-white ${APP_TEXT_CLASS[prompt.applicationSlug] ?? ""}`}>
-            {prompt.applicationName}
-          </span>
-          <span className={`ml-2 rounded-full px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide ${
-            prompt.sourceType === "personal"
-              ? "bg-blue-600/10 text-blue-700 dark:text-blue-300"
-              : "bg-insepti-green-light/15 text-insepti-green-light"
-          }`}>
-            {prompt.sourceType === "personal" ? "Ma création" : "INSEPTI"}
-          </span>
-          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">{prompt.title}</h1>
-          <p className="mt-2" style={{ color: "var(--fg-muted)" }}>
-            {prompt.description}
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2 text-xs" style={{ color: "var(--fg-muted)" }}>
-            <span className="data-chip">Mis à jour le {new Date(prompt.updatedAt).toLocaleDateString("fr-FR")}</span>
-            {prompt.responsibleName && <span className="data-chip">Responsable · {prompt.responsibleName}</span>}
-          </div>
-        </div>
-        <FavoriteButton promptId={prompt.id} initialFavorite={prompt.isFavorite} />
-        </div>
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t pt-5" style={{ borderColor: "var(--border)" }}>
-          <FolderPicker
-            promptId={prompt.id}
-            folders={folders.map((folder) => ({ id: folder.id, name: folder.name }))}
-            initialFolderIds={folderIds}
-          />
-          {prompt.sourceType === "insepti" && <ReportPromptButton promptId={prompt.id} />}
-        </div>
-      </div>
-
-      <PromptPersonalizer
-        body={prompt.body}
-        variables={prompt.variables}
-        applicationName={prompt.applicationName}
-        applicationColorClass={APP_BORDER_CLASS[prompt.applicationSlug] ?? ""}
-        launchUrl={APPLICATION_LAUNCH_URL[prompt.applicationSlug] ?? "https://www.office.com"}
-      />
-    </div>
-  );
+  const [folders, folderIds] = await Promise.all([listPromptFolders(session.userId), getFolderIdsForPrompt(session.userId, prompt.id)]);
+  return <article className="prompt-detail-page">
+    <Link href="/catalogue" className="back-link">← Retour aux prompts</Link>
+    <header className="prompt-detail-header"><div className="prompt-detail-copy"><div className="prompt-card-tags justify-start"><SpecialtyTag value={prompt.specialty}/><DifficultyTag value={prompt.difficulty}/><AiTag value={prompt.ai}/></div><h1>{prompt.title}</h1><p>{prompt.description}</p><div className="prompt-card-meta"><span><Image src="/icons/specialties/aime-gris.png" alt="J’aime" width={16} height={16} unoptimized/>{prompt.likes}</span><span><Image src="/icons/specialties/date-gris.png" alt="Mise à jour" width={16} height={16} unoptimized/>{new Date(prompt.updatedAt).toLocaleDateString("fr-FR",{day:"2-digit",month:"long",year:"numeric"})}</span></div></div><aside><p>Enregistrer ce prompt dans votre espace pour le retrouver facilement.</p><FolderPicker promptId={prompt.id} folders={folders.map((folder)=>({id:folder.id,name:folder.name}))} initialFolderIds={folderIds}/></aside></header>
+    <PromptPersonalizer body={prompt.body} variables={prompt.variables} applicationName={prompt.applicationName} applicationColorClass={APP_BORDER_CLASS[prompt.applicationSlug] ?? ""} launchUrl={APPLICATION_LAUNCH_URL[prompt.applicationSlug] ?? "https://www.office.com"}/>
+    <section className="prompt-use-cases"><div className="section-heading"><div><p className="brand-kicker">Applications concrètes</p><h2>Cas d’usage</h2></div></div><div><article><span>01</span><h3>Préparer un livrable</h3><p>Obtenir une première version structurée à relire et enrichir.</p></article><article><span>02</span><h3>Gagner du temps</h3><p>Standardiser une tâche récurrente sans perdre les critères de qualité.</p></article><article><span>03</span><h3>Faciliter la décision</h3><p>Rendre les informations essentielles plus claires et actionnables.</p></article></div></section>
+    <PromptFeedback/>
+  </article>;
 }
