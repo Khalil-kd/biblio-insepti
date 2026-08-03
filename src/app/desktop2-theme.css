@@ -354,6 +354,9 @@ input:focus, textarea:focus, select:focus { outline: 2px solid rgba(117, 192, 68
 /* Login follows the same Desktop 2 system while keeping the Penpot structure. */
 .login-v4 { background: #061014; color: #f4f8f5; }
 .login-v4 > section:first-child {
+  isolation: isolate;
+  overflow: hidden;
+  padding: 0;
   background-color: #071519;
   background-image:
     linear-gradient(rgba(117, 192, 68, 0.055) 1px, transparent 1px),
@@ -361,6 +364,63 @@ input:focus, textarea:focus, select:focus { outline: 2px solid rgba(117, 192, 68
     radial-gradient(circle at 35% 30%, rgba(117, 192, 68, 0.2), transparent 30rem);
   background-size: 48px 48px, 48px 48px, auto;
   color: #f4f8f5;
+}
+.login-v4 > section.login-hero-panel > .login-hero-copy {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0;
+  padding: 56px 48px 68px;
+  pointer-events: none;
+}
+.login-v4 > section.login-hero-panel > .login-hero-copy > img { width: 270px; height: auto; }
+.login-v4 .login-hero-message { max-width: 620px; margin: 0; }
+.login-v4 .login-hero-message h1 {
+  margin: 0;
+  color: #f4f8f5;
+  text-shadow: 0 3px 28px rgba(0, 0, 0, 0.42);
+}
+.login-v4 .login-hero-message p { color: #becac4; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5); }
+.login-v4 > section.login-hero-panel > .login-spline-stage {
+  --spline-x: 0px;
+  --spline-y: 0px;
+  position: absolute;
+  inset: -7%;
+  z-index: 1;
+  max-width: none;
+  overflow: hidden;
+  margin: 0;
+  background: #071519;
+  opacity: 0;
+  transform: translate3d(var(--spline-x), var(--spline-y), 0) scale(1.12);
+  transition: opacity 600ms ease, transform 650ms cubic-bezier(.2,.7,.2,1);
+  will-change: transform;
+}
+.login-v4 > section.login-hero-panel > .login-spline-stage.is-ready { opacity: 0.92; }
+.login-spline-drift { width: 100%; height: 100%; animation: login-spline-drift 15s ease-in-out infinite alternate; }
+.login-spline-visual { width: 100% !important; height: 100% !important; filter: hue-rotate(178deg) saturate(.8) brightness(.6) contrast(1.18); }
+.login-spline-loader {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 60% 28%, rgba(117, 192, 68, 0.34), transparent 42%),
+    linear-gradient(145deg, #071519, #0b2420);
+}
+.login-spline-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(4, 16, 18, 0.12), rgba(4, 16, 18, 0.36)),
+    linear-gradient(180deg, rgba(4, 16, 18, 0.08), rgba(4, 16, 18, 0.72));
+  pointer-events: none;
+}
+@keyframes login-spline-drift {
+  from { transform: translate3d(-1.4%, -1.2%, 0) rotate(-.7deg) scale(1.035); }
+  to { transform: translate3d(1.4%, 1.1%, 0) rotate(.7deg) scale(1.07); }
 }
 .login-v4 > section:first-child p { color: #a8b6b0; }
 .login-v4 > section:last-child { background: #061014; }
@@ -399,4 +459,6 @@ input:focus, textarea:focus, select:focus { outline: 2px solid rgba(117, 192, 68
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .login-spline-stage { transform: scale(1.08); transition: opacity 250ms ease; }
+  .login-spline-drift { animation: none; }
 }

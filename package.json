@@ -18,6 +18,8 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^1.12.98",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.44.2",
     "iban": "^0.0.14",

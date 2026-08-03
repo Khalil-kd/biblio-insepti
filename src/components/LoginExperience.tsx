@@ -1,10 +1,14 @@
 import Image from "next/image";
+import { LoginSplineScene } from "./LoginSplineScene";
 
 export function LoginExperience() {
   return <main className="login-v4">
-    <section>
-      <Image src="/brand/insepti-logo-primary.png" alt="INSEPTI" width={270} height={54} priority unoptimized />
-      <div><h1>La bonne formulation,<br />au bon moment.</h1><p>Centralisez, adaptez et sécurisez les prompts utilisés par les équipes.</p><ul><li>✓ Prompts validés par métier</li><li>✓ Données sensibles protégées</li><li>✓ Historique et favoris synchronisés</li></ul></div>
+    <section className="login-hero-panel">
+      <LoginSplineScene />
+      <div className="login-hero-copy">
+        <Image src="/brand/insepti-logo-primary.png" alt="INSEPTI" width={270} height={54} priority unoptimized />
+        <div className="login-hero-message"><h1>La bonne formulation,<br />au bon moment.</h1><p>Centralisez, adaptez et sécurisez les prompts utilisés par les équipes.</p><ul><li>✓ Prompts validés par métier</li><li>✓ Données sensibles protégées</li><li>✓ Historique et favoris synchronisés</li></ul></div>
+      </div>
     </section>
     <section>
       <form action="/api/auth/login" method="GET">
