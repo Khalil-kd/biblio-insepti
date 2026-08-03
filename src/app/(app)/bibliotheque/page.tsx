@@ -33,6 +33,18 @@ export default async function HomePage() {
       <HomeNetworkScene label={fr ? "Réseau tridimensionnel INSEPTI interactif" : "Interactive INSEPTI three-dimensional network"} />
     </section>
 
+    <section className="home-live-rail" aria-label={fr ? "Activités du portail" : "Portal activity"}>
+      <div>
+        {[...Array(2)].flatMap((_, cycle) => [
+          [fr ? "Prompts validés" : "Validated prompts", "+12"],
+          [fr ? "Skills opérationnels" : "Operational skills", "06"],
+          [fr ? "Données protégées" : "Protected data", "LOCAL"],
+          [fr ? "Exercices guidés" : "Guided exercises", "04"],
+          [fr ? "Articles en veille" : "Monitored articles", "LIVE"],
+        ].map(([name, value], index) => <span key={`${cycle}-${index}`}><i />{name}<b>{value}</b></span>))}
+      </div>
+    </section>
+
     <section className="home-v5-paths">
       <Link href="/catalogue"><span>01</span><div><h2>{fr ? "Trouver le bon point de départ" : "Find the right starting point"}</h2><p>{fr ? "Explorez les prompts par métier, difficulté et origine." : "Explore prompts by specialty, level and origin."}</p></div><b>→</b></Link>
       <Link href="/constructeur"><span>02</span><div><h2>{fr ? "Construire votre propre méthode" : "Build your own method"}</h2><p>{fr ? "Transformez les mentions @ en champs personnalisables." : "Turn @ mentions into customizable fields."}</p></div><b>→</b></Link>

@@ -1,9 +1,6 @@
-import { LoginLogo3D } from "./LoginLogo3D";
-
 export function LoginExperience() {
   return <main className="login-v4">
     <section className="login-hero-panel">
-      <LoginLogo3D />
       <div className="login-hero-copy">
         <div className="login-hero-message"><h1>La bonne formulation,<br />au bon moment.</h1><p>Centralisez, adaptez et sécurisez les prompts utilisés par les équipes.</p><ul><li>✓ Prompts validés par métier</li><li>✓ Données sensibles protégées</li><li>✓ Historique et favoris synchronisés</li></ul></div>
       </div>
