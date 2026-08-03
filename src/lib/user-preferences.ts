@@ -15,7 +15,7 @@ export type UserPreferences = {
 };
 
 const DEFAULTS = {
-  theme: "light" as const,
+  theme: "dark" as const,
   language: "fr" as const,
   trackHistory: false,
   notifySpecialtyPrompts: true,

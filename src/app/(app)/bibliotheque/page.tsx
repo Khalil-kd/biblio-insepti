@@ -3,6 +3,7 @@ import { requireSession } from "@/lib/require-session";
 import { listPrompts } from "@/lib/prompts";
 import { importPromptsFromSeed } from "@/lib/import-prompts";
 import { getUserPreferences } from "@/lib/user-preferences";
+import { HomeNetworkScene } from "@/components/HomeNetworkScene";
 
 export const metadata = { title: "Accueil — Bibliothèque INSEPTI" };
 
@@ -15,13 +16,21 @@ export default async function HomePage() {
     prompts = await listPrompts({ userId: session.userId, sort: "recent" });
   }
   const fr = preferences.language === "fr";
-  const firstName = session.displayName.split(" ")[0];
+  const firstName = session.displayName.split(" ")[0] ?? session.displayName;
   const favorites = prompts.filter((prompt) => prompt.isFavorite).length;
 
-  return <div className="home-v5">
+  return <div className="home-v5 desktop2-home">
     <section className="home-v5-hero">
-      <div><p>{fr ? `Bonjour ${firstName}` : `Hello ${firstName}`}</p><h1>{fr ? "Tout ce qu’il faut pour mieux travailler avec l’IA." : "Everything you need to work better with AI."}</h1><span>{fr ? "Des méthodes solides, des prompts utiles et des réflexes de protection réunis dans un même portail." : "Reliable methods, useful prompts and data-protection habits in one portal."}</span></div>
-      <div className="home-orbit" aria-hidden="true"><i>Prompt</i><i>Skill</i><i>Exercice</i><i>Protection</i><b>INSEPTI</b></div>
+      <div className="home-v5-copy">
+        <p>{fr ? `BIBLIOTHÈQUE IA · BONJOUR ${firstName.toUpperCase()}` : `AI LIBRARY · HELLO ${firstName.toUpperCase()}`}</p>
+        <h1>{fr ? "Transformez vos idées en résultats immédiatement." : "Turn your ideas into results instantly."}</h1>
+        <span>{fr ? "Un espace professionnel pour trouver la bonne méthode, construire des prompts précis et adopter les bons réflexes avec l’IA." : "A professional workspace to find the right method, build precise prompts and develop reliable AI habits."}</span>
+        <div className="home-v5-actions">
+          <Link className="primary-action" href="/catalogue">{fr ? "Explorer les prompts" : "Explore prompts"} <b>↗</b></Link>
+          <Link className="secondary-action" href="/skills">{fr ? "Découvrir les skills" : "Discover skills"}</Link>
+        </div>
+      </div>
+      <HomeNetworkScene label={fr ? "Réseau tridimensionnel INSEPTI interactif" : "Interactive INSEPTI three-dimensional network"} />
     </section>
 
     <section className="home-v5-paths">
@@ -31,7 +40,7 @@ export default async function HomePage() {
     </section>
 
     <section className="home-v5-snapshot">
-      <div><p>{fr ? "Votre espace" : "Your workspace"}</p><h2>{fr ? "Reprenez là où vous vous êtes arrêté." : "Continue where you left off."}</h2></div>
+      <div><p>{fr ? "VOTRE ESPACE" : "YOUR WORKSPACE"}</p><h2>{fr ? "Reprenez votre progression sans perdre le fil." : "Continue your progress without losing context."}</h2></div>
       <Link href="/dossiers"><strong>{favorites}</strong><span>{fr ? "prompts sauvegardés" : "saved prompts"}</span></Link>
       <Link href="/exercices"><strong>4</strong><span>{fr ? "parcours d’exercices" : "exercise tracks"}</span></Link>
       <Link href="/skills"><strong>6</strong><span>{fr ? "skills opérationnels" : "operational skills"}</span></Link>
