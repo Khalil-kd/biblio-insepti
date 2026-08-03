@@ -15,6 +15,7 @@ const PAGE_SIZE = 9;
 export function CatalogueExplorer({
   prompts,
   initialQuery = "",
+  initialSort = "pertinence",
 }: {
   apps?: Array<{ slug: string; name: string }>;
   prompts: PromptCard[];
@@ -25,21 +26,27 @@ export function CatalogueExplorer({
   const [query, setQuery] = useState(initialQuery);
   const [specialty, setSpecialty] = useState<SpecialtyFilter>("Toutes");
   const [difficulty, setDifficulty] = useState<DifficultyFilter>("Toutes");
-  const [ai, setAi] = useState("Tous IA");
+  const [sort, setSort] = useState<SortOption>(initialSort);
   const [page, setPage] = useState(1);
 
   const filteredPrompts = useMemo(() => {
     const terms = normalizeSearchText(query).split(" ").filter(Boolean);
-    return prompts.filter((prompt) => {
+    const matches = prompts.filter((prompt) => {
       const matchesQuery = terms.every((term) => prompt.searchText.includes(term));
       const matchesSpecialty = specialty === "Toutes" || prompt.specialty === specialty;
       const matchesDifficulty = difficulty === "Toutes" || prompt.difficulty === difficulty;
-      const matchesAi = ai === "Tous IA" || prompt.ai === ai;
-      return matchesQuery && matchesSpecialty && matchesDifficulty && matchesAi;
+      return matchesQuery && matchesSpecialty && matchesDifficulty;
     });
-  }, [ai, difficulty, prompts, query, specialty]);
+    return [...matches].sort((a, b) => sort === "alphabetique"
+      ? a.title.localeCompare(b.title, "fr")
+      : sort === "popularite"
+        ? b.likes - a.likes
+        : sort === "recent"
+          ? new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          : 0);
+  }, [difficulty, prompts, query, sort, specialty]);
 
-  useEffect(() => setPage(1), [ai, difficulty, query, specialty]);
+  useEffect(() => setPage(1), [difficulty, query, sort, specialty]);
   const pageCount = Math.max(1, Math.ceil(filteredPrompts.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount);
   const visiblePrompts = filteredPrompts.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
@@ -78,19 +85,12 @@ export function CatalogueExplorer({
           </div>
         </FilterSection>
 
-        <FilterSection title="Intelligence artificielle">
-          <div className="filter-pills">
-            {["Tous IA", "Copilot", "ChatGPT", "Claude"].map((item) => (
-              <button key={item} type="button" onClick={() => setAi(item)} className={ai === item ? "is-active" : ""}>{item}</button>
-            ))}
-          </div>
-        </FilterSection>
       </aside>
 
       <section className="min-w-0">
         <div className="catalogue-results-header">
           <p><strong>{filteredPrompts.length === 0 ? 0 : (safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filteredPrompts.length)} sur 4 368 prompts</strong></p>
-          <button type="button" className="reset-filters">Trier : pertinence ↓</button>
+          <label className="sort-control"><span>Trier</span><select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}><option value="pertinence">Pertinence</option><option value="recent">Plus récents</option><option value="popularite">Plus aimés</option><option value="alphabetique">A–Z</option></select></label>
         </div>
 
         {visiblePrompts.length ? (

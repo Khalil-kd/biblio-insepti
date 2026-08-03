@@ -2,6 +2,7 @@ import { requireSession } from "@/lib/require-session";
 import { getFolderName, listPromptFolders, listPromptsInFolder } from "@/lib/prompt-folders";
 import { FolderManager } from "@/components/FolderManager";
 import { PromptCardView } from "@/components/PromptCardView";
+import { listPrompts } from "@/lib/prompts";
 
 export const metadata = { title: "Mes dossiers — Bibliothèque de prompts INSEPTI" };
 
@@ -12,17 +13,18 @@ export default async function FoldersPage({
 }) {
   const session = await requireSession();
   const { folder: activeFolderId } = await searchParams;
-  const [folders, activeFolder, folderPrompts] = await Promise.all([
+  const [folders, activeFolder, folderPrompts, savedPrompts] = await Promise.all([
     listPromptFolders(session.userId),
     activeFolderId ? getFolderName(activeFolderId, session.userId) : null,
     activeFolderId ? listPromptsInFolder(activeFolderId, session.userId) : Promise.resolve([]),
+    listPrompts({ userId: session.userId, favoritesOnly: true, sort: "recent" }),
   ]);
 
   return (
     <div className="grid gap-7 lg:grid-cols-[17rem_1fr]">
       <div>
         <p className="brand-kicker">Organisation privée</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Mes dossiers</h1>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Ma bibliothèque</h1>
         <p className="mt-2 text-sm leading-6" style={{ color: "var(--fg-muted)" }}>
           Regroupez les prompts INSEPTI et vos créations selon votre propre organisation.
         </p>
@@ -56,13 +58,7 @@ export default async function FoldersPage({
             )}
           </>
         ) : (
-          <div className="surface rounded-xl2 p-8 sm:p-12">
-            <p className="brand-kicker">Workspace personnel</p>
-            <h2 className="mt-3 max-w-xl text-3xl font-semibold tracking-[-0.04em]">Une arborescence qui suit votre façon de travailler.</h2>
-            <p className="mt-4 max-w-xl text-sm leading-6" style={{ color: "var(--fg-muted)" }}>
-              Créez un dossier à gauche, puis classez-y autant de prompts que nécessaire. Le classement reste visible uniquement par vous.
-            </p>
-          </div>
+          <div className="personal-library-overview"><header><div><p className="brand-kicker">Prompts sauvegardés</p><h2>{savedPrompts.length} prompt{savedPrompts.length > 1 ? "s" : ""} dans votre bibliothèque</h2></div></header>{savedPrompts.length ? <div className="prompt-grid">{savedPrompts.map((prompt) => <PromptCardView key={prompt.id} prompt={prompt} />)}</div> : <div className="surface rounded-xl2 p-8 sm:p-12"><h2 className="text-2xl font-semibold">Votre bibliothèque est prête.</h2><p className="mt-4 text-sm" style={{color:"var(--fg-muted)"}}>Ajoutez un prompt depuis sa fiche, puis classez-le dans le dossier de votre choix.</p></div>}</div>
         )}
       </section>
     </div>

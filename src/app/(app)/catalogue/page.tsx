@@ -24,7 +24,7 @@ export default async function CataloguePage({
       sort: "recent",
     }),
   ]);
-  const initialSort: SortOption = ["pertinence", "alphabetique", "recent"].includes(params.tri ?? "")
+  const initialSort: SortOption = ["pertinence", "alphabetique", "recent", "popularite"].includes(params.tri ?? "")
     ? (params.tri as SortOption)
     : "pertinence";
 

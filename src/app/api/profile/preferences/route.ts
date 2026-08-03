@@ -5,8 +5,12 @@ import { upsertUserPreferences } from "@/lib/user-preferences";
 import { verifyCsrf } from "@/lib/csrf";
 
 const schema = z.object({
-  theme: z.enum(["light", "dark", "system"]),
+  theme: z.enum(["light", "dark"]),
+  language: z.enum(["fr", "en"]),
   trackHistory: z.boolean(),
+  notifySpecialtyPrompts: z.boolean(),
+  notifySavedPromptUpdates: z.boolean(),
+  notifyBlogArticles: z.boolean(),
 });
 
 export async function PATCH(request: NextRequest) {

@@ -7,6 +7,7 @@ import { showToast } from "@/lib/toast-client";
 import { extractAtVariables } from "@/lib/prompt-variables";
 import { CUSTOM_PROMPT_ICONS, resolveCustomPromptIconKey, type CustomPromptIconKey } from "@/lib/custom-icons";
 import { CustomPromptIcon } from "./CustomPromptIcon";
+import { SPECIALTIES, type Specialty } from "@/lib/prompt-taxonomy";
 
 type PromptStatus = "draft" | "published" | "archived";
 
@@ -44,7 +45,8 @@ export function PromptEditorForm({
   const [title, setTitle] = useState(prompt?.title ?? "");
   const [description, setDescription] = useState(prompt?.description ?? "");
   const [body, setBody] = useState(prompt?.body ?? "");
-  const [applicationId, setApplicationId] = useState(prompt?.applicationId ?? applications[0]?.id ?? "");
+  const [applicationId] = useState(prompt?.applicationId ?? applications[0]?.id ?? "");
+  const [specialty, setSpecialty] = useState<Specialty>(() => SPECIALTIES.find((item) => prompt?.tags.includes(item)) ?? "Microsoft 365");
   const [customIconKey, setCustomIconKey] = useState<CustomPromptIconKey>(
     resolveCustomPromptIconKey(prompt?.customIconKey),
   );
@@ -68,7 +70,7 @@ export function PromptEditorForm({
               applicationId,
               customIconKey: selectedApplication?.slug === "other" ? customIconKey : null,
               variables: detectedVariables.length > 0 ? detectedVariables : (prompt?.variables ?? []),
-              tags: prompt?.tags ?? [],
+              tags: [...(prompt?.tags ?? []).filter((tag) => !(SPECIALTIES as readonly string[]).includes(tag)), specialty],
               ...(adminMode ? { status } : {}),
             }),
           }),
@@ -121,10 +123,10 @@ export function PromptEditorForm({
           <input required maxLength={200} value={title} onChange={(event) => setTitle(event.target.value)} className={fieldClass} />
         </label>
         <label className="grid gap-1.5 text-sm font-medium">
-          Application
-          <select required value={applicationId} onChange={(event) => setApplicationId(event.target.value)} className={fieldClass}>
-            {applications.map((application) => (
-              <option key={application.id} value={application.id}>{application.name}</option>
+          Spécialité
+          <select required value={specialty} onChange={(event) => setSpecialty(event.target.value as Specialty)} className={fieldClass}>
+            {SPECIALTIES.map((item) => (
+              <option key={item} value={item}>{item}</option>
             ))}
           </select>
         </label>

@@ -1,0 +1,54 @@
+/* Updated desktop/login board from Penpot. Loaded last to supersede the legacy login skin. */
+.login-v4{
+  display:grid;
+  min-height:100vh;
+  grid-template-columns:minmax(0,744fr) minmax(0,696fr);
+  overflow:hidden;
+  background:#273238;
+  color:#172126;
+}
+.login-v4>section:first-child{
+  position:relative;
+  display:block;
+  min-height:100vh;
+  padding:156px 43px 72px;
+  background:#f4f5f2 url('/brand/insepti-login-hero.png') center/cover no-repeat;
+  color:#172126;
+}
+.login-v4>section:first-child>img{width:341px;height:auto}
+.login-v4>section:first-child>div{margin-top:202px;max-width:620px}
+.login-v4>section:first-child h1{margin:0;font-size:52px;font-weight:650;line-height:1.08;letter-spacing:-.045em}
+.login-v4>section:first-child p{max-width:590px;margin-top:25px;color:#47545a;font-size:20px;line-height:1.5}
+.login-v4 ul{display:none}
+.login-v4>section:last-child{
+  display:flex;
+  min-height:100vh;
+  align-items:flex-start;
+  justify-content:center;
+  padding:207px 32px 72px;
+  background:#273238;
+}
+.login-v4 form{
+  width:522px;
+  min-height:548px;
+  border:0;
+  border-radius:20px;
+  background:#fff;
+  padding:51px 48px 38px;
+  box-shadow:0 24px 70px rgba(0,0,0,.14);
+}
+.login-v4 h2{margin:0;font-size:40px;font-weight:650;line-height:1.1;letter-spacing:-.035em}
+.login-v4 form>p{margin:25px 0 0;color:#667178;font-size:16px}
+.login-v4 label{gap:8px;margin-top:27px;color:#253138;font-size:12px;font-weight:700}
+.login-v4 input:not([type=checkbox]){height:48px;border:1px solid #cbd5cf!important;border-radius:10px;background:#fff!important;padding:0 14px;color:#172126!important;font-size:14px}
+.login-v4 input[type=password]::placeholder{color:#111;opacity:1;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2.5px}
+.login-options{align-items:center;margin-top:24px;color:#536168}
+.login-options>span{color:#315f2a;font-weight:700}
+.login-ms{margin-top:28px;background:#2e682b}
+.login-v4 form>small{margin-top:22px;text-align:center}
+@media(max-width:900px){
+  .login-v4{grid-template-columns:1fr}
+  .login-v4>section:first-child{display:none}
+  .login-v4>section:last-child{min-height:100vh;padding:32px 20px}
+  .login-v4 form{width:min(522px,100%);min-height:auto}
+}

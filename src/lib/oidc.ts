@@ -44,6 +44,7 @@ export function buildAuthorizationUrl(params: {
   state: string;
   nonce: string;
   codeChallenge: string;
+  loginHint?: string;
 }): string {
   const { tenantId, clientId, redirectUri } = getAuthEnv();
   const ep = endpoints(tenantId);
@@ -58,6 +59,7 @@ export function buildAuthorizationUrl(params: {
   url.searchParams.set("code_challenge", params.codeChallenge);
   url.searchParams.set("code_challenge_method", "S256");
   url.searchParams.set("prompt", "select_account");
+  if (params.loginHint) url.searchParams.set("login_hint", params.loginHint);
   return url.toString();
 }
 

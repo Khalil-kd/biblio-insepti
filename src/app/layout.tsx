@@ -8,6 +8,9 @@ import "./admin-v4.css";
 import "./login-v4.css";
 import "./login-v4-fix.css";
 import "./settings-v4.css";
+import "./app-v5.css";
+import "./notifications-v5.css";
+import "./login-penpot-v5.css";
 
 export const metadata: Metadata = {
   title: "Bibliothèque de prompts INSEPTI",

@@ -4,28 +4,40 @@ import Image from "next/image";
 import Link from "next/link";
 import { useId, useRef, useState } from "react";
 import type { PromptCard } from "@/lib/prompts";
-import { AiTag, DifficultyTag, SpecialtyTag } from "./PromptTags";
+import { DifficultyTag, OriginTag, SpecialtyTag } from "./PromptTags";
 
 function PromptMeta({ prompt }: { prompt: PromptCard }) {
   return (
     <div className="prompt-card-meta">
-      <span><Image src="/icons/specialties/aime-gris.png" alt="J’aime" width={16} height={16} unoptimized />{prompt.likes}</span>
-      <span><Image src="/icons/specialties/date-gris.png" alt="Mise à jour" width={16} height={16} unoptimized />{new Date(prompt.updatedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })}</span>
+      <span><Image src="/icons/specialties/aime-gris.png" alt="J’aime" width={20} height={20} unoptimized />{prompt.likes}</span>
+      <span><Image src="/icons/specialties/date-gris.png" alt="Mise à jour" width={20} height={20} unoptimized />{new Date(prompt.updatedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })}</span>
     </div>
   );
 }
 
 export function PromptCardView({ prompt }: { prompt: PromptCard }) {
   const [previewOpen, setPreviewOpen] = useState(false);
+  const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const titleId = useId();
 
   function openPreview() {
+    if (openTimer.current) clearTimeout(openTimer.current);
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setPreviewOpen(true);
   }
 
+  function scheduleOpen() {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (openTimer.current) clearTimeout(openTimer.current);
+    openTimer.current = setTimeout(openPreview, 2000);
+  }
+
   function scheduleClose() {
+    if (openTimer.current) clearTimeout(openTimer.current);
+    openTimer.current = null;
+    if (!previewOpen) return;
+    if (closeTimer.current) clearTimeout(closeTimer.current);
     closeTimer.current = setTimeout(() => setPreviewOpen(false), 160);
   }
 
@@ -33,13 +45,13 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
     <>
       <article
         className="prompt-card focus-within:ring-2 focus-within:ring-insepti-green"
-        onMouseEnter={openPreview}
+        onMouseEnter={scheduleOpen}
         onMouseLeave={scheduleClose}
       >
         <div className="prompt-card-tags">
-          <SpecialtyTag value={prompt.specialty} />
           <DifficultyTag value={prompt.difficulty} />
-          <AiTag value={prompt.ai} />
+          <SpecialtyTag value={prompt.specialty} />
+          <OriginTag sourceType={prompt.sourceType} />
         </div>
         <Link href={`/prompt/${prompt.slug}`} prefetch={false} className="focus-ring flex flex-1 flex-col" aria-labelledby={titleId}>
           <h2 id={titleId} className="prompt-card-title">{prompt.title}</h2>
@@ -57,9 +69,9 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
           >
             <button className="prompt-preview-close" type="button" onClick={() => setPreviewOpen(false)} aria-label="Fermer l’aperçu">×</button>
             <div className="prompt-card-tags justify-start">
-              <SpecialtyTag value={prompt.specialty} />
               <DifficultyTag value={prompt.difficulty} />
-              <AiTag value={prompt.ai} />
+              <SpecialtyTag value={prompt.specialty} />
+              <OriginTag sourceType={prompt.sourceType} />
             </div>
             <h2 className="prompt-preview-title">{prompt.title}</h2>
             <p className="prompt-preview-description">{prompt.description}</p>

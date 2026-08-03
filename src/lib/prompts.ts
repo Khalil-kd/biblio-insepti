@@ -34,7 +34,7 @@ export interface PromptDetail extends PromptCard {
   variables: string[];
 }
 
-export type SortOption = "pertinence" | "alphabetique" | "recent";
+export type SortOption = "pertinence" | "alphabetique" | "recent" | "popularite";
 
 export interface ListPromptsOptions {
   query?: string;
@@ -104,7 +104,7 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
     void _tagsJson;
     return {
       ...prompt,
-      ...derivePromptTaxonomy({ id: r.id, title: r.title, description: r.description, tags }),
+      ...derivePromptTaxonomy({ id: r.id, title: r.title, description: r.description, tags, applicationName: r.applicationName }),
       isFavorite: isFavoriteValue(r.isFavorite),
     };
   });
@@ -197,7 +197,7 @@ export async function getPromptBySlug(
     responsibleName: row.responsibleName,
     status: row.status,
     lastReviewedAt: row.lastReviewedAt,
-    ...derivePromptTaxonomy({ id: row.id, title: row.title, description: row.description, tags }),
+    ...derivePromptTaxonomy({ id: row.id, title: row.title, description: row.description, tags, applicationName: row.applicationName }),
   };
 }
 

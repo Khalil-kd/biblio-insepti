@@ -1,4 +1,5 @@
 export const SPECIALTIES = [
+  "Microsoft 365",
   "Marketing",
   "Rédaction",
   "Développement",
@@ -18,6 +19,7 @@ export type Specialty = (typeof SPECIALTIES)[number];
 export type Difficulty = "Débutant" | "Intermédiaire" | "Avancé";
 
 export const SPECIALTY_ICON_KEYS: Record<Specialty, string> = {
+  "Microsoft 365": "microsoft365",
   Marketing: "marketing",
   "Rédaction": "redaction",
   "Développement": "developpement",
@@ -44,9 +46,11 @@ export function derivePromptTaxonomy(input: {
   title: string;
   description: string;
   tags: string[];
+  applicationName?: string;
 }) {
-  const haystack = `${input.title} ${input.description} ${input.tags.join(" ")}`.toLocaleLowerCase("fr");
+  const haystack = `${input.applicationName ?? ""} ${input.title} ${input.description} ${input.tags.join(" ")}`.toLocaleLowerCase("fr");
   const specialtyRules: Array<[Specialty, RegExp]> = [
+    ["Microsoft 365", /microsoft|copilot|word|excel|powerpoint|outlook|teams|sharepoint|onedrive|onenote|planner|forms/],
     ["Marketing", /marketing|campagne|client|réseau|social/],
     ["Rédaction", /rédig|article|texte|synthèse|résum|document/],
     ["Développement", /code|développ|technique|api|logiciel/],
@@ -61,7 +65,8 @@ export function derivePromptTaxonomy(input: {
     ["Analyse de données", /donnée|table|analyse|indicateur|enquête/],
     ["Juridique", /jurid|contrat|conform|règlement/],
   ];
-  const specialty = specialtyRules.find(([, rule]) => rule.test(haystack))?.[0]
+  const explicitSpecialty = SPECIALTIES.find((item) => input.tags.some((tag) => tag.toLocaleLowerCase("fr") === item.toLocaleLowerCase("fr")));
+  const specialty = explicitSpecialty ?? specialtyRules.find(([, rule]) => rule.test(haystack))?.[0]
     ?? SPECIALTIES[stableIndex(input.id, SPECIALTIES.length)]
     ?? "Business";
   const difficulty = (["Débutant", "Intermédiaire", "Avancé"] as const)[stableIndex(`${input.id}-difficulty`, 3)] ?? "Intermédiaire";

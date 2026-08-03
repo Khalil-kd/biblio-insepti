@@ -1,6 +1,7 @@
 import { PromptEditorForm } from "@/components/PromptEditorForm";
 import { listManagedPromptsForAdmin, listPromptApplications } from "@/lib/prompt-management";
 import { DeletePromptButton } from "@/components/DeletePromptButton";
+import { derivePromptTaxonomy } from "@/lib/prompt-taxonomy";
 
 export const metadata = { title: "Prompts — Administration" };
 
@@ -37,7 +38,7 @@ export default async function AdminPromptsPage() {
                   <div className="flex min-h-10 flex-wrap items-center gap-x-3 gap-y-2">
                     <span className="font-semibold">{prompt.title}</span>
                     <span className="text-xs" style={{ color: "var(--fg-muted)" }}>
-                      {prompt.applicationName} · {new Date(prompt.updatedAt).toLocaleDateString("fr-FR")}
+                      {derivePromptTaxonomy({ id: prompt.id, title: prompt.title, description: prompt.description, tags: prompt.tags, applicationName: prompt.applicationName }).specialty} · {new Date(prompt.updatedAt).toLocaleDateString("fr-FR")}
                     </span>
                     <span className="hidden text-xs lg:inline" style={{ color: "var(--fg-muted)" }}>
                       Responsable : {prompt.responsibleName ?? prompt.ownerName ?? "Administration"}

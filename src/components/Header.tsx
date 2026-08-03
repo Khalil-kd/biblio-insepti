@@ -3,17 +3,21 @@ import Link from "next/link";
 import { AppNavigation } from "./AppNavigation";
 import { ProfileMenu } from "./ProfileMenu";
 import type { CurrentSession } from "@/lib/session";
+import type { UserPreferences } from "@/lib/user-preferences";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { NotificationCenter } from "./NotificationCenter";
 
-export function Header({ session }: { session: CurrentSession; favoritesCount?: number }) {
+export function Header({ session, preferences }: { session: CurrentSession; preferences: UserPreferences }) {
   return (
     <header className="app-header">
       <div className="app-header-inner">
-        <Link href="/catalogue" className="focus-ring app-logo" aria-label="INSEPTI — Prompts">
+        <Link href="/bibliotheque" className="focus-ring app-logo" aria-label="Accueil INSEPTI">
           <Image src="/brand/insepti-logo-primary.png" alt="INSEPTI" width={145} height={31} className="h-auto w-[145px]" priority unoptimized />
         </Link>
-        <AppNavigation />
+        <AppNavigation language={preferences.language} />
         <div className="app-header-actions">
-          <button type="button" className="language-button" aria-label="Langue : français">FR <span aria-hidden="true">⌄</span></button>
+          <LanguageSwitcher preferences={preferences} />
+          <NotificationCenter preferences={preferences} />
           <ProfileMenu displayName={session.displayName} email={session.email} isAdmin={session.role === "admin"} />
         </div>
       </div>

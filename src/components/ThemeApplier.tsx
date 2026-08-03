@@ -2,11 +2,10 @@
 
 import { useEffect } from "react";
 
-export function ThemeApplier({ theme }: { theme: "light" | "dark" | "system" }) {
+export function ThemeApplier({ theme }: { theme: "light" | "dark" }) {
   useEffect(() => {
-    const resolvedTheme = theme === "light" ? "light" : "dark";
-    document.documentElement.dataset.theme = resolvedTheme;
-    document.documentElement.classList.toggle("dark", resolvedTheme === "dark");
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
   return null;

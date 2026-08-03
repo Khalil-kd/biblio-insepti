@@ -14,11 +14,12 @@ export async function GET(request: NextRequest) {
   }
 
   const rememberMe = request.nextUrl.searchParams.get("remember_me") === "on";
+  const loginHint = request.nextUrl.searchParams.get("login_hint")?.trim();
   const { codeVerifier, codeChallenge } = await generatePkcePair();
   const state = randomString(24);
   const nonce = randomString(24);
 
-  const authorizeUrl = buildAuthorizationUrl({ state, nonce, codeChallenge });
+  const authorizeUrl = buildAuthorizationUrl({ state, nonce, codeChallenge, loginHint: loginHint || undefined });
 
   const store = await cookies();
   const cookieOpts = {

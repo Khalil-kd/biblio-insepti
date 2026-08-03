@@ -2,14 +2,15 @@ import Image from "next/image";
 import { SPECIALTY_ICON_KEYS, type Difficulty, type Specialty } from "@/lib/prompt-taxonomy";
 
 export function SpecialtyIcon({ specialty, active = false }: { specialty: Specialty; active?: boolean }) {
+  if (specialty === "Microsoft 365") return <Image src="/icons/copilot.svg" alt="" width={20} height={20} className={`specialty-icon-m365 ${active ? "is-active" : ""}`} unoptimized />;
   const key = SPECIALTY_ICON_KEYS[specialty];
   return (
     <Image
       src={`/icons/specialties/${key}-${active ? "vert" : "gris"}.png`}
       alt=""
-      width={16}
-      height={16}
-      className="h-4 w-4 shrink-0 object-contain"
+      width={20}
+      height={20}
+      className="h-5 w-5 shrink-0 object-contain"
       unoptimized
     />
   );
@@ -40,4 +41,8 @@ export function AiTag({ value }: { value: string }) {
       {value}
     </span>
   );
+}
+
+export function OriginTag({ sourceType }: { sourceType: "insepti" | "personal" }) {
+  return <span className={`prompt-tag origin-tag ${sourceType === "insepti" ? "is-insepti" : "is-personal"}`}>{sourceType === "insepti" ? "INSEPTI" : "Personnel"}</span>;
 }

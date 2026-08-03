@@ -211,7 +211,11 @@ export const rateLimitEvents = pgTable(
 
 export const userPreferences = pgTable("user_preferences", {
   userId: text("user_id").primaryKey().references(() => users.id, { onDelete: "cascade" }),
-  theme: text("theme", { enum: ["light", "dark", "system"] }).notNull().default("system"),
+  theme: text("theme", { enum: ["light", "dark", "system"] }).notNull().default("light"),
+  language: text("language", { enum: ["fr", "en"] }).notNull().default("fr"),
   trackHistory: boolean("track_history").notNull().default(false),
+  notifySpecialtyPrompts: boolean("notify_specialty_prompts").notNull().default(true),
+  notifySavedPromptUpdates: boolean("notify_saved_prompt_updates").notNull().default(true),
+  notifyBlogArticles: boolean("notify_blog_articles").notNull().default(false),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
