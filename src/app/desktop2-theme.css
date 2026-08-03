@@ -371,12 +371,11 @@ input:focus, textarea:focus, select:focus { outline: 2px solid rgba(117, 192, 68
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin: 0;
   padding: 56px 48px 68px;
   pointer-events: none;
 }
-.login-v4 > section.login-hero-panel > .login-hero-copy > img { width: 270px; height: auto; }
 .login-v4 .login-hero-message { max-width: 620px; margin: 0; }
 .login-v4 .login-hero-message h1 {
   margin: 0;
@@ -384,44 +383,60 @@ input:focus, textarea:focus, select:focus { outline: 2px solid rgba(117, 192, 68
   text-shadow: 0 3px 28px rgba(0, 0, 0, 0.42);
 }
 .login-v4 .login-hero-message p { color: #becac4; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5); }
-.login-v4 > section.login-hero-panel > .login-spline-stage {
-  --spline-x: 0px;
-  --spline-y: 0px;
+.login-v4 > section.login-hero-panel > .login-logo-3d {
   position: absolute;
-  inset: -7%;
+  inset: 2% 3% 28%;
   z-index: 1;
+  display: block;
   max-width: none;
   overflow: hidden;
   margin: 0;
-  background: #071519;
-  opacity: 0;
-  transform: translate3d(var(--spline-x), var(--spline-y), 0) scale(1.12);
-  transition: opacity 600ms ease, transform 650ms cubic-bezier(.2,.7,.2,1);
-  will-change: transform;
+  cursor: ew-resize;
+  background:
+    radial-gradient(circle at 50% 47%, rgba(117, 192, 68, 0.15), transparent 27%),
+    radial-gradient(circle at 50% 50%, rgba(117, 192, 68, 0.06), transparent 52%);
+  opacity: 0.72;
+  transition: opacity 500ms ease;
 }
-.login-v4 > section.login-hero-panel > .login-spline-stage.is-ready { opacity: 0.92; }
-.login-spline-drift { width: 100%; height: 100%; animation: login-spline-drift 15s ease-in-out infinite alternate; }
-.login-spline-visual { width: 100% !important; height: 100% !important; filter: hue-rotate(178deg) saturate(.8) brightness(.6) contrast(1.18); }
-.login-spline-loader {
+.login-v4 > section.login-hero-panel > .login-logo-3d.is-ready { opacity: 1; }
+.login-logo-3d-mount,
+.login-logo-3d-canvas {
   width: 100%;
   height: 100%;
-  background:
-    radial-gradient(ellipse at 60% 28%, rgba(117, 192, 68, 0.34), transparent 42%),
-    linear-gradient(145deg, #071519, #0b2420);
 }
-.login-spline-vignette {
+.login-logo-3d-canvas { display: block; touch-action: none; }
+.login-logo-3d-orbit {
   position: absolute;
-  inset: 0;
-  z-index: 2;
-  background:
-    linear-gradient(90deg, rgba(4, 16, 18, 0.12), rgba(4, 16, 18, 0.36)),
-    linear-gradient(180deg, rgba(4, 16, 18, 0.08), rgba(4, 16, 18, 0.72));
+  top: 50%;
+  left: 50%;
+  width: min(72%, 650px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(117, 192, 68, 0.12);
+  border-radius: 50%;
+  box-shadow: 0 0 80px rgba(117, 192, 68, 0.06), inset 0 0 55px rgba(117, 192, 68, 0.04);
+  opacity: 0;
   pointer-events: none;
+  transform: translate(-50%, -50%) rotateX(72deg);
+  transition: opacity 600ms ease 150ms;
 }
-@keyframes login-spline-drift {
-  from { transform: translate3d(-1.4%, -1.2%, 0) rotate(-.7deg) scale(1.035); }
-  to { transform: translate3d(1.4%, 1.1%, 0) rotate(.7deg) scale(1.07); }
+.login-logo-3d.is-ready .login-logo-3d-orbit { opacity: 1; }
+.login-logo-3d figcaption {
+  position: absolute;
+  right: 30px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #91a099;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease 300ms;
 }
+.login-logo-3d.is-ready figcaption { opacity: .9; }
+.login-logo-3d figcaption i { color: #9be15d; font-size: 18px; font-style: normal; }
 .login-v4 > section:first-child p { color: #a8b6b0; }
 .login-v4 > section:last-child { background: #061014; }
 .login-v4 form { border: 1px solid rgba(117, 192, 68, 0.2); background: rgba(13, 27, 31, 0.9); color: #f4f8f5; box-shadow: 0 30px 90px rgba(0, 0, 0, 0.38); }
@@ -459,6 +474,5 @@ input:focus, textarea:focus, select:focus { outline: 2px solid rgba(117, 192, 68
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
-  .login-spline-stage { transform: scale(1.08); transition: opacity 250ms ease; }
-  .login-spline-drift { animation: none; }
+  .login-logo-3d figcaption { display: none; }
 }

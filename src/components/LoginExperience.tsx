@@ -1,12 +1,10 @@
-import Image from "next/image";
-import { LoginSplineScene } from "./LoginSplineScene";
+import { LoginLogo3D } from "./LoginLogo3D";
 
 export function LoginExperience() {
   return <main className="login-v4">
     <section className="login-hero-panel">
-      <LoginSplineScene />
+      <LoginLogo3D />
       <div className="login-hero-copy">
-        <Image src="/brand/insepti-logo-primary.png" alt="INSEPTI" width={270} height={54} priority unoptimized />
         <div className="login-hero-message"><h1>La bonne formulation,<br />au bon moment.</h1><p>Centralisez, adaptez et sécurisez les prompts utilisés par les équipes.</p><ul><li>✓ Prompts validés par métier</li><li>✓ Données sensibles protégées</li><li>✓ Historique et favoris synchronisés</li></ul></div>
       </div>
     </section>
