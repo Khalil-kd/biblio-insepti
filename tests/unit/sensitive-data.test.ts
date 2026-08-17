@@ -26,4 +26,15 @@ describe("sensitive data protection", () => {
   it("ne signale pas un numéro de téléphone français invalide", () => {
     expect(detectSensitiveData("Appelez le 06 12 34 56 7.")).toEqual([]);
   });
+
+  it("détecte les secrets présents dans du code et des fichiers de configuration", () => {
+    const input = `Authorization: Bearer abcdefghijklmnopqrstuvwxyz123456
+DATABASE_URL=postgresql://admin:supersecret@db.internal/app
+const client_secret = "secret-value-123456";`;
+    const labels = detectSensitiveData(input).map((finding) => finding.label);
+
+    expect(labels).toContain("Jeton d’autorisation");
+    expect(labels).toContain("Chaîne de connexion");
+    expect(labels).toContain("Secret dans le code");
+  });
 });

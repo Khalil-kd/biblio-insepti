@@ -30,7 +30,7 @@ export function PromptCardView({ prompt }: { prompt: PromptCard }) {
   function scheduleOpen() {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     if (openTimer.current) clearTimeout(openTimer.current);
-    openTimer.current = setTimeout(openPreview, 2000);
+    openTimer.current = setTimeout(openPreview, 1200);
   }
 
   function scheduleClose() {

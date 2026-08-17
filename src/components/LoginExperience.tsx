@@ -8,14 +8,8 @@ export function LoginExperience() {
     <section>
       <form action="/api/auth/login" method="GET">
         <h2>Bienvenue</h2><p>Connectez-vous avec votre compte professionnel.</p>
-        <label>Adresse e-mail<input name="login_hint" type="email" autoComplete="email" placeholder="votre adresse e-mail" /></label>
-        <label>Mot de passe<input type="password" autoComplete="current-password" placeholder="●●●●●●●●●●●●" /></label>
-        <div className="login-options">
-          <label className="remember-control"><input type="checkbox" name="remember_me" defaultChecked /><span>Rester connecté</span></label>
-          <span>Mot de passe oublié ?</span>
-        </div>
         <button type="submit" className="login-ms"><i><span /><span /><span /><span /></i>Se connecter avec Microsoft</button>
-        <small>Accès réservé aux collaborateurs autorisés.</small>
+        <small>Authentification sécurisée par Microsoft Entra ID.<br />Accès réservé aux collaborateurs autorisés.</small>
       </form>
     </section>
   </main>;

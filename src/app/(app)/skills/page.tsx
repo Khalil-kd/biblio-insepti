@@ -1,4 +1,8 @@
-import Link from "next/link";
+import { SkillsExplorer } from "@/components/SkillsExplorer";
 import { SKILLS } from "@/lib/skills-data";
-export const metadata={title:"Skills — INSEPTI"};
-export default function SkillsPage(){const featured=SKILLS.find((skill)=>skill.slug==="skill-creator")??SKILLS[0];return <div className="skills-v4"><header><h1>Skills opérationnels</h1><p>Une sélection réelle de compétences agentiques, avec leur dépôt, commande d’installation et statut d’audit.</p></header><div className="skills-v4-toolbar"><label className="search-field"><span>⌕</span><input placeholder="Rechercher un skill, un éditeur ou un dépôt..."/></label><div><button className="is-active">Tous {SKILLS.length}</button><button>Officiels</button><button>Audités</button><button>Microsoft</button></div></div><div className="skills-v4-grid"><div className="skills-v4-table"><div className="skills-v4-head"><b>N°</b><b>Skill</b><b>Éditeur / dépôt</b><b>Installations</b><b>Plus</b></div>{SKILLS.map((skill,i)=><Link href={`/skills/${skill.slug}`} key={skill.slug} className="skills-v4-row"><b>{String(i+1).padStart(2,"0")}</b><span><strong>{skill.title}</strong><small>{skill.description}</small></span><span>{skill.owner} · {skill.repo}</span><b>{skill.installs}</b><em>Ouvrir</em></Link>)}</div><aside className="skill-feature"><small>À découvrir</small><h2>{featured.title}</h2><p>{featured.description}</p><div><small>INSTALLATION</small><strong>{featured.command}</strong></div><dl><dt>Installations</dt><dd>{featured.installs}</dd><dt>Dépôt</dt><dd>{featured.repo}</dd><dt>Audit</dt><dd>{featured.audit}</dd></dl><Link href={`/skills/${featured.slug}`} className="secondary-action">Voir le détail</Link></aside></div></div>}
+
+export const metadata = { title: "Skills — INSEPTI" };
+
+export default function SkillsPage() {
+  return <div className="skills-v4"><header><h1>Skills opérationnels</h1><p>Explorez des compétences agentiques réelles, filtrez-les, consultez leurs capacités et récupérez leur commande d’installation.</p></header><SkillsExplorer skills={SKILLS}/></div>;
+}

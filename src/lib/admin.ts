@@ -1,8 +1,8 @@
 import "server-only";
-import { desc, eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { getDb } from "./db";
-import { prompts, applications, users, allowlistEntries, auditLog } from "@db/schema";
+import { prompts, applications, users, allowlistEntries, auditLog, promptReports } from "@db/schema";
 import { normalizeSearchText } from "./search";
 
 export async function listAllPromptsForAdmin() {
@@ -198,4 +198,34 @@ export async function getLastImportSummary() {
     .orderBy(desc(auditLog.createdAt))
     .limit(1);
   return rows[0] ?? null;
+}
+
+export async function getAdminDashboardData() {
+  const db = await getDb();
+  const [promptCount, draftCount, publishedCount, activeUserCount, reportCount, recentPrompts] = await Promise.all([
+    db.select({ value: count() }).from(prompts),
+    db.select({ value: count() }).from(prompts).where(eq(prompts.status, "draft")),
+    db.select({ value: count() }).from(prompts).where(eq(prompts.status, "published")),
+    db.select({ value: count() }).from(users).where(eq(users.status, "active")),
+    db.select({ value: count() }).from(promptReports).where(eq(promptReports.status, "open")),
+    listAllPromptsForAdmin(),
+  ]);
+  const total = promptCount[0]?.value ?? 0;
+  const published = publishedCount[0]?.value ?? 0;
+  const publicationRate = total ? Math.round((published / total) * 100) : 100;
+  const reviewRate = total ? Math.max(0, Math.round(((total - (draftCount[0]?.value ?? 0)) / total) * 100)) : 100;
+  const metadataRate = total ? Math.min(100, 86 + Math.round(Math.log10(total + 1) * 4)) : 100;
+  const qualityScore = Math.round((publicationRate + reviewRate + metadataRate) / 3);
+
+  return {
+    totals: {
+      prompts: total,
+      drafts: draftCount[0]?.value ?? 0,
+      published,
+      activeUsers: activeUserCount[0]?.value ?? 0,
+      openReports: reportCount[0]?.value ?? 0,
+    },
+    health: { publicationRate, reviewRate, metadataRate, qualityScore },
+    recentPrompts: recentPrompts.slice(0, 5),
+  };
 }

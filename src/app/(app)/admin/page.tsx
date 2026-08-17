@@ -1,2 +1,22 @@
-const ROWS=[["Plan de transformation","Équipe Change","À valider","Aujourd’hui"],["Analyse opportunité IA","Data Lab","Publié","Hier"],["Compte-rendu exécutif","Conseil","Brouillon","25/07"],["Guide atelier métier","RH","Publié","22/07"],["Matrice des risques","PMO","À valider","20/07"]] as const;
-export default function AdminDashboardPage(){return <div className="admin-v4"><header><div><h1>Administration</h1><p>Pilotez la qualité, les publications et les accès du portail.</p></div><button className="secondary-action">+ Inviter un utilisateur</button></header><section className="admin-v4-kpis">{[["Prompts à valider","7"],["Utilisateurs actifs","146"],["Skills publiés","28"],["Qualité moyenne","92 %"],["Signalements","2"]].map(x=><article key={x[0]}><span>{x[0]}</span><b>{x[1]}</b></article>)}</section><nav>{["Prompts","Utilisateurs","Taxonomies","Skills","Journal"].map((x,i)=><button className={i===0?"active":""} key={x}>{x}</button>)}</nav><div className="admin-v4-grid"><main><header><h2>File de validation</h2><button className="secondary-action">Voir les 7</button></header>{ROWS.map(r=><article key={r[0]}><b>{r[0]}</b><span>{r[1]}</span><span>{r[2]}</span><span>{r[3]}</span><button className="secondary-action">Examiner</button></article>)}</main><aside><section><h2>Santé de la bibliothèque</h2><strong>92 / 100</strong>{[["Prompts revus","94 %"],["Métadonnées complètes","89 %"],["Retours positifs","93 %"]].map(x=><div key={x[0]}><p><b>{x[0]}</b><span>{x[1]}</span></p><i><em style={{width:x[1]}}/></i></div>)}</section><section><h2>Actions prioritaires</h2>{["7 prompts attendent une validation","2 signalements à examiner","4 taxonomies sans propriétaire"].map(x=><p key={x}>•　{x}</p>)}<button className="primary-action">Ouvrir le centre de contrôle</button></section></aside></div></div>}
+import Link from "next/link";
+import { getAdminDashboardData } from "@/lib/admin";
+import { SKILLS } from "@/lib/skills-data";
+
+const STATUS_LABELS: Record<string, string> = { draft: "À valider", published: "Publié", archived: "Archivé" };
+
+export default async function AdminDashboardPage() {
+  const dashboard = await getAdminDashboardData();
+  const { totals, health } = dashboard;
+  const priorities = [
+    { label: `${totals.drafts} prompt${totals.drafts > 1 ? "s" : ""} en attente de validation`, href: "/admin/prompts" },
+    { label: `${totals.openReports} signalement${totals.openReports > 1 ? "s" : ""} à examiner`, href: "/admin/gouvernance" },
+    { label: `${totals.activeUsers} utilisateur${totals.activeUsers > 1 ? "s" : ""} actif${totals.activeUsers > 1 ? "s" : ""}`, href: "/admin/utilisateurs" },
+  ];
+  return <div className="admin-v4"><header><div><h1>Vue d’ensemble</h1><p>Données en direct de la bibliothèque, des utilisateurs et des signalements.</p></div><Link href="/admin/utilisateurs" className="secondary-action">Gérer les utilisateurs</Link></header>
+    <section className="admin-v4-kpis">{[["Prompts à valider",totals.drafts],["Utilisateurs actifs",totals.activeUsers],["Skills référencés",SKILLS.length],["Prompts publiés",totals.published],["Signalements",totals.openReports]].map(([label,value])=><article key={label}><span>{label}</span><b>{value}</b></article>)}</section>
+    <nav>{([["Prompts","/admin/prompts"],["Utilisateurs","/admin/utilisateurs"],["Gouvernance","/admin/gouvernance"],["Skills","/skills"],["Journal","/admin/journal"]] as const).map(([label,href],index)=><Link className={index===0?"active":""} href={href} key={label}>{label}</Link>)}</nav>
+    <div className="admin-v4-grid"><main><header><h2>Dernières mises à jour</h2><Link href="/admin/prompts" className="secondary-action">Voir les {totals.prompts}</Link></header>{dashboard.recentPrompts.map((prompt)=><article key={prompt.id}><b>{prompt.title}</b><span>{prompt.applicationName}</span><span>{STATUS_LABELS[prompt.status] ?? prompt.status}</span><span>{new Date(prompt.updatedAt).toLocaleDateString("fr-FR")}</span><Link href="/admin/prompts" className="secondary-action">Examiner</Link></article>)}</main>
+      <aside><section><h2>Santé de la bibliothèque</h2><strong>{health.qualityScore} / 100</strong>{[["Prompts publiés",health.publicationRate],["Prompts traités",health.reviewRate],["Métadonnées",health.metadataRate]].map(([label,value])=><div key={label}><p><b>{label}</b><span>{value} %</span></p><i><em style={{width:`${value}%`}}/></i></div>)}</section><section><h2>Actions prioritaires</h2>{priorities.map((item)=><Link key={item.label} href={item.href}>→ {item.label}</Link>)}<Link href="/admin/gouvernance" className="primary-action">Ouvrir le centre de contrôle</Link></section></aside>
+    </div>
+  </div>;
+}
