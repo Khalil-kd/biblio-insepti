@@ -19,7 +19,7 @@ function randomToken(): string {
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-const PUBLIC_PREFIXES = ["/api/auth", "/login", "/faq", "/erreur", "/brand", "/icons"];
+const PUBLIC_PREFIXES = ["/api/auth", "/login", "/faq", "/erreur", "/brand", "/icons", "/visuals"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
