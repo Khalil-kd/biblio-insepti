@@ -388,7 +388,9 @@ input::placeholder, textarea::placeholder {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  :root:not([data-motion="full"]) *,
+  :root:not([data-motion="full"]) *::before,
+  :root:not([data-motion="full"]) *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -421,7 +423,7 @@ input::placeholder, textarea::placeholder {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .app-rain-icon {
+  :root:not([data-motion="full"]) .app-rain-icon {
     animation: none;
     opacity: 0.26;
     top: calc(8% + (var(--rain-index, 1) * 3%));
