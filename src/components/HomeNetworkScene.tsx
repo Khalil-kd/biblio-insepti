@@ -103,7 +103,7 @@ export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
             roughness: 0.72,
           });
           const planet = new THREE.Mesh(planetGeometry, planetMaterial);
-          planet.position.set(...spec.position);
+          planet.position.set(spec.position[0], spec.position[1], spec.position[2]);
           planet.userData.baseY = spec.position[1];
           planet.userData.phase = spec.phase;
           planets.add(planet);
