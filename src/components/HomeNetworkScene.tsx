@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { BufferGeometry, Material, Mesh, Object3D, Texture } from "three";
 
-export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boolean }) {
+export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "fallback">("loading");
 
@@ -52,57 +52,38 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
         cyan.position.set(4, -2, 2);
         scene.add(cyan);
 
-        const count = 220;
+        const rows = 13;
+        const samples = 56;
+        const count = rows * (samples - 1) * 2;
         const home = new Float32Array(count * 3);
-        const velocity = new Float32Array(count * 3);
         const colors: number[] = [];
         const green = new THREE.Color("#9be15d");
         const teal = new THREE.Color("#24d4d8");
-        for (let i = 0; i < count; i += 1) {
-          const angle = i * 0.61803398875 * Math.PI * 2;
-          const radius = 1.5 + ((i * 37) % 100) / 100 * 4.1;
-          home[i * 3] = Math.cos(angle) * radius;
-          home[i * 3 + 1] = Math.sin(angle) * radius * 0.58;
-          home[i * 3 + 2] = Math.sin(angle * 1.7) * 0.8 - 1;
-          const color = green.clone().lerp(teal, (i % 11) / 18);
-          colors.push(color.r, color.g, color.b);
+        let vertex = 0;
+        for (let row = 0; row < rows; row += 1) {
+          const y = -2.35 + row * (4.7 / (rows - 1));
+          const z = -1.8 + Math.sin(row * 0.72) * 0.16;
+          const color = green.clone().lerp(teal, row / (rows - 1) * 0.42);
+          for (let sample = 0; sample < samples - 1; sample += 1) {
+            const x0 = -5.25 + sample * (10.5 / (samples - 1));
+            const x1 = -5.25 + (sample + 1) * (10.5 / (samples - 1));
+            home.set([x0, y, z, x1, y, z], vertex * 3);
+            colors.push(color.r, color.g, color.b, color.r, color.g, color.b);
+            vertex += 2;
+          }
         }
 
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute("position", new THREE.BufferAttribute(home.slice(), 3));
         geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-        const arrowCanvas = document.createElement("canvas");
-        arrowCanvas.width = 32;
-        arrowCanvas.height = 32;
-        const arrowContext = arrowCanvas.getContext("2d");
-        if (arrowContext) {
-          arrowContext.translate(16, 16);
-          arrowContext.fillStyle = "#ffffff";
-          arrowContext.beginPath();
-          arrowContext.moveTo(-11, -2.4);
-          arrowContext.lineTo(4, -2.4);
-          arrowContext.lineTo(4, -8);
-          arrowContext.lineTo(12, 0);
-          arrowContext.lineTo(4, 8);
-          arrowContext.lineTo(4, 2.4);
-          arrowContext.lineTo(-11, 2.4);
-          arrowContext.closePath();
-          arrowContext.fill();
-        }
-        const arrowTexture = new THREE.CanvasTexture(arrowCanvas);
-        arrowTexture.colorSpace = THREE.SRGBColorSpace;
-        const material = new THREE.PointsMaterial({
-          size: 10,
-          sizeAttenuation: false,
-          map: arrowTexture,
-          alphaTest: 0.02,
+        const material = new THREE.LineBasicMaterial({
           vertexColors: true,
           transparent: true,
-          opacity: 0.96,
+          opacity: 0.72,
           depthWrite: false,
           blending: THREE.AdditiveBlending,
         });
-        particles.add(new THREE.Points(geometry, material));
+        particles.add(new THREE.LineSegments(geometry, material));
 
         const geometries: BufferGeometry[] = [geometry];
         const materials: Material[] = [material];
@@ -112,6 +93,7 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
         let lastY = 0;
         let pointerX = 99;
         let pointerY = 99;
+        let pointerActive = false;
         let targetX = 0;
         let targetY = 0;
         const reduced = () => document.documentElement.dataset.motion === "soft";
@@ -124,6 +106,7 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
           const bounds = mount.getBoundingClientRect();
           pointerX = ((event.clientX - bounds.left) / bounds.width - 0.5) * 10;
           pointerY = -((event.clientY - bounds.top) / bounds.height - 0.5) * 5.8;
+          pointerActive = true;
         };
         const down = (event: PointerEvent) => {
           dragging = true;
@@ -149,37 +132,23 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
         const render = (time = 0) => {
           if (disposed || !visible) return;
           const positions = geometry.attributes.position!.array as Float32Array;
-          const force = reduced() ? 0.004 : 0.011;
           for (let i = 0; i < count; i += 1) {
             const j = i * 3;
-            const px = positions[j] ?? 0;
-            const py = positions[j + 1] ?? 0;
-            const pz = positions[j + 2] ?? 0;
-            const dx = px - pointerX;
-            const dy = py - pointerY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            let vx = velocity[j] ?? 0;
-            let vy = velocity[j + 1] ?? 0;
-            let vz = velocity[j + 2] ?? 0;
-            if (distance < 1.45) {
-              const push = (1 - distance / 1.45) * force;
-              vx += dx / (distance + 0.01) * push;
-              vy += dy / (distance + 0.01) * push;
-            }
-            vx = (vx + ((home[j] ?? 0) - px) * 0.012) * 0.91;
-            vy = (vy + ((home[j + 1] ?? 0) - py) * 0.012) * 0.91;
-            vz = (vz + ((home[j + 2] ?? 0) - pz) * 0.01) * 0.91;
-            velocity[j] = vx;
-            velocity[j + 1] = vy;
-            velocity[j + 2] = vz;
-            positions[j] = px + vx + Math.sin(time * 0.0005 + i) * 0.00035;
-            positions[j + 1] = py + vy + Math.cos(time * 0.00045 + i) * 0.0003;
-            positions[j + 2] = pz + vz;
+            const hx = home[j] ?? 0;
+            const hy = home[j + 1] ?? 0;
+            const dx = hx - pointerX;
+            const dy = hy - pointerY;
+            const influence = pointerActive ? Math.exp(-(dx * dx + dy * dy) / 1.55) : 0;
+            const amplitude = reduced() ? 0.1 : 0.28;
+            const desiredY = hy + influence * Math.sin(dx * 2.35 + time * 0.0042) * amplitude;
+            positions[j] = hx;
+            positions[j + 1] = (positions[j + 1] ?? hy) + (desiredY - (positions[j + 1] ?? hy)) * 0.14;
+            positions[j + 2] = home[j + 2] ?? 0;
           }
           geometry.attributes.position!.needsUpdate = true;
           rig.position.x += (targetX - rig.position.x) * 0.09;
           rig.position.y += (targetY - rig.position.y) * 0.09;
-          const breath = 1.23 * (1 + (reduced() ? 0.012 : 0.028) * Math.sin(time * 0.0011));
+          const breath = 1.107 * (1 + (reduced() ? 0.012 : 0.028) * Math.sin(time * 0.0011));
           rig.scale.setScalar(breath);
           renderer.render(scene, camera);
           frame = requestAnimationFrame(render);
@@ -241,6 +210,7 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
           if (!dragging) {
             pointerX = 99;
             pointerY = 99;
+            pointerActive = false;
           }
         });
         mount.addEventListener("dblclick", reset);
@@ -266,7 +236,6 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
           });
           geometries.forEach((item) => item.dispose());
           materials.forEach((item) => item.dispose());
-          arrowTexture.dispose();
           renderer.dispose();
           renderer.domElement.remove();
         };
@@ -284,7 +253,6 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
   return (
     <figure className={`home-network-scene is-${status}`} aria-label={label}>
       <div ref={mountRef} className="home-network-mount" />
-      <figcaption><b>{fr ? "Glisser pour déplacer · double-clic pour recentrer" : "Drag to move · double-click to reset"}</b></figcaption>
     </figure>
   );
 }
