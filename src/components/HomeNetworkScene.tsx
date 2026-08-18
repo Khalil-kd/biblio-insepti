@@ -54,7 +54,7 @@ export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
 
         const geometries: BufferGeometry[] = [];
         const materials: Material[] = [];
-        const starCount = 460;
+        const starCount = 34;
         const starPositions = new Float32Array(starCount * 3);
         const starColors: number[] = [];
         const starGreen = new THREE.Color("#baff91");
@@ -178,11 +178,11 @@ export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
             planet.position.y = baseY + Math.sin(time * 0.00045 + phase) * 0.09 * motionFactor;
           });
           starMaterial.opacity = 0.74 + Math.sin(time * 0.0007) * 0.08 * motionFactor;
-          const floatX = targetX + (pointerActive ? pointerNX * 0.16 : 0);
-          const floatY = targetY + Math.sin(time * 0.00075) * 0.14 * motionFactor + (pointerActive ? -pointerNY * 0.1 : 0);
+          const floatX = targetX + Math.sin(time * 0.00052) * 0.12 * motionFactor + (pointerActive ? pointerNX * 0.16 : 0);
+          const floatY = targetY + Math.sin(time * 0.00075) * 0.26 * motionFactor + (pointerActive ? -pointerNY * 0.1 : 0);
           rig.position.x += (floatX - rig.position.x) * 0.075;
           rig.position.y += (floatY - rig.position.y) * 0.075;
-          const breath = 1.107 * (1 + (reduced() ? 0.012 : 0.028) * Math.sin(time * 0.0011));
+          const breath = 0.5535 * (1 + (reduced() ? 0.012 : 0.028) * Math.sin(time * 0.0011));
           rig.scale.setScalar(breath);
           renderer.render(scene, camera);
           frame = requestAnimationFrame(render);
