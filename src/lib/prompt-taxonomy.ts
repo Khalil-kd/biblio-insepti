@@ -70,6 +70,5 @@ export function derivePromptTaxonomy(input: {
     ?? SPECIALTIES[stableIndex(input.id, SPECIALTIES.length)]
     ?? "Business";
   const difficulty = (["Débutant", "Intermédiaire", "Avancé"] as const)[stableIndex(`${input.id}-difficulty`, 3)] ?? "Intermédiaire";
-  const likes = 86 + stableIndex(`${input.id}-likes`, 248);
-  return { specialty, difficulty, ai: "Tous IA", likes };
+  return { specialty, difficulty, ai: "Tous IA", likes: 0 };
 }

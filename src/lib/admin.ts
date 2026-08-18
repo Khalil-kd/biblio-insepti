@@ -2,7 +2,7 @@ import "server-only";
 import { count, desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { getDb } from "./db";
-import { prompts, applications, users, allowlistEntries, auditLog, promptReports } from "@db/schema";
+import { prompts, applications, users, allowlistEntries, auditLog, promptReports, favorites } from "@db/schema";
 import { normalizeSearchText } from "./search";
 
 export async function listAllPromptsForAdmin() {
@@ -202,12 +202,14 @@ export async function getLastImportSummary() {
 
 export async function getAdminDashboardData() {
   const db = await getDb();
-  const [promptCount, draftCount, publishedCount, activeUserCount, reportCount, recentPrompts] = await Promise.all([
+  const [promptCount, draftCount, publishedCount, activeUserCount, reportCount, openReportCount, likeCount, recentPrompts] = await Promise.all([
     db.select({ value: count() }).from(prompts),
     db.select({ value: count() }).from(prompts).where(eq(prompts.status, "draft")),
     db.select({ value: count() }).from(prompts).where(eq(prompts.status, "published")),
     db.select({ value: count() }).from(users).where(eq(users.status, "active")),
+    db.select({ value: count() }).from(promptReports),
     db.select({ value: count() }).from(promptReports).where(eq(promptReports.status, "open")),
+    db.select({ value: count() }).from(favorites),
     listAllPromptsForAdmin(),
   ]);
   const total = promptCount[0]?.value ?? 0;
@@ -223,7 +225,9 @@ export async function getAdminDashboardData() {
       drafts: draftCount[0]?.value ?? 0,
       published,
       activeUsers: activeUserCount[0]?.value ?? 0,
-      openReports: reportCount[0]?.value ?? 0,
+      openReports: openReportCount[0]?.value ?? 0,
+      reports: reportCount[0]?.value ?? 0,
+      likes: likeCount[0]?.value ?? 0,
     },
     health: { publicationRate, reviewRate, metadataRate, qualityScore },
     recentPrompts: recentPrompts.slice(0, 5),

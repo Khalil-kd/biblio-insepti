@@ -27,6 +27,8 @@ export interface PromptCard {
   difficulty: Difficulty;
   ai: string;
   likes: number;
+  previewBody: string;
+  useCases: string[];
 }
 
 export interface PromptDetail extends PromptCard {
@@ -87,9 +89,11 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
       status: prompts.status,
       lastReviewedAt: prompts.lastReviewedAt,
       tagsJson: prompts.tagsJson,
+      body: prompts.body,
       isFavorite: opts.userId
         ? sql<unknown>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${opts.userId})`
         : sql<unknown>`0`,
+      likes: sql<number>`(select count(*) from ${favorites} as all_favorites where all_favorites.prompt_id = ${prompts.id})`,
     })
     .from(prompts)
     .innerJoin(applications, eq(prompts.applicationId, applications.id))
@@ -102,9 +106,17 @@ export async function listPrompts(opts: ListPromptsOptions): Promise<PromptCard[
     try { tags = JSON.parse(r.tagsJson) as string[]; } catch { tags = []; }
     const { tagsJson: _tagsJson, ...prompt } = r;
     void _tagsJson;
+    const taxonomy = derivePromptTaxonomy({ id: r.id, title: r.title, description: r.description, tags, applicationName: r.applicationName });
     return {
       ...prompt,
-      ...derivePromptTaxonomy({ id: r.id, title: r.title, description: r.description, tags, applicationName: r.applicationName }),
+      ...taxonomy,
+      likes: Number(r.likes ?? 0),
+      previewBody: r.body,
+      useCases: [
+        `${taxonomy.specialty} · production quotidienne`,
+        `${taxonomy.specialty} · contrôle qualité`,
+        "Adaptation à un contexte client",
+      ],
       isFavorite: isFavoriteValue(r.isFavorite),
     };
   });
@@ -156,6 +168,7 @@ export async function getPromptBySlug(
       isFavorite: userId
         ? sql<unknown>`(select count(*) from ${favorites} where ${favorites.promptId} = ${prompts.id} and ${favorites.userId} = ${userId})`
         : sql<unknown>`0`,
+      likes: sql<number>`(select count(*) from ${favorites} as all_favorites where all_favorites.prompt_id = ${prompts.id})`,
     })
     .from(prompts)
     .innerJoin(applications, eq(prompts.applicationId, applications.id))
@@ -198,6 +211,13 @@ export async function getPromptBySlug(
     status: row.status,
     lastReviewedAt: row.lastReviewedAt,
     ...derivePromptTaxonomy({ id: row.id, title: row.title, description: row.description, tags, applicationName: row.applicationName }),
+    likes: Number(row.likes ?? 0),
+    previewBody: row.body,
+    useCases: [
+      `${derivePromptTaxonomy({ id: row.id, title: row.title, description: row.description, tags, applicationName: row.applicationName }).specialty} · production quotidienne`,
+      "Contrôle et validation par un collaborateur",
+      "Adaptation à un contexte client",
+    ],
   };
 }
 

@@ -1,10 +1,11 @@
 import Link from "next/link";
-import Image from "next/image";
 import { requireSession } from "@/lib/require-session";
 import { listPrompts } from "@/lib/prompts";
 import { importPromptsFromSeed } from "@/lib/import-prompts";
 import { getUserPreferences } from "@/lib/user-preferences";
 import { HomeNetworkScene } from "@/components/HomeNetworkScene";
+import { ArticleImage } from "@/components/ArticleImage";
+import { EDITORIAL_ARTICLES } from "@/lib/editorial-articles";
 
 export const metadata = { title: "Accueil — Bibliothèque INSEPTI" };
 
@@ -50,15 +51,15 @@ export default async function HomePage() {
 
     <section className="home-v5-paths">
       <Link className="home-path-card is-cyan" href="/catalogue" data-reveal="zoom">
-        <div className="home-path-visual" data-parallax><Image src="/visuals/neural-knowledge-v1.png" alt="" fill sizes="(max-width: 1150px) 100vw, 33vw" /></div>
+        <div className="home-path-visual" data-parallax><ArticleImage src={EDITORIAL_ARTICLES[0]!.visual} alt="Transformation IA en entreprise" sizes="(max-width:1150px) 100vw,33vw"/></div>
         <div className="home-path-body"><span>01</span><div><h2>{fr ? "Trouver le bon point de départ" : "Find the right starting point"}</h2><p>{fr ? "Explorez les prompts par métier, difficulté et origine." : "Explore prompts by specialty, level and origin."}</p></div><b>→</b></div>
       </Link>
       <Link className="home-path-card is-violet" href="/constructeur" data-reveal="zoom">
-        <div className="home-path-visual" data-parallax><Image src="/visuals/skills-learning-v1.png" alt="" fill sizes="(max-width: 1150px) 100vw, 33vw" /></div>
+        <div className="home-path-visual" data-parallax><ArticleImage src={EDITORIAL_ARTICLES[2]!.visual} alt="Création de skills et agents de code" sizes="(max-width:1150px) 100vw,33vw"/></div>
         <div className="home-path-body"><span>02</span><div><h2>{fr ? "Construire votre propre méthode" : "Build your own method"}</h2><p>{fr ? "Transformez les mentions @ en champs personnalisables." : "Turn @ mentions into customizable fields."}</p></div><b>→</b></div>
       </Link>
       <Link className="home-path-card is-orange" href="/protecteur" data-reveal="zoom">
-        <div className="home-path-visual" data-parallax><Image src="/visuals/data-protector-v1.png" alt="" fill sizes="(max-width: 1150px) 100vw, 33vw" /></div>
+        <div className="home-path-visual" data-parallax><ArticleImage src={EDITORIAL_ARTICLES[1]!.visual} alt="Sécurité et protection des données" sizes="(max-width:1150px) 100vw,33vw"/></div>
         <div className="home-path-body"><span>03</span><div><h2>{fr ? "Vérifier avant de partager" : "Check before sharing"}</h2><p>{fr ? "Détectez les données sensibles et créez une version protégée." : "Detect sensitive data and create a protected version."}</p></div><b>→</b></div>
       </Link>
     </section>

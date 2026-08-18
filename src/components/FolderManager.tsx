@@ -86,7 +86,7 @@ export function FolderManager({ folders, activeFolderId }: { folders: Folder[]; 
               <button
                 type="button"
                 onClick={() => setFolderToDelete(folder)}
-                className="focus-ring mr-2 grid h-5 w-5 shrink-0 place-items-center rounded-md text-[12px] leading-none text-red-500 opacity-70 transition hover:bg-red-500/10 hover:opacity-100"
+                className="focus-ring mr-2 grid h-7 w-7 shrink-0 place-items-center rounded-md text-[12px] leading-none text-red-500 opacity-0 transition hover:bg-red-500/10 hover:opacity-100 group-hover:opacity-55 focus:opacity-100"
                 aria-label={`Supprimer ${folder.name}`}
               >
                 ×

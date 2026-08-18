@@ -59,6 +59,9 @@ export function ProfileMenu({
             <Link role="menuitem" href="/profil" className="focus-ring block rounded-xl px-3 py-2.5 text-sm hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
               Profil et réglages
             </Link>
+            <Link role="menuitem" href="/faq" className="focus-ring mt-1 block rounded-xl px-3 py-2.5 text-sm hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+              Aide et FAQ
+            </Link>
             {isAdmin && (
               <Link role="menuitem" href="/admin" className="focus-ring mt-1 block rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
                 Espace administrateur

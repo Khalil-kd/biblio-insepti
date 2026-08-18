@@ -1,64 +1,17 @@
-import Link from "next/link";
-
-const FAQ_ITEMS = [
-  {
-    question: "Qui peut accéder à la bibliothèque ?",
-    answer:
-      "L’accès est réservé aux collaborateurs autorisés par INSEPTI. La connexion utilise votre compte professionnel Microsoft.",
-  },
-  {
-    question: "Quelle est la différence entre un prompt INSEPTI et une création privée ?",
-    answer:
-      "Les prompts INSEPTI composent le catalogue commun. Les créations privées sont conçues par chaque utilisateur pour ses propres besoins.",
-  },
-  {
-    question: "Mes créations privées sont-elles visibles par les autres collaborateurs ?",
-    answer:
-      "Non. Une création privée est visible uniquement par son auteur et par l’administrateur de la plateforme.",
-  },
-  {
-    question: "Comment créer des champs à personnaliser ?",
-    answer:
-      "Écrivez un champ précédé de @ dans le contenu, par exemple @client ou @objectif. Le formulaire de personnalisation sera créé automatiquement.",
-  },
-  {
-    question: "Comment gérer mes favoris, mes dossiers et mes prompts ?",
-    answer:
-      "Depuis votre espace, vous pouvez gérer vos favoris, créer vos propres prompts et les regrouper dans des dossiers personnels.",
-  },
-];
-
-export const metadata = {
-  title: "Questions fréquentes — INSEPTI",
-};
-
-export default function FaqPage() {
-  return (
-    <main className="min-h-dvh bg-[#F7F8F6] px-6 py-12 text-insepti-graphite sm:px-10 lg:px-16 lg:py-16">
-      <div className="mx-auto max-w-4xl">
-        <Link href="/" className="focus-ring text-sm font-semibold text-insepti-green-deep hover:underline">
-          ← Retour à la connexion
-        </Link>
-        <p className="brand-kicker mt-12">Aide et informations</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">Questions fréquentes</h1>
-        <p className="mt-4 max-w-2xl text-sm leading-6 text-insepti-slate">
-          Les réponses essentielles pour utiliser la bibliothèque de prompts INSEPTI en toute autonomie.
-        </p>
-
-        <div className="mt-10 divide-y divide-black/10 border-y border-black/10">
-          {FAQ_ITEMS.map((item, index) => (
-            <details key={item.question} className="group py-1" open={index === 0}>
-              <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-5 py-5 font-semibold">
-                <span>{item.question}</span>
-                <span className="text-xl font-normal text-insepti-green-deep transition-transform group-open:rotate-45" aria-hidden="true">
-                  +
-                </span>
-              </summary>
-              <p className="max-w-2xl pb-5 pr-10 text-sm leading-6 text-insepti-slate">{item.answer}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </main>
-  );
-}
+"use client";
+import Link from "next/link";import{useMemo,useState}from"react";
+const ITEMS=[
+["Compte","Qui peut accéder à la bibliothèque ?","Les collaborateurs et partenaires explicitement autorisés peuvent se connecter avec leur compte Microsoft professionnel."],
+["Compte","Comment changer la langue ou le thème ?","Ouvrez votre profil, puis Profil et réglages. Les choix français/anglais et clair/sombre sont enregistrés dans votre compte."],
+["Prompts","Quelle différence entre un prompt INSEPTI et personnel ?","Le tag vert INSEPTI identifie le catalogue commun. Une création personnelle reste privée tant qu’elle n’est pas publiée."],
+["Prompts","Comment signaler un prompt incorrect ?","Ouvrez sa fiche puis utilisez Signaler. Choisissez le motif et ajoutez le contexte utile à l’administrateur."],
+["Bibliothèque","Comment classer mes prompts ?","Depuis une fiche, sauvegardez le prompt puis affectez-le à un dossier créé dans Ma bibliothèque."],
+["Constructeur","À quoi servent les variables @ ?","Dans l’éditeur uniquement, écrivez @role, @objectif ou votre propre nom. Un champ lisible est généré automatiquement."],
+["Protecteur","Le texte analysé quitte-t-il mon navigateur ?","La détection courante est locale. Vérifiez toujours la politique interne avant de traiter un document confidentiel."],
+["Protecteur","Le protecteur peut-il analyser du code ?","Oui, il recherche aussi les clés, jetons, chaînes de connexion, adresses, secrets et identifiants présents dans des extraits de code."],
+["Skills","Qu’est-ce qu’un skill ?","Un skill est une procédure réutilisable qui donne à un agent des instructions, outils et contrôles pour une tâche précise."],
+["Exercices","Ma progression est-elle sauvegardée ?","Oui, les six exercices conservent leur état dans ce navigateur et débloquent des badges de progression."],
+["Confidentialité","Puis-je coller des données clients ?","Commencez par le Protecteur et remplacez les données identifiantes. Respectez les règles contractuelles et internes applicables."],
+["Administration","Que voit un administrateur ?","Il pilote les publications, utilisateurs, signalements et indicateurs de santé. Les actions sensibles sont journalisées."],
+] as const;
+export default function FaqPage(){const[q,setQ]=useState("");const[cat,setCat]=useState("Toutes");const cats=["Toutes",...Array.from(new Set(ITEMS.map(i=>i[0])))];const filtered=useMemo(()=>ITEMS.filter(i=>(cat==="Toutes"||i[0]===cat)&&`${i[0]} ${i[1]} ${i[2]}`.toLocaleLowerCase("fr").includes(q.toLocaleLowerCase("fr"))),[q,cat]);return <main className="faq-page"><div className="faq-shell"><Link href="/" className="faq-back">← Retour</Link><p className="brand-kicker">CENTRE D’AIDE</p><h1>Comment pouvons-nous vous aider ?</h1><p>Des réponses courtes pour utiliser le portail avec autonomie et sécurité.</p><label className="faq-search"><span className="sr-only">Rechercher dans la FAQ</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Rechercher une question..."/></label><nav aria-label="Catégories FAQ">{cats.map(c=><button key={c} className={cat===c?"is-active":""} onClick={()=>setCat(c)}>{c}</button>)}</nav><section className="faq-list" aria-live="polite">{filtered.map((i,index)=><details key={i[1]} open={index===0&&q===""}><summary><span><small>{i[0]}</small>{i[1]}</span><b aria-hidden="true">+</b></summary><p>{i[2]}</p></details>)}{!filtered.length&&<p className="faq-empty">Aucun résultat. Essayez un terme plus général.</p>}</section></div></main>}

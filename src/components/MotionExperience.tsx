@@ -1,104 +1,29 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-
-type MotionMode = "system" | "full" | "reduced";
-
-const STORAGE_KEY = "insepti-motion";
+import { useEffect } from "react";
 
 export function MotionExperience() {
   const pathname = usePathname();
-  const [mode, setMode] = useState<MotionMode>("system");
-  const [systemReduced, setSystemReduced] = useState(false);
-
-  useEffect(() => {
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "full" || stored === "reduced") setMode(stored);
-    setSystemReduced(motionQuery.matches);
-
-    const onPreferenceChange = (event: MediaQueryListEvent) => setSystemReduced(event.matches);
-    motionQuery.addEventListener("change", onPreferenceChange);
-    return () => motionQuery.removeEventListener("change", onPreferenceChange);
-  }, []);
-
-  const motionEnabled = mode === "full" || (mode === "system" && !systemReduced);
-
   useEffect(() => {
     const root = document.documentElement;
-    root.dataset.motion = motionEnabled ? "full" : "reduced";
-    window.dispatchEvent(new CustomEvent("insepti:motion-change"));
-  }, [motionEnabled]);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.add("motion-ready");
-    const revealNodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
-    const parallaxNodes = Array.from(document.querySelectorAll<HTMLElement>("[data-parallax]"));
-
-    if (!motionEnabled) {
-      revealNodes.forEach((node) => node.classList.add("is-visible"));
-      parallaxNodes.forEach((node) => node.style.setProperty("--parallax", "0"));
-      return;
-    }
-
-    revealNodes.forEach((node) => node.classList.remove("is-visible"));
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        revealObserver.unobserve(entry.target);
-      });
-    }, { rootMargin: "0px 0px -9%", threshold: 0.08 });
-    revealNodes.forEach((node) => revealObserver.observe(node));
-
-    let frame = 0;
-    const updateParallax = () => {
-      const viewportCenter = window.innerHeight / 2;
-      parallaxNodes.forEach((node) => {
-        const bounds = node.getBoundingClientRect();
-        const nodeCenter = bounds.top + bounds.height / 2;
-        const progress = Math.max(-1, Math.min(1, (nodeCenter - viewportCenter) / Math.max(window.innerHeight, 1)));
-        node.style.setProperty("--parallax", progress.toFixed(3));
-      });
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => { root.dataset.motion = query.matches ? "soft" : "full"; };
+    sync(); query.addEventListener("change", sync); root.classList.add("motion-ready");
+    const reveals = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    const parallax = Array.from(document.querySelectorAll<HTMLElement>("[data-parallax]"));
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => entry.target.classList.toggle("is-visible", entry.isIntersecting)), { rootMargin: "-3% 0px -8%", threshold: [0, .08, .35] });
+    reveals.forEach((node) => observer.observe(node));
+    let frame = 0; let previous = window.scrollY;
+    const update = () => {
+      const height = Math.max(window.innerHeight, 1); const center = height / 2; const current = window.scrollY;
+      root.dataset.scrollDirection = current >= previous ? "down" : "up"; previous = current;
+      parallax.forEach((node) => { const box = node.getBoundingClientRect(); const progress = Math.max(-1, Math.min(1, (box.top + box.height / 2 - center) / (height + box.height))); node.style.setProperty("--parallax", progress.toFixed(4)); });
       frame = 0;
     };
-    const requestParallaxUpdate = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(updateParallax);
-    };
-
-    updateParallax();
-    window.addEventListener("scroll", requestParallaxUpdate, { passive: true });
-    window.addEventListener("resize", requestParallaxUpdate);
-    return () => {
-      revealObserver.disconnect();
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", requestParallaxUpdate);
-      window.removeEventListener("resize", requestParallaxUpdate);
-    };
-  }, [motionEnabled, pathname]);
-
-  const toggleMotion = () => {
-    const nextMode: MotionMode = motionEnabled ? "reduced" : "full";
-    window.localStorage.setItem(STORAGE_KEY, nextMode);
-    setMode(nextMode);
-  };
-
-  return (
-    <button
-      type="button"
-      className="motion-experience-toggle"
-      onClick={toggleMotion}
-      aria-pressed={motionEnabled}
-      aria-label={motionEnabled ? "Réduire les animations" : "Activer les animations"}
-      title={motionEnabled ? "Réduire les animations" : "Activer les animations"}
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 12h3l2.1-6 4.1 12 2.1-6H20" />
-      </svg>
-      <span>{motionEnabled ? "Mouvement actif" : "Activer le mouvement"}</span>
-    </button>
-  );
+    const request = () => { if (!frame) frame = window.requestAnimationFrame(update); };
+    update(); window.addEventListener("scroll", request, { passive: true }); window.addEventListener("resize", request);
+    return () => { query.removeEventListener("change", sync); observer.disconnect(); window.cancelAnimationFrame(frame); window.removeEventListener("scroll", request); window.removeEventListener("resize", request); };
+  }, [pathname]);
+  return null;
 }

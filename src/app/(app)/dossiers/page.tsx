@@ -3,6 +3,7 @@ import { getFolderName, listPromptFolders, listPromptsInFolder } from "@/lib/pro
 import { FolderManager } from "@/components/FolderManager";
 import { PromptCardView } from "@/components/PromptCardView";
 import { listPrompts } from "@/lib/prompts";
+import Link from "next/link";
 
 export const metadata = { title: "Mes dossiers — Bibliothèque de prompts INSEPTI" };
 
@@ -21,7 +22,7 @@ export default async function FoldersPage({
   ]);
 
   return (
-    <div className="grid gap-7 lg:grid-cols-[17rem_1fr]">
+    <div className="library-layout grid gap-7 lg:grid-cols-[18rem_1fr]">
       <div>
         <p className="brand-kicker">Organisation privée</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">Ma bibliothèque</h1>
@@ -58,7 +59,7 @@ export default async function FoldersPage({
             )}
           </>
         ) : (
-          <div className="personal-library-overview"><header><div><p className="brand-kicker">Prompts sauvegardés</p><h2>{savedPrompts.length} prompt{savedPrompts.length > 1 ? "s" : ""} dans votre bibliothèque</h2></div></header>{savedPrompts.length ? <div className="prompt-grid">{savedPrompts.map((prompt) => <PromptCardView key={prompt.id} prompt={prompt} />)}</div> : <div className="surface rounded-xl2 p-8 sm:p-12"><h2 className="text-2xl font-semibold">Votre bibliothèque est prête.</h2><p className="mt-4 text-sm" style={{color:"var(--fg-muted)"}}>Ajoutez un prompt depuis sa fiche, puis classez-le dans le dossier de votre choix.</p></div>}</div>
+          <div className="personal-library-overview"><header><div><p className="brand-kicker">Prompts sauvegardés</p><h2>{savedPrompts.length} prompt{savedPrompts.length > 1 ? "s" : ""} dans votre bibliothèque</h2></div></header>{savedPrompts.length ? <div className="prompt-grid">{savedPrompts.map((prompt) => <PromptCardView key={prompt.id} prompt={prompt} />)}</div> : <div className="surface rounded-xl2 p-8 sm:p-12"><h2 className="text-2xl font-semibold">Votre bibliothèque est prête.</h2><p className="mt-4 text-sm" style={{color:"var(--fg-muted)"}}>Sauvegardez un prompt depuis sa fiche puis classez-le dans le dossier de votre choix.</p><Link href="/catalogue" className="primary-action mt-6">Explorer le catalogue →</Link></div>}</div>
         )}
       </section>
     </div>

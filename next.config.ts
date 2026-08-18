@@ -4,7 +4,7 @@ const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://login.microsoftonline.com",
+  "img-src 'self' data: https://login.microsoftonline.com https://blogs.microsoft.com https://cdn.sanity.io https://www.anthropic.com https://storage.googleapis.com",
   "font-src 'self' data:",
   "connect-src 'self' https://login.microsoftonline.com https://graph.microsoft.com",
   "frame-ancestors 'none'",
@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   output: "standalone",
+  images: { remotePatterns: [
+    { protocol: "https", hostname: "blogs.microsoft.com" },
+    { protocol: "https", hostname: "cdn.sanity.io" },
+    { protocol: "https", hostname: "www.anthropic.com" },
+    { protocol: "https", hostname: "storage.googleapis.com" },
+  ] },
   async headers() {
     return [
       {
