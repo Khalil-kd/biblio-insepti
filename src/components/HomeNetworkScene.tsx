@@ -52,7 +52,7 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
         cyan.position.set(4, -2, 2);
         scene.add(cyan);
 
-        const count = 320;
+        const count = 170;
         const home = new Float32Array(count * 3);
         const velocity = new Float32Array(count * 3);
         const colors: number[] = [];
@@ -92,7 +92,7 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
         const arrowTexture = new THREE.CanvasTexture(arrowCanvas);
         arrowTexture.colorSpace = THREE.SRGBColorSpace;
         const material = new THREE.PointsMaterial({
-          size: 0.18,
+          size: 0.115,
           map: arrowTexture,
           alphaTest: 0.08,
           vertexColors: true,
@@ -186,6 +186,25 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
 
         new GLTFLoader().load("/brand/insepti-logo-3d.glb", (gltf) => {
           model = gltf.scene;
+          let index = 0;
+          model.traverse((child) => {
+            const mesh = child as Mesh;
+            if (!mesh.isMesh) return;
+            const source = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+            const branded = source.map(() => {
+              const greenTone = index++ % 3 !== 1;
+              const nextMaterial = new THREE.MeshStandardMaterial({
+                color: greenTone ? 0x75c044 : 0x77868b,
+                emissive: greenTone ? 0x183b0d : 0x0b1417,
+                emissiveIntensity: greenTone ? 0.52 : 0.15,
+                metalness: greenTone ? 0.3 : 0.7,
+                roughness: 0.28,
+              });
+              materials.push(nextMaterial);
+              return nextMaterial;
+            });
+            mesh.material = Array.isArray(mesh.material) ? branded : branded[0]!;
+          });
           const box = new THREE.Box3().setFromObject(model);
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
