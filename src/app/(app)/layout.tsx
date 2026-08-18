@@ -12,7 +12,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <>
       <ThemeApplier theme={preferences.theme} />
-      <MotionExperience />
+      <MotionExperience isAdmin={session.role === "admin"} />
       <Header session={session} preferences={preferences} />
       <main className="app-main">{children}</main>
       <Toaster />
