@@ -52,7 +52,7 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
         cyan.position.set(4, -2, 2);
         scene.add(cyan);
 
-        const count = 170;
+        const count = 220;
         const home = new Float32Array(count * 3);
         const velocity = new Float32Array(count * 3);
         const colors: number[] = [];
@@ -92,12 +92,13 @@ export function HomeNetworkScene({ label, fr = true }: { label: string; fr?: boo
         const arrowTexture = new THREE.CanvasTexture(arrowCanvas);
         arrowTexture.colorSpace = THREE.SRGBColorSpace;
         const material = new THREE.PointsMaterial({
-          size: 0.115,
+          size: 10,
+          sizeAttenuation: false,
           map: arrowTexture,
-          alphaTest: 0.08,
+          alphaTest: 0.02,
           vertexColors: true,
           transparent: true,
-          opacity: 0.82,
+          opacity: 0.96,
           depthWrite: false,
           blending: THREE.AdditiveBlending,
         });
