@@ -2,15 +2,18 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const ADMIN_MOTION_KEY = "insepti-admin-motion";
+import { ADMIN_MOTION_EVENT, ADMIN_MOTION_KEY } from "@/components/AdminMotionControl";
 
 export function MotionExperience({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
   const [adminMotion, setAdminMotion] = useState(false);
 
   useEffect(() => {
-    if (isAdmin) setAdminMotion(window.localStorage.getItem(ADMIN_MOTION_KEY) === "full");
+    if (!isAdmin) return;
+    setAdminMotion(window.localStorage.getItem(ADMIN_MOTION_KEY) === "full");
+    const update = (event: Event) => setAdminMotion((event as CustomEvent<boolean>).detail);
+    window.addEventListener(ADMIN_MOTION_EVENT, update);
+    return () => window.removeEventListener(ADMIN_MOTION_EVENT, update);
   }, [isAdmin]);
 
   useEffect(() => {
@@ -73,11 +76,5 @@ export function MotionExperience({ isAdmin = false }: { isAdmin?: boolean }) {
     };
   }, [adminMotion, pathname]);
 
-  if (!isAdmin) return null;
-  const toggle = () => {
-    const next = !adminMotion;
-    setAdminMotion(next);
-    window.localStorage.setItem(ADMIN_MOTION_KEY, next ? "full" : "auto");
-  };
-  return <button type="button" className={`admin-motion-toggle ${adminMotion ? "is-active" : ""}`} aria-pressed={adminMotion} onClick={toggle}><span aria-hidden="true" />{adminMotion ? "Animation renforcée" : "Activer l’animation"}</button>;
+  return null;
 }

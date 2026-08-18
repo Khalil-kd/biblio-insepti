@@ -12,6 +12,7 @@ import "./app-v5.css";
 import "./notifications-v5.css";
 import "./login-penpot-v5.css";
 import "./desktop2-theme.css";
+import "./login-centered-fix.css";
 
 export const metadata: Metadata = {
   title: "Bibliothèque de prompts INSEPTI",

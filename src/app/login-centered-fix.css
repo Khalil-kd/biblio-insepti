@@ -1,0 +1,38 @@
+.login-v4 {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+}
+
+.login-v4 > .login-center {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  width: min(448px, calc(100vw - 48px));
+  margin: auto;
+  padding: 0;
+  background: transparent;
+}
+
+.login-v4 > .login-center > form {
+  width: 100%;
+  min-height: 0;
+  margin-top: 36px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  box-shadow: none;
+}
+
+.login-v4 > .login-center .login-ms {
+  margin-top: 0;
+}
+
+@media (max-width: 520px) {
+  .login-v4 > .login-center {
+    width: 100%;
+  }
+}
