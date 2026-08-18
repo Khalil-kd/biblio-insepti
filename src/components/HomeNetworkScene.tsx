@@ -34,9 +34,9 @@ export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
         camera.position.z = 10;
-        const particles = new THREE.Group();
-        particles.position.z = -1.8;
-        scene.add(particles);
+        const space = new THREE.Group();
+        space.position.z = -1.8;
+        scene.add(space);
         const rig = new THREE.Group();
         rig.rotation.set(Math.PI / 2 - 0.06, -0.08, 0);
         scene.add(rig);
@@ -52,48 +52,86 @@ export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
         cyan.position.set(4, -2, 2);
         scene.add(cyan);
 
-        const rows = 13;
-        const samples = 56;
-        const count = rows * (samples - 1) * 2;
-        const home = new Float32Array(count * 3);
-        const colors: number[] = [];
-        const green = new THREE.Color("#9be15d");
-        const teal = new THREE.Color("#24d4d8");
-        let vertex = 0;
-        for (let row = 0; row < rows; row += 1) {
-          const y = -2.35 + row * (4.7 / (rows - 1));
-          const z = -1.8 + Math.sin(row * 0.72) * 0.16;
-          const color = green.clone().lerp(teal, row / (rows - 1) * 0.42);
-          for (let sample = 0; sample < samples - 1; sample += 1) {
-            const x0 = -5.25 + sample * (10.5 / (samples - 1));
-            const x1 = -5.25 + (sample + 1) * (10.5 / (samples - 1));
-            home.set([x0, y, z, x1, y, z], vertex * 3);
-            colors.push(color.r, color.g, color.b, color.r, color.g, color.b);
-            vertex += 2;
-          }
+        const geometries: BufferGeometry[] = [];
+        const materials: Material[] = [];
+        const starCount = 460;
+        const starPositions = new Float32Array(starCount * 3);
+        const starColors: number[] = [];
+        const starGreen = new THREE.Color("#baff91");
+        const starWhite = new THREE.Color("#eef8f3");
+        for (let i = 0; i < starCount; i += 1) {
+          const seed = Math.sin(i * 9283.17) * 43758.5453;
+          const next = Math.sin((i + 17) * 6131.73) * 19731.224;
+          const depth = Math.sin((i + 41) * 3917.31) * 8513.77;
+          starPositions[i * 3] = (seed - Math.floor(seed) - 0.5) * 13;
+          starPositions[i * 3 + 1] = (next - Math.floor(next) - 0.5) * 7.4;
+          starPositions[i * 3 + 2] = -1 - (depth - Math.floor(depth)) * 5;
+          const color = starWhite.clone().lerp(starGreen, i % 7 === 0 ? 0.75 : 0.08);
+          starColors.push(color.r, color.g, color.b);
         }
-
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute("position", new THREE.BufferAttribute(home.slice(), 3));
-        geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-        const material = new THREE.LineBasicMaterial({
+        const starGeometry = new THREE.BufferGeometry();
+        starGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+        starGeometry.setAttribute("color", new THREE.Float32BufferAttribute(starColors, 3));
+        const starMaterial = new THREE.PointsMaterial({
+          size: 0.045,
           vertexColors: true,
           transparent: true,
-          opacity: 0.72,
+          opacity: 0.82,
           depthWrite: false,
           blending: THREE.AdditiveBlending,
         });
-        particles.add(new THREE.LineSegments(geometry, material));
+        space.add(new THREE.Points(starGeometry, starMaterial));
+        geometries.push(starGeometry);
+        materials.push(starMaterial);
 
-        const geometries: BufferGeometry[] = [geometry];
-        const materials: Material[] = [material];
+        const planets = new THREE.Group();
+        space.add(planets);
+        const planetSpecs = [
+          { radius: 0.72, color: 0x2e682b, emissive: 0x102d12, position: [-3.9, 1.65, -1.2], phase: 0.4, ring: true },
+          { radius: 0.94, color: 0x183e4a, emissive: 0x09242d, position: [3.85, -1.55, -0.8], phase: 2.1, ring: true },
+          { radius: 0.42, color: 0x7aa35c, emissive: 0x172a10, position: [3.55, 2.05, -2.8], phase: 4.2, ring: false },
+          { radius: 0.34, color: 0x69767c, emissive: 0x11191c, position: [-4.25, -2.15, -3.1], phase: 5.4, ring: false },
+        ] as const;
+        const planetMeshes: Mesh[] = [];
+        planetSpecs.forEach((spec) => {
+          const planetGeometry = new THREE.SphereGeometry(spec.radius, 32, 20);
+          const planetMaterial = new THREE.MeshStandardMaterial({
+            color: spec.color,
+            emissive: spec.emissive,
+            emissiveIntensity: 0.55,
+            metalness: 0.18,
+            roughness: 0.72,
+          });
+          const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+          planet.position.set(...spec.position);
+          planet.userData.baseY = spec.position[1];
+          planet.userData.phase = spec.phase;
+          planets.add(planet);
+          planetMeshes.push(planet);
+          geometries.push(planetGeometry);
+          materials.push(planetMaterial);
+          if (spec.ring) {
+            const ringGeometry = new THREE.TorusGeometry(spec.radius * 1.45, 0.022, 8, 96);
+            const ringMaterial = new THREE.MeshBasicMaterial({
+              color: spec.color === 0x2e682b ? 0x9be15d : 0x24d4d8,
+              transparent: true,
+              opacity: 0.62,
+            });
+            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+            ring.position.copy(planet.position);
+            ring.rotation.set(1.18, 0.22, -0.3);
+            planets.add(ring);
+            geometries.push(ringGeometry);
+            materials.push(ringMaterial);
+          }
+        });
         let model: Object3D | undefined;
         let dragging = false;
         let lastX = 0;
         let lastY = 0;
-        let pointerX = 99;
-        let pointerY = 99;
         let pointerActive = false;
+        let pointerNX = 0;
+        let pointerNY = 0;
         let targetX = 0;
         let targetY = 0;
         const reduced = () => document.documentElement.dataset.motion === "soft";
@@ -104,8 +142,8 @@ export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
         };
         const updatePointer = (event: PointerEvent) => {
           const bounds = mount.getBoundingClientRect();
-          pointerX = ((event.clientX - bounds.left) / bounds.width - 0.5) * 10;
-          pointerY = -((event.clientY - bounds.top) / bounds.height - 0.5) * 5.8;
+          pointerNX = (event.clientX - bounds.left) / bounds.width - 0.5;
+          pointerNY = (event.clientY - bounds.top) / bounds.height - 0.5;
           pointerActive = true;
         };
         const down = (event: PointerEvent) => {
@@ -131,23 +169,19 @@ export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
 
         const render = (time = 0) => {
           if (disposed || !visible) return;
-          const positions = geometry.attributes.position!.array as Float32Array;
-          for (let i = 0; i < count; i += 1) {
-            const j = i * 3;
-            const hx = home[j] ?? 0;
-            const hy = home[j + 1] ?? 0;
-            const dx = hx - pointerX;
-            const dy = hy - pointerY;
-            const influence = pointerActive ? Math.exp(-(dx * dx + dy * dy) / 1.55) : 0;
-            const amplitude = reduced() ? 0.1 : 0.28;
-            const desiredY = hy + influence * Math.sin(dx * 2.35 + time * 0.0042) * amplitude;
-            positions[j] = hx;
-            positions[j + 1] = (positions[j + 1] ?? hy) + (desiredY - (positions[j + 1] ?? hy)) * 0.14;
-            positions[j + 2] = home[j + 2] ?? 0;
-          }
-          geometry.attributes.position!.needsUpdate = true;
-          rig.position.x += (targetX - rig.position.x) * 0.09;
-          rig.position.y += (targetY - rig.position.y) * 0.09;
+          const motionFactor = reduced() ? 0.35 : 1;
+          space.position.x += ((pointerActive ? pointerNX * 0.34 : 0) - space.position.x) * 0.035;
+          space.position.y += ((pointerActive ? -pointerNY * 0.22 : 0) - space.position.y) * 0.035;
+          planetMeshes.forEach((planet) => {
+            const baseY = Number(planet.userData.baseY);
+            const phase = Number(planet.userData.phase);
+            planet.position.y = baseY + Math.sin(time * 0.00045 + phase) * 0.09 * motionFactor;
+          });
+          starMaterial.opacity = 0.74 + Math.sin(time * 0.0007) * 0.08 * motionFactor;
+          const floatX = targetX + (pointerActive ? pointerNX * 0.16 : 0);
+          const floatY = targetY + Math.sin(time * 0.00075) * 0.14 * motionFactor + (pointerActive ? -pointerNY * 0.1 : 0);
+          rig.position.x += (floatX - rig.position.x) * 0.075;
+          rig.position.y += (floatY - rig.position.y) * 0.075;
           const breath = 1.107 * (1 + (reduced() ? 0.012 : 0.028) * Math.sin(time * 0.0011));
           rig.scale.setScalar(breath);
           renderer.render(scene, camera);
@@ -208,9 +242,9 @@ export function HomeNetworkScene({ label }: { label: string; fr?: boolean }) {
         mount.addEventListener("pointercancel", up);
         mount.addEventListener("pointerleave", () => {
           if (!dragging) {
-            pointerX = 99;
-            pointerY = 99;
             pointerActive = false;
+            pointerNX = 0;
+            pointerNY = 0;
           }
         });
         mount.addEventListener("dblclick", reset);
