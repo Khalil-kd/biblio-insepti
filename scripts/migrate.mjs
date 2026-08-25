@@ -2,10 +2,10 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import pg from "pg";
 
-const databaseUrl = process.env.DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL_V2 ?? process.env.DATABASE_URL;
 
 if (!databaseUrl) {
-  throw new Error("DATABASE_URL is required before running migrations.");
+  throw new Error("DATABASE_URL_V2 or DATABASE_URL is required before running migrations.");
 }
 
 const migrationsDirectory = path.join(process.cwd(), "db", "migrations-postgres");
